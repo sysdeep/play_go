@@ -1,0 +1,4 @@
+github.com/visualfc/atk v0.0.0-20190409015818-572ab07f9a00 h1:fs3/WCI84k0sfEEYztSRbwEXy2BL3t4AoLdPY4zGcYM=
+github.com/visualfc/atk v0.0.0-20190409015818-572ab07f9a00/go.mod h1:wG2f67s8iOGUfD8ZKoOicNoZPqZRN1UAXT8ip8GDPsM=
+golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a h1:WXEvlFVvvGxCJLG6REjsT03iWnKLEWinaScsxF2Vm2o=
+golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
