@@ -3,6 +3,6 @@ module atk_example
 go 1.14
 
 require (
-	github.com/visualfc/atk v0.0.0-20190409015818-572ab07f9a00
-	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a // indirect
+	github.com/visualfc/atk v1.2.2
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 )

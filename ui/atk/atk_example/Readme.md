@@ -5,6 +5,10 @@
 
 
 
+## Run 
+
+	go run ./example/main
+
 
 ## Windows x_64
 
