@@ -15,7 +15,11 @@ func main() {
 	// exFile("/home/nika/screen_2021-03-25_19-16-53.mp4", 8)
 
 	//--- ex xor --------------------------------------------------------------
-	exXor()
+	// exXor()
+
+
+	//--- toffoli
+	Toffoli()
 
 	log.Println("End app")
 }
