@@ -1,6 +1,9 @@
 package main
 
-import "log"
+import (
+	"gotree/LZTree"
+	"log"
+)
 
 func main() {
 	log.Println("Start app")
@@ -17,9 +20,12 @@ func main() {
 	//--- ex xor --------------------------------------------------------------
 	// exXor()
 
+	//--- toffoli -------------------------------------------------------------
+	// Toffoli()
 
-	//--- toffoli
-	Toffoli()
+	//--- LZTree --------------------------------------------------------------
+	LZTree.ExampleLZTree1()
+	//--- LZTree --------------------------------------------------------------
 
 	log.Println("End app")
 }
