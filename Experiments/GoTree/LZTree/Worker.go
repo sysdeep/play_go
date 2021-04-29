@@ -19,6 +19,8 @@ func NewWorker() *Worker {
 }
 
 func (w *Worker) Start(data []byte) {
+
+	//--- pack
 	for _, b := range data {
 		// log.Println("input byte:", i, b)
 
@@ -26,4 +28,18 @@ func (w *Worker) Start(data []byte) {
 	}
 	w.tree.Finish()
 	w.tree.PrinfInfo()
+
+	// w.tree.Unpack()
+
+	// //--- pack data
+	// nodes := w.tree.GetNodes()
+	// sequence := w.tree.GetSequence()
+
+	// // fmt.Println(sequence)
+
+	// //--- unpack
+	// ut := NewTree()
+	// ut.SetSequence(sequence)
+	// ut.SetNodes(nodes)
+
 }

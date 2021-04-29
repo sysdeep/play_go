@@ -18,7 +18,7 @@ func NewTree() *Tree {
 	tree := &Tree{}
 	tree.sequence = make([]int, 0)
 	tree.nodes = make([]*Node, 0)
-	tree.root = NewNode(-1, 0)
+	tree.root = NewNode(-1, -2, nil, 0)
 	tree.total = 0
 	return tree
 }
@@ -38,27 +38,28 @@ func (t *Tree) Append(b byte) {
 
 	if node != nil {
 		// если нода найдена - сохраняем как пред.
-		log.Println("Tree: node found")
-		// n := NewNode(b)
-		// node.Append(n)
-		// t.nodes = append(t.nodes, n)
+		// log.Println("Tree: node found")
 		t.last = node
 	} else {
 		// не найдена
 
+		//--- make node id - index in nodes
 		node_id := len(t.nodes)
 
 		log.Println("Tree: node NOT found - create: ", node_id)
-		n := NewNode(node_id, b)
 
+		var n *Node
 		if t.last != nil {
+			n = NewNode(node_id, t.last.ID, t.last, b)
 			t.last.Append(n)
 		} else {
+			n = NewNode(node_id, -1, nil, b)
 			t.root.Append(n)
 		}
 
 		t.last = nil
 		// t.root.Append(n)
+
 		t.nodes = append(t.nodes, n)
 		t.sequence = append(t.sequence, node_id)
 	}
@@ -86,12 +87,42 @@ func (t *Tree) PrinfInfo() {
 	fmt.Println("========================================================")
 }
 
-// func (t *Tree) findNode(b byte) *Node {
-// 	for _, node := range t.nodes {
-// 		if node.data == b {
-// 			return node
-// 		}
-// 	}
+func (t *Tree) Unpack() {
 
-// 	return nil
-// }
+	result := make([]byte, 0)
+
+	for _, node_index := range t.sequence {
+		node := t.nodes[node_index]
+		// fmt.Println(node_index, node.Data)
+
+		// // корневой узел - данные готовы
+		// if node.Parent == nil {
+		// 	fmt.Println(node.Data)
+		// } else {
+		// 	// иначе - собираем полный путь до корня
+
+		// }
+
+		// fmt.Println(node.GetData())
+		result = append(result, node.GetData()...)
+	}
+
+	fmt.Println(result)
+
+}
+
+func (t *Tree) GetNodes() []*Node {
+	return t.nodes
+}
+
+func (t *Tree) GetSequence() []int {
+	return t.sequence
+}
+
+func (t *Tree) SetSequence(items []int) {
+	t.sequence = items
+}
+
+func (t *Tree) SetNodes(nodes []*Node) {
+	t.nodes = nodes
+}

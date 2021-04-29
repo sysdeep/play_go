@@ -24,7 +24,8 @@ func main() {
 	// Toffoli()
 
 	//--- LZTree --------------------------------------------------------------
-	LZTree.ExampleLZTree1()
+	LZTree.ExampleLZTree1() // fake data
+	// LZTree.ExampleLZTree2() // file data
 	//--- LZTree --------------------------------------------------------------
 
 	log.Println("End app")
