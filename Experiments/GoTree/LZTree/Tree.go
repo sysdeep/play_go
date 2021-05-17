@@ -2,7 +2,6 @@ package LZTree
 
 import (
 	"fmt"
-	"log"
 )
 
 // Tree
@@ -46,7 +45,7 @@ func (t *Tree) Append(b byte) {
 		//--- make node id - index in nodes
 		node_id := len(t.nodes)
 
-		log.Println("Tree: node NOT found - create: ", node_id)
+		// log.Println("Tree: node NOT found - create: ", node_id)
 
 		var n *Node
 		if t.last != nil {

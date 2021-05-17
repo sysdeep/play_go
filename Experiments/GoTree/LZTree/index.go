@@ -1,6 +1,7 @@
 package LZTree
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 )
@@ -109,4 +110,60 @@ func ExampleLZTree2() {
 
 	worker := NewWorker()
 	worker.Start(data)
+}
+
+
+// ExampleLZTree3 - 
+func ExampleLZTree3() {
+	const srcFile string = "./add/CalgaryCorpus/calgarycorpus/bib"
+	fmt.Println(srcFile)
+	data, err := ioutil.ReadFile(srcFile)
+
+	if err != nil {
+		log.Fatal("unable read file")
+	}
+
+	// var data = []byte{0xAA, 0xAA, 0xAA, 0xAA, 0xAA}
+
+	worker := NewWorker()
+	worker.Start(data)
+}
+
+// ExampleLZTree4 - 
+func ExampleLZTree4() {
+	
+	var srcFiles = []string{
+		"./add/CalgaryCorpus/calgarycorpus/bib",
+		"./add/CalgaryCorpus/calgarycorpus/book1",
+		"./add/CalgaryCorpus/calgarycorpus/book2",
+		"./add/CalgaryCorpus/calgarycorpus/geo",
+		"./add/CalgaryCorpus/calgarycorpus/news",
+		"./add/CalgaryCorpus/calgarycorpus/obj1",
+		"./add/CalgaryCorpus/calgarycorpus/obj2",
+		"./add/CalgaryCorpus/calgarycorpus/paper1",
+		"./add/CalgaryCorpus/calgarycorpus/paper2",
+		"./add/CalgaryCorpus/calgarycorpus/pic",
+		"./add/CalgaryCorpus/calgarycorpus/progc",
+		"./add/CalgaryCorpus/calgarycorpus/progl",
+		"./add/CalgaryCorpus/calgarycorpus/progp",
+		"./add/CalgaryCorpus/calgarycorpus/trans",
+	}
+
+
+	for _, filePath := range srcFiles {
+		fmt.Println("**********************************************************")
+		fmt.Println(filePath)
+		data, err := ioutil.ReadFile(filePath)
+		
+		if err != nil {
+			log.Print("unable read file")
+			continue
+		}
+		
+		// var data = []byte{0xAA, 0xAA, 0xAA, 0xAA, 0xAA}
+		
+		worker := NewWorker()
+		worker.Start(data)
+		fmt.Println("**********************************************************")
+	}
 }
