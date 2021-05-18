@@ -7,6 +7,7 @@ type Node struct {
 	Parent    *Node
 	Data      byte
 	childrens []*Node
+	Level     int
 }
 
 func NewNode(id int, parentID int, parent *Node, b byte) *Node {
@@ -15,6 +16,7 @@ func NewNode(id int, parentID int, parent *Node, b byte) *Node {
 		ParentID:  parentID,
 		Parent:    parent,
 		Data:      b,
+		Level:     0,
 		childrens: make([]*Node, 0),
 	}
 
@@ -32,6 +34,7 @@ func (n *Node) FindTreeNode(b byte) *Node {
 }
 
 func (n *Node) Append(node *Node) {
+	node.Level = n.Level + 1
 	n.childrens = append(n.childrens, node)
 }
 

@@ -43,3 +43,22 @@ func (w *Worker) Start(data []byte) {
 	// ut.SetNodes(nodes)
 
 }
+
+// StartData - добавление в дерево несколько частей, в конце - StopParts
+func (w *Worker) StartPart(data []byte) {
+
+	//--- pack
+	for _, b := range data {
+		// log.Println("input byte:", i, b)
+
+		w.tree.Append(b)
+	}
+}
+
+// StopParts - отчёт о добавленных частях - после StartPart
+func (w *Worker) StopParts() {
+
+	w.tree.Finish()
+	w.tree.PrinfInfo()
+
+}

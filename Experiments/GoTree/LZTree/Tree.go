@@ -83,6 +83,15 @@ func (t *Tree) PrinfInfo() {
 	// fmt.Printf("%d\t%d\t%d\t%d\t%d\t%s\t%d\n",
 	// 	fileInfo.Size(), chunkSize, chunks, treeCount, totalCount, elapsed, ratio)
 
+	maxLevel := 0
+	for _, node := range t.nodes {
+		if node.Level > maxLevel {
+			maxLevel = node.Level
+		}
+	}
+
+	fmt.Println("max branch level: ", maxLevel)
+
 	fmt.Println("========================================================")
 }
 
