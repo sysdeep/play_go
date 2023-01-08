@@ -23,6 +23,7 @@ func NewNode(id int, parentID int, parent *Node, b byte) *Node {
 	return node
 }
 
+// найти заданную ноду в списке детёнышей или вернуть nil если не смогли найти
 func (n *Node) FindTreeNode(b byte) *Node {
 	for _, node := range n.childrens {
 		if node.Data == b {
@@ -33,11 +34,13 @@ func (n *Node) FindTreeNode(b byte) *Node {
 	return nil
 }
 
+// добавить новую ноду в своё пространство
 func (n *Node) Append(node *Node) {
 	node.Level = n.Level + 1
 	n.childrens = append(n.childrens, node)
 }
 
+// получить набор данных от корня до тек. ноды
 func (n *Node) GetData() []byte {
 
 	if n.Parent == nil {
