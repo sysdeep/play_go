@@ -1,14 +1,13 @@
 package main
 
 import (
-	"gotree/LZTree"
 	"log"
 )
 
 func main() {
 	log.Println("Start app")
 	//--- ex1 -----------------------------------------------------------------
-	// ex1()
+	ex1()
 
 	//--- ex_file -------------------------------------------------------------
 	// exFile("./main.go", 4)
@@ -22,13 +21,6 @@ func main() {
 
 	//--- toffoli -------------------------------------------------------------
 	// Toffoli()
-
-	//--- LZTree --------------------------------------------------------------
-	LZTree.ExampleLZTree1() // fake data
-	// LZTree.ExampleLZTree2() // file data
-	// LZTree.ExampleLZTree3() // calgary file data
-	// LZTree.ExampleLZTree4() // all calgary file data
-	//--- LZTree --------------------------------------------------------------
 
 	log.Println("End app")
 }

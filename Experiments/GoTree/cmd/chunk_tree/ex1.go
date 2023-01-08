@@ -1,6 +1,9 @@
 package main
 
-import "log"
+import (
+	"gotree/internal/chunk_tree"
+	"log"
+)
 
 var PAYLOADEX1 []byte = []byte{
 	0x11, 0x12, 0x13, 0x14,
@@ -12,7 +15,7 @@ var PAYLOADEX1 []byte = []byte{
 func ex1() {
 	log.Println("data count: ", len(PAYLOADEX1))
 
-	tree := NewTree()
+	tree := chunk_tree.NewTree()
 
 	for i := 0; i < (len(PAYLOADEX1) / 4); i++ {
 		chunk := PAYLOADEX1[i*4 : i*4+4]

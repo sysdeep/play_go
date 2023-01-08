@@ -1,4 +1,4 @@
-package main
+package chunk_tree
 
 type Node struct {
 	data         byte

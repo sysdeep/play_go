@@ -18,6 +18,7 @@ package main
 */
 import (
 	"fmt"
+	"gotree/internal/chunk_tree"
 	"log"
 	"os"
 	"time"
@@ -40,7 +41,7 @@ func exFile(filePath string, chunkSize int) {
 	log.Println("chunks count: ", chunks)
 	log.Println("chunk size: ", chunkSize)
 
-	tree := NewTree()
+	tree := chunk_tree.NewTree()
 
 	t1 := time.Now()
 	chunk := make([]byte, chunkSize)
