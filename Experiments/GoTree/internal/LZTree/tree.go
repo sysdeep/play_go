@@ -6,11 +6,11 @@ import (
 
 // Tree
 type Tree struct {
-	nodes    []*Node
-	sequence []int
-	root     *Node
-	last     *Node
-	total    int
+	nodes       []*Node
+	sequence    []int
+	root        *Node
+	currentNode *Node
+	totalBytes  int
 }
 
 func NewTree() *Tree {
@@ -18,65 +18,71 @@ func NewTree() *Tree {
 	tree.sequence = make([]int, 0)
 	tree.nodes = make([]*Node, 0)
 	tree.root = NewNode(-1, -2, nil, 0)
-	tree.total = 0
+	tree.totalBytes = 0
 	return tree
 }
 
-func (t *Tree) Append(b byte) {
-	t.total = t.total + 1
+// добавить новый байт в последовательность
+// если байт найден в дереве - вернуть -1 иначе - вернуть id созданного узла
+func (t *Tree) Append(b byte) int {
+	t.totalBytes = t.totalBytes + 1
+
 	var node *Node
 
 	// если есть пред. поиск - продолжаем поиск глубже
-	if t.last != nil {
-		node = t.last.FindTreeNode(b)
+	if t.currentNode != nil {
+		node = t.currentNode.FindTreeNode(b)
 	} else {
 		// иначе начинаем заново
 		//--- find node
 		node = t.root.FindTreeNode(b)
 	}
 
+	// если нода найдена - сохраняем как пред.
 	if node != nil {
-		// если нода найдена - сохраняем как пред.
-		// log.Println("Tree: node found")
-		t.last = node
-	} else {
-		// не найдена
-
-		//--- make node id - index in nodes
-		node_id := len(t.nodes)
-
-		// log.Println("Tree: node NOT found - create: ", node_id)
-
-		var n *Node
-		if t.last != nil {
-			n = NewNode(node_id, t.last.ID, t.last, b)
-			t.last.Append(n)
-		} else {
-			n = NewNode(node_id, -1, nil, b)
-			t.root.Append(n)
-		}
-
-		t.last = nil
-		// t.root.Append(n)
-
-		t.nodes = append(t.nodes, n)
-		t.sequence = append(t.sequence, node_id)
+		t.currentNode = node
+		return NO_NODE_ID
 	}
+
+	// не найдена
+	return t.createNode(b)
+
+}
+
+// создать новый узел
+func (t *Tree) createNode(data byte) int {
+	node_id := len(t.nodes)
+
+	var n *Node
+	if t.currentNode != nil {
+		n = NewNode(node_id, t.currentNode.ID, t.currentNode, data)
+		t.currentNode.Append(n)
+	} else {
+		n = NewNode(node_id, -1, nil, data)
+		t.root.Append(n)
+	}
+
+	t.currentNode = nil
+
+	t.nodes = append(t.nodes, n)
+	t.sequence = append(t.sequence, node_id)
+
+	return node_id
 
 }
 
 // Finish - корректировка последней ноды
 func (t *Tree) Finish() {
-	if t.last != nil {
-		t.sequence = append(t.sequence, t.last.ID)
-		t.last = nil
+	if t.currentNode != nil {
+		t.sequence = append(t.sequence, t.currentNode.ID)
+		t.currentNode = nil
 	}
 
 }
 
 func (t *Tree) PrinfInfo() {
 	fmt.Println("========================================================")
-	fmt.Println("total bytes count: ", t.total)
+	fmt.Println("total bytes count: ", t.totalBytes)
 	fmt.Println("nodes count: ", len(t.nodes))
 	fmt.Println("sequence count: ", len(t.sequence))
 	// fmt.Println("dSaize\tcSize\tchunks\ttCount\ttotal\telapsed\t\tratio")
