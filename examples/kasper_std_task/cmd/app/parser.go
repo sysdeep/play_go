@@ -2,34 +2,46 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
-func parse(config *Config) {
+func parse(config *Config) (map[string]int, error) {
 	fd, err := os.Open(config.FilePath)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer fd.Close()
 
 	scanner := bufio.NewScanner(fd)
 	scanner.Split(bufio.ScanLines)
 
+	var result map[string]int = make(map[string]int)
+
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
+
+		if len(line) == 0 {
+			continue
+		}
 
 		name, balance := parse_line(line)
 
-		fmt.Println(name, balance)
+		stored_value, ok := result[name]
+		if !ok {
+			stored_value = 0
+		}
+
+		result[name] = stored_value + balance
 	}
+
+	return result, nil
 
 }
 
 func parse_line(line string) (name string, balance int) {
+
 	result := strings.Split(line, ":")
 
 	lname := strings.ToLower(result[0])

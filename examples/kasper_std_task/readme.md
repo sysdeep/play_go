@@ -1,6 +1,6 @@
-package main
+# kasper task - go
 
-/*
+```python
 # система учета финансов, выводит баланс клиента после серии операций
 #
 # На вход программе подается многострочный текстовый файл.
@@ -27,29 +27,4 @@ package main
 # Возможный результат:
 # alice: -11
 # bob: 12
-*/
-
-import (
-	"fmt"
-)
-
-func main() {
-	// parse args
-	err, config := ConfigFromArgs()
-	check_err(err)
-
-	// parse data
-	result, err := parse(config)
-	check_err(err)
-
-	// print data
-	for name, balance := range result {
-		fmt.Printf("%s: %d\n", name, balance)
-	}
-}
-
-func check_err(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
+```
