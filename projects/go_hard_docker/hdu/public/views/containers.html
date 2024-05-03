@@ -1,0 +1,43 @@
+{{define "containers"}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Containers</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Image</th>
+          <th>Status</th>
+
+          <th>Name</th>
+          <th>State</th>
+          <th>Image</th>
+          <th>Created</th>
+          <th>IP Address</th>
+          <th>Published Ports</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .}}
+        <tr>
+          <td>{{.ID}}</td>
+          <td>{{.Image}}</td>
+          <td>{{.Status}}</td>
+          <td>{{.Names}}</td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </body>
+</html>
+
+{{end}}

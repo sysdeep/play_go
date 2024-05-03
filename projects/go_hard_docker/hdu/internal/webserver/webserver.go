@@ -38,6 +38,15 @@ func NewWebserver(docker *client.Client) *Webserver {
 		return c.Render(http.StatusOK, "hello", containers)
 	})
 
+	e.GET("/containers", func(c echo.Context) error {
+		// Получение списка запуцщенных контейнеров(docker ps)
+		containers, err := docker.ContainerList(context.Background(), container.ListOptions{All: true})
+		if err != nil {
+			panic(err)
+		}
+		return c.Render(http.StatusOK, "containers", containers)
+	})
+
 	return &Webserver{
 		e: e,
 	}
