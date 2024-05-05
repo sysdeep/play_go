@@ -1,4 +1,4 @@
-{{define "hello"}}
+{{define "main"}} {{ template "header" . }}
 
 <!-- Hello, {{.}}! -->
 
@@ -7,4 +7,5 @@
   <li>{{.ID}} {{.Image}} (status: {{.Status}})</li>
   {{end}}
 </ul>
-{{end}}
+
+{{ template "footer" . }} {{end}}

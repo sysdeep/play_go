@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"context"
+	"hdu/internal/webserver/handlers"
 	"html/template"
 	"net/http"
 
@@ -17,35 +18,28 @@ type Webserver struct {
 
 func NewWebserver(docker *client.Client) *Webserver {
 
+	template_files := makeTemplatesList("views")
+
 	t := &Template{
-		templates: template.Must(template.ParseGlob("public/views/*.html")),
+		// templates: template.Must(template.ParseGlob("views/*.html")),
+		templates: template.Must(template.ParseFiles(template_files...)),
 	}
 
 	e := echo.New()
 	e.Renderer = t
 
-	// test EP
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello")
-	})
-
-	e.GET("/hello", func(c echo.Context) error {
 		// Получение списка запуцщенных контейнеров(docker ps)
 		containers, err := docker.ContainerList(context.Background(), container.ListOptions{All: true})
 		if err != nil {
 			panic(err)
 		}
-		return c.Render(http.StatusOK, "hello", containers)
+		return c.Render(http.StatusOK, "main", containers)
 	})
 
-	e.GET("/containers", func(c echo.Context) error {
-		// Получение списка запуцщенных контейнеров(docker ps)
-		containers, err := docker.ContainerList(context.Background(), container.ListOptions{All: true})
-		if err != nil {
-			panic(err)
-		}
-		return c.Render(http.StatusOK, "containers", containers)
-	})
+	hndls := handlers.NewHandlers(docker)
+
+	e.GET("/containers", hndls.ContainersPage)
 
 	return &Webserver{
 		e: e,
