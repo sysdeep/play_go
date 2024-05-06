@@ -1,0 +1,30 @@
+{{define "volumes"}} {{ template "header" . }}
+
+<h1>Volumes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <!-- <th>Stack</th> -->
+      <th>Driver</th>
+      <th>Mount point</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{range .Volumes}}
+    <tr>
+      <td>
+        <a href="/volumes/{{.Name}}">{{.Name}}</a>
+      </td>
+      <!-- <td></td> -->
+      <td>{{ .Driver }}</td>
+      <td>{{ .Mountpoint }}</td>
+      <td>{{ .CreatedAt }}</td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+
+{{ template "footer" . }} {{end}}

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -84,8 +83,8 @@ func (h *Handlers) ContainersPage(c echo.Context) error {
 			}
 */
 func convert_container(c types.Container) containerModel {
-	fmt.Println("------------------------------")
-	fmt.Printf("%+v\n", c)
+	// fmt.Println("------------------------------")
+	// fmt.Printf("%+v\n", c)
 
 	// time format
 	unixTimeUTC := time.Unix(c.Created, 0) //gives unix time stamp in utc
