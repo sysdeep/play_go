@@ -1,12 +1,10 @@
 package webserver
 
 import (
-	"context"
+	"hdu/internal/logger"
 	"hdu/internal/webserver/handlers"
 	"html/template"
-	"net/http"
 
-	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"github.com/labstack/echo/v4"
 )
@@ -16,7 +14,7 @@ type Webserver struct {
 	// docker *client.Client
 }
 
-func NewWebserver(docker *client.Client) *Webserver {
+func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 
 	template_files := makeTemplatesList("views")
 
@@ -28,17 +26,10 @@ func NewWebserver(docker *client.Client) *Webserver {
 	e := echo.New()
 	e.Renderer = t
 
-	e.GET("/", func(c echo.Context) error {
-		// Получение списка запуцщенных контейнеров(docker ps)
-		containers, err := docker.ContainerList(context.Background(), container.ListOptions{All: true})
-		if err != nil {
-			panic(err)
-		}
-		return c.Render(http.StatusOK, "main", containers)
-	})
+	hndls := handlers.NewHandlers(docker, logger)
 
-	hndls := handlers.NewHandlers(docker)
-
+	e.GET("/", hndls.MainPage)
+	e.GET("/containers/:id", hndls.ContainerPage)
 	e.GET("/containers", hndls.ContainersPage)
 
 	return &Webserver{

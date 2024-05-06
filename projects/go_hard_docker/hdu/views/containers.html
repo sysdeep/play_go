@@ -2,7 +2,6 @@
 
 <h1>Containers</h1>
 
-
 <table>
   <thead>
     <tr>
@@ -19,15 +18,16 @@
     {{range .Containers}}
     <tr>
       <td>
-        <a href="/container/{{.ID}}">{{.Name}}</a></td>
+        <a href="/containers/{{.ID}}">{{.Name}}</a>
+      </td>
       <td>{{.State}}</td>
       <td>{{.Image}}</td>
       <td>{{.CreatedStr}}</td>
       <td></td>
       <td></td>
       <td>
-        <a href="/container/{{.ID}}/inspect">inspect</a>
-        <a href="/container/{{.ID}}/logs">logs</a>
+        <a href="/containers/{{.ID}}/inspect">inspect</a>
+        <a href="/containers/{{.ID}}/logs">logs</a>
       </td>
     </tr>
     {{end}}

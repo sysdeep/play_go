@@ -35,6 +35,6 @@ func main() {
 	}
 
 	// web server
-	web_server := webserver.NewWebserver(cli)
+	web_server := webserver.NewWebserver(cli, log)
 	web_server.Start()
 }
