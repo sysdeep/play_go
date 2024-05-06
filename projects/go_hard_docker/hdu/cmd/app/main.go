@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"hdu/internal/logger"
 	"hdu/internal/webserver"
 
 	"github.com/docker/docker/api/types/container"
@@ -10,7 +11,8 @@ import (
 )
 
 func main() {
-	fmt.Println("start")
+	log := logger.NewLogger()
+	log.Info("start")
 
 	// test docker
 
