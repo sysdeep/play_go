@@ -20,7 +20,6 @@ type volumeListModel struct {
 	CreatedAt string
 
 	// Name of the volume driver used by the volume.
-	// Required: true
 	Driver string
 
 	// User-defined key/value metadata.
@@ -28,7 +27,6 @@ type volumeListModel struct {
 	// Labels map[string]string `json:"Labels"`
 
 	// Mount path of the volume on the host.
-	// Required: true
 	Mountpoint string
 
 	// The driver specific options used when creating the volume.
@@ -66,11 +64,6 @@ func (h *Handlers) VolumesPage(c echo.Context) error {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("\n%+v\n", volumes_data)
-	// var containers []containerModel
-	// for _, c := range raw_containers {
-	// 	containers = append(containers, convert_container(c))
-	// }
 
 	var volumes []volumeListModel
 	for _, v := range volumes_data.Volumes {
@@ -85,6 +78,7 @@ func (h *Handlers) VolumesPage(c echo.Context) error {
 }
 
 func make_volume_list_model(data *volume.Volume) volumeListModel {
+	fmt.Printf("%+v\n", data)
 	return volumeListModel{
 		Name:       data.Name,
 		CreatedAt:  data.CreatedAt,

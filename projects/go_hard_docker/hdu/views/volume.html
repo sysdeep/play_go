@@ -1,0 +1,32 @@
+{{define "volume"}} {{ template "header" . }}
+
+<h1>Volume: {{ .Volume.Name }}</h1>
+
+<div>
+  <h2>Volume details</h2>
+  <div>
+    <table>
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td>{{ .Volume.Name }}</td>
+        </tr>
+        <tr>
+          <td>Created</td>
+          <td>{{ .Volume.CreatedAt }}</td>
+        </tr>
+        <tr>
+          <td>Mount path</td>
+          <td>{{ .Volume.Mountpoint }}</td>
+        </tr>
+        <tr>
+          <td>Driver</td>
+          <td>{{ .Volume.Driver }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="">Remove TODO</button>
+  </div>
+</div>
+
+{{ template "footer" . }} {{end}}

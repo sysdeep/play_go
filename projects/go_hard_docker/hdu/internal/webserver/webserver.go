@@ -7,6 +7,7 @@ import (
 
 	"github.com/docker/docker/client"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type Webserver struct {
@@ -24,6 +25,10 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	}
 
 	e := echo.New()
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
+	e.Use(middleware.Recover())
 	e.Renderer = t
 
 	hndls := handlers.NewHandlers(docker, logger)
@@ -31,6 +36,7 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	e.GET("/", hndls.MainPage)
 	e.GET("/containers/:id", hndls.ContainerPage)
 	e.GET("/containers", hndls.ContainersPage)
+	e.GET("/volumes/:name", hndls.VolumePage)
 	e.GET("/volumes", hndls.VolumesPage)
 
 	return &Webserver{
