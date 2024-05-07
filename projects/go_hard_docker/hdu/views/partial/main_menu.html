@@ -1,43 +1,10 @@
 {{define "main_menu"}}
-<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
-  <div class="container">
-    <a class="navbar-brand" href="/">Main</a>
 
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="main_menu" id="main_menu_events">
-          <a href="/containers">
-            <strong>
-              <i class="fa fa-tasks" aria-hidden="true"></i> Containers
-            </strong>
-          </a>
-        </li>
-
-        <li class="main_menu" id="main_menu_events">
-          <a href="/volumes">
-            <strong>
-              <i class="fa fa-tasks" aria-hidden="true"></i> Volumes
-            </strong>
-          </a>
-        </li>
-
-        <!--						
-                {# <li class="main_menu" id="main_menu_logs">
-                    <a href="#/logs">
-                        <strong><i class="fa fa-line-chart"></i> Логи</strong>
-                    </a>
-                </li> #}-->
-        <!-- <li class="main_menu" id="main_menu_apps"><a href="#/apps">Apps</a></li> -->
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right">
-        <!-- <li id="main_menu_about"> -->
-        <!--     <a href="/about" title="Страница информации"> -->
-        <!--         <strong><i class="fa fa-credit-card" aria-hidden="true"></i> О программе</strong> -->
-        <!--     </a> -->
-        <!-- </li> -->
-      </ul>
-    </div>
+<nav class="nav">
+  <div class="nav-left">
+    <a href="/">Main</a>
+    <a href="/containers">Containers</a>
+    <a href="/volumes">Volumes</a>
   </div>
 </nav>
 

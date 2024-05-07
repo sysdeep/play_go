@@ -25,6 +25,7 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	}
 
 	e := echo.New()
+	e.Static("/static", "public")
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
