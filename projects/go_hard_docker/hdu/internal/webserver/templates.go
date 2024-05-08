@@ -1,6 +1,7 @@
 package webserver
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"os"
@@ -26,6 +27,7 @@ func makeTemplatesList(root_path string) []string {
 	filepath.Walk(root_path, func(path string, info os.FileInfo, err error) error {
 		filename := info.Name()
 		if strings.HasSuffix(filename, ".html") {
+			fmt.Println(path)
 			all_templates = append(all_templates, path)
 		}
 		return nil

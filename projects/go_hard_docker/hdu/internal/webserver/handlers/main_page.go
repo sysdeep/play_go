@@ -36,7 +36,7 @@ func (h *Handlers) MainPage(c echo.Context) error {
 		SystemInfo:    make_system_info(sys_info),
 	}
 
-	return c.Render(http.StatusOK, "main", response)
+	return c.Render(http.StatusOK, "main.html", response)
 }
 
 // systemInfo

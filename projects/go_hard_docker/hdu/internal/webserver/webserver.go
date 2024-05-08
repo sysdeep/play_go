@@ -1,6 +1,7 @@
 package webserver
 
 import (
+	"fmt"
 	"hdu/internal/logger"
 	"hdu/internal/webserver/handlers"
 	"html/template"
@@ -18,6 +19,9 @@ type Webserver struct {
 func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 
 	template_files := makeTemplatesList("views")
+
+	qqq, _ := template.ParseFiles(template_files...)
+	fmt.Printf("%+v\n", qqq)
 
 	t := &Template{
 		// templates: template.Must(template.ParseGlob("views/*.html")),
@@ -48,6 +52,11 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	e.GET("/volumes", hndls.VolumesPage)
 	e.GET("/images/:id", hndls.ImagePage)
 	e.GET("/images", hndls.ImagesPage)
+	e.GET("/qqq", func(c echo.Context) error {
+
+		// return c.Render(200, "aaa", 0)
+		return c.Render(200, "aaa.html", 0)
+	})
 
 	return &Webserver{
 		e: e,
