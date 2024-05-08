@@ -39,6 +39,7 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	e.GET("/containers", hndls.ContainersPage)
 	e.GET("/volumes/:name", hndls.VolumePage)
 	e.GET("/volumes", hndls.VolumesPage)
+	e.GET("/images", hndls.ImagesPage)
 
 	return &Webserver{
 		e: e,
