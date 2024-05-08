@@ -25,12 +25,19 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	}
 
 	e := echo.New()
+
 	e.Static("/static", "public")
+
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
 	e.Use(middleware.Recover())
+
+	// setup custom renderer
 	e.Renderer = t
+
+	// setup custom error renderer
+	e.HTTPErrorHandler = customHTTPErrorHandler
 
 	hndls := handlers.NewHandlers(docker, logger)
 
@@ -39,6 +46,7 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	e.GET("/containers", hndls.ContainersPage)
 	e.GET("/volumes/:name", hndls.VolumePage)
 	e.GET("/volumes", hndls.VolumesPage)
+	e.GET("/images/:id", hndls.ImagePage)
 	e.GET("/images", hndls.ImagesPage)
 
 	return &Webserver{

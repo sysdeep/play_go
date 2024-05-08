@@ -28,7 +28,7 @@ func (h *Handlers) VolumePage(c echo.Context) error {
 	name := c.Param("name")
 	volume_data, err := h.docker_client.VolumeInspect(context.Background(), name)
 	if err != nil {
-		panic(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	fmt.Printf("%+v\n", volume_data)

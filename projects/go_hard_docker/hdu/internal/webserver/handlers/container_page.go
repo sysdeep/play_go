@@ -11,9 +11,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// ContainerState stores container's running state
+// containerState stores container's running state
 // it's part of ContainerJSONBase and will return by "inspect" command
-type ContainerState struct {
+type containerState struct {
 	Status string // String representation of the container state. Can be one of "created", "running", "paused", "restarting", "removing", "exited", or "dead"
 	// Running    bool
 	// Paused     bool
@@ -28,9 +28,9 @@ type ContainerState struct {
 	// Health     *Health `json:",omitempty"`
 }
 
-// MountPoint represents a mount point configuration inside the container.
+// mountPoint represents a mount point configuration inside the container.
 // This is used for reporting the mountpoints in use by a container.
-type MountPoint struct {
+type mountPoint struct {
 	// Type is the type of mount, see `Type<foo>` definitions in
 	// github.com/docker/docker/api/types/mount.Type
 	// Type mount.Type `json:",omitempty"`
@@ -72,13 +72,40 @@ type MountPoint struct {
 	// Propagation mount.Propagation
 }
 
+// основные данные о контейнере
+type containerModel struct {
+	ID      string
+	Created string
+	// Path            string
+	// Args            []string
+	// State           *ContainerState
+	Image string
+	// ResolvConfPath  string
+	// HostnamePath    string
+	// HostsPath       string
+	// LogPath         string
+	// Node            *ContainerNode `json:",omitempty"` // Node is only propagated by Docker Swarm standalone API
+	Name         string
+	RestartCount int
+	// Driver          string
+	// Platform        string
+	// MountLabel      string
+	// ProcessLabel    string
+	// AppArmorProfile string
+	// ExecIDs         []string
+	// HostConfig      *container.HostConfig
+	// GraphDriver     GraphDriverData
+	// SizeRw          *int64 `json:",omitempty"`
+	// SizeRootFs      *int64 `json:",omitempty"`
+}
+
 // Config contains the configuration data about a container.
 // It should hold only portable information about the container.
 // Here, "portable" means "independent from the host we are running on".
 // Non-portable information *should* appear in HostConfig.
 // All fields added to this struct must be marked `omitempty` to keep getting
 // predictable hashes from the old `v1Compatibility` configuration.
-type ContainerConfig struct {
+type containerConfig struct {
 	// Hostname        string              // Hostname
 	// Domainname      string              // Domainname
 	// User            string              // User that will run the command(s) inside the container, also support user:group
@@ -127,8 +154,8 @@ type PortMap map[Port][]PortBinding
 // Port is a string containing port number and protocol in the format "80/tcp"
 type Port string
 
-// EndpointSettings stores the network endpoint details
-type EndpointSettings struct {
+// networkEndpointSettings stores the network endpoint details
+type networkEndpointSettings struct {
 	// Configurations
 	// IPAMConfig *EndpointIPAMConfig
 	// Links      []string
@@ -153,44 +180,21 @@ type EndpointSettings struct {
 	// DNSNames []string
 }
 
-// NetworkSettings exposes the network settings in the api
-type NetworkSettings struct {
+// networkSettings exposes the network settings in the api
+type networkSettings struct {
 	// NetworkSettingsBase
 	Ports PortMap // Ports is a collection of PortBinding indexed by Port
 	// DefaultNetworkSettings
-	Networks map[string]EndpointSettings
+	Networks map[string]networkEndpointSettings
 }
 
 type containerPageModel struct {
-	ID      string
-	Name    string
-	Created string
-	State   ContainerState
+	Container containerModel
+	State     containerState
 
-	Mounts  []MountPoint
-	Config  ContainerConfig
-	Network NetworkSettings
-
-	// Path            string
-	// Args            []string
-	// Image           string
-	// ResolvConfPath  string
-	// HostnamePath    string
-	// HostsPath       string
-	// LogPath         string
-	// Node            *ContainerNode `json:",omitempty"` // Node is only propagated by Docker Swarm standalone API
-	// RestartCount    int
-	// Driver          string
-	// Platform        string
-	// MountLabel      string
-	// ProcessLabel    string
-	// AppArmorProfile string
-	// ExecIDs         []string
-	// HostConfig      *container.HostConfig
-	// GraphDriver     GraphDriverData
-	// SizeRw          *int64 `json:",omitempty"`
-	// SizeRootFs      *int64 `json:",omitempty"`
-
+	Mounts  []mountPoint
+	Config  containerConfig
+	Network networkSettings
 }
 
 func (h *Handlers) ContainerPage(c echo.Context) error {
@@ -198,34 +202,44 @@ func (h *Handlers) ContainerPage(c echo.Context) error {
 
 	inspect_data, err := h.docker_client.ContainerInspect(context.Background(), container_id)
 	if err != nil {
-		h.logger.Error(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	// fmt.Printf("%+v\n", inspect_data)
+	fmt.Printf("%+v\n", inspect_data)
 	// fmt.Printf("network: \n\t%+v\n", inspect_data.NetworkSettings)
 	// fmt.Printf("networks: \n\t%+v\n", inspect_data.NetworkSettings.Networks)
 
-	var mount_points []MountPoint
+	var mount_points []mountPoint
 	for _, mp := range inspect_data.Mounts {
 		mount_points = append(mount_points, make_container_mount_point_view(mp))
 	}
 
 	response := containerPageModel{
-		ID:      container_id,
-		Name:    inspect_data.Name,
-		Created: inspect_data.Created,
-		State:   make_container_state_view(inspect_data.State),
+
+		Container: make_container_model(inspect_data.ContainerJSONBase),
+		State:     make_container_state_view(inspect_data.State),
 
 		Mounts:  mount_points,
 		Config:  make_container_config_view(inspect_data.Config),
 		Network: make_network_settings_view(inspect_data.NetworkSettings),
 	}
 	// fmt.Printf("\n%+v\n", response)
+
 	return c.Render(http.StatusOK, "container", response)
 }
 
-func make_container_state_view(state *types.ContainerState) ContainerState {
-	return ContainerState{
+func make_container_model(data *types.ContainerJSONBase) containerModel {
+	return containerModel{
+		ID:           data.ID,
+		Name:         data.Name,
+		Image:        data.Image,
+		Created:      data.Created,
+		RestartCount: data.RestartCount,
+	}
+}
+
+func make_container_state_view(state *types.ContainerState) containerState {
+	return containerState{
 		Status: state.Status,
 		// Running    bool
 		// Paused     bool
@@ -240,17 +254,17 @@ func make_container_state_view(state *types.ContainerState) ContainerState {
 	}
 }
 
-func make_container_mount_point_view(point types.MountPoint) MountPoint {
+func make_container_mount_point_view(point types.MountPoint) mountPoint {
 	// fmt.Printf("\n%+v\n", point)
-	return MountPoint{
+	return mountPoint{
 		Name:        point.Name,
 		Destination: point.Destination,
 	}
 }
 
-func make_container_config_view(data *container.Config) ContainerConfig {
+func make_container_config_view(data *container.Config) containerConfig {
 	// fmt.Printf("\n%+v\n", data)
-	return ContainerConfig{
+	return containerConfig{
 		Env:        data.Env,
 		Image:      data.Image,
 		Cmd:        strings.Join(data.Cmd, " "),
@@ -258,7 +272,7 @@ func make_container_config_view(data *container.Config) ContainerConfig {
 	}
 }
 
-func make_network_settings_view(settings *types.NetworkSettings) NetworkSettings {
+func make_network_settings_view(settings *types.NetworkSettings) networkSettings {
 
 	// convert ports
 	ports_map := make(PortMap)
@@ -273,16 +287,16 @@ func make_network_settings_view(settings *types.NetworkSettings) NetworkSettings
 	}
 
 	// convert endpoints
-	networks_map := make(map[string]EndpointSettings)
+	networks_map := make(map[string]networkEndpointSettings)
 	for ep, ep_settings := range settings.Networks {
-		networks_map[ep] = EndpointSettings{
+		networks_map[ep] = networkEndpointSettings{
 			Gateway:    ep_settings.Gateway,
 			IPAddress:  ep_settings.IPAddress,
 			MacAddress: ep_settings.MacAddress,
 		}
 	}
 
-	return NetworkSettings{
+	return networkSettings{
 		Ports:    ports_map,
 		Networks: networks_map,
 	}

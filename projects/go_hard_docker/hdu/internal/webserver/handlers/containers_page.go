@@ -11,7 +11,7 @@ import (
 )
 
 // models
-type containerModel struct {
+type containerListModel struct {
 	ID          string
 	Name        string
 	Image       string
@@ -22,7 +22,7 @@ type containerModel struct {
 }
 
 type containersPageModel struct {
-	Containers []containerModel
+	Containers []containerListModel
 }
 
 // handler
@@ -30,10 +30,10 @@ func (h *Handlers) ContainersPage(c echo.Context) error {
 	// Получение списка запуцщенных контейнеров(docker ps)
 	raw_containers, err := h.docker_client.ContainerList(context.Background(), container.ListOptions{All: true})
 	if err != nil {
-		panic(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	var containers []containerModel
+	var containers []containerListModel
 	for _, c := range raw_containers {
 		containers = append(containers, convert_container(c))
 	}
@@ -82,7 +82,7 @@ func (h *Handlers) ContainersPage(c echo.Context) error {
 				]
 			}
 */
-func convert_container(c types.Container) containerModel {
+func convert_container(c types.Container) containerListModel {
 	// fmt.Println("------------------------------")
 	// fmt.Printf("%+v\n", c)
 
@@ -94,7 +94,7 @@ func convert_container(c types.Container) containerModel {
 	// fmt.Println("unix time stamp in UTC :--->",unixTimeUTC)
 	// fmt.Println("unix time stamp in unitTimeInRFC3339 format :->",unitTimeInRFC3339)
 
-	return containerModel{
+	return containerListModel{
 		ID:          c.ID,
 		Name:        c.Names[0],
 		Image:       c.Image,

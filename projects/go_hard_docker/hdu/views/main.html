@@ -2,4 +2,60 @@
 
 <!-- Hello, {{.}}! -->
 
+<div>
+  <h2>Host info</h2>
+  <table>
+    <tbody>
+      <tr>
+        <td>DaemonHost</td>
+        <td>{{ .DaemonHost }}</td>
+      </tr>
+      <tr>
+        <td>ClientVersion</td>
+        <td>{{ .ClientVersion }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <h2>Info</h2>
+  <table>
+    <tbody>
+      <tr>
+        <td>ID</td>
+        <td>{{ .SystemInfo.ID }}</td>
+      </tr>
+      <tr>
+        <td>Containers</td>
+        <td>{{ .SystemInfo.Containers }}</td>
+      </tr>
+      <tr>
+        <td>ContainersRunning</td>
+        <td>{{ .SystemInfo.ContainersRunning }}</td>
+      </tr>
+      <tr>
+        <td>ContainersPaused</td>
+        <td>{{ .SystemInfo.ContainersPaused }}</td>
+      </tr>
+      <tr>
+        <td>ContainersStopped</td>
+        <td>{{ .SystemInfo.ContainersStopped }}</td>
+      </tr>
+      <tr>
+        <td>Images</td>
+        <td>{{ .SystemInfo.Images }}</td>
+      </tr>
+      <tr>
+        <td>Driver</td>
+        <td>{{ .SystemInfo.Driver }}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 {{ template "footer" . }} {{end}}

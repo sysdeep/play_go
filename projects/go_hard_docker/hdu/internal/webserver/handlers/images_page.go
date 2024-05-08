@@ -98,7 +98,7 @@ type imagesPageModel struct {
 func (h *Handlers) ImagesPage(c echo.Context) error {
 	images_list, err := h.docker_client.ImageList(context.Background(), image.ListOptions{All: true})
 	if err != nil {
-		panic(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	var images []imageListModel

@@ -62,7 +62,7 @@ type volumesPageModel struct {
 func (h *Handlers) VolumesPage(c echo.Context) error {
 	volumes_data, err := h.docker_client.VolumeList(context.Background(), volume.ListOptions{})
 	if err != nil {
-		panic(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	var volumes []volumeListModel

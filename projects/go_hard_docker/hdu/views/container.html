@@ -7,25 +7,25 @@
   <div>
     <ul>
       <li>
-        <a href="/container/{{.ID}}/action/start">Start TODO</a>
+        <a href="/container/{{.Container.ID}}/action/start">Start TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/action/stop">Stop TODO</a>
+        <a href="/container/{{.Container.ID}}/action/stop">Stop TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/action/kill">Kill TODO</a>
+        <a href="/container/{{.Container.ID}}/action/kill">Kill TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/action/restart">Restart TODO</a>
+        <a href="/container/{{.Container.ID}}/action/restart">Restart TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/action/pause">Pause TODO</a>
+        <a href="/container/{{.Container.ID}}/action/pause">Pause TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/action/resume">Resume TODO</a>
+        <a href="/container/{{.Container.ID}}/action/resume">Resume TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/action/remove">Remove TODO</a>
+        <a href="/container/{{.Container.ID}}/action/remove">Remove TODO</a>
       </li>
     </ul>
   </div>
@@ -38,11 +38,11 @@
       <tbody>
         <tr>
           <td>ID</td>
-          <td>{{.ID}}</td>
+          <td>{{ .Container.ID}}</td>
         </tr>
         <tr>
           <td>Name</td>
-          <td>{{.Name}}</td>
+          <td>{{.Container.Name}}</td>
         </tr>
         <tr>
           <td>Ip address</td>
@@ -54,11 +54,15 @@
         </tr>
         <tr>
           <td>Created</td>
-          <td>{{.Created}}</td>
+          <td>{{ .Container.Created }}</td>
         </tr>
         <tr>
           <td>Start time</td>
           <td>{{.State.StartedAt}}</td>
+        </tr>
+        <tr>
+          <td>RestartCount</td>
+          <td>{{ .Container.RestartCount }}</td>
         </tr>
       </tbody>
     </table>
@@ -66,19 +70,19 @@
   <div>
     <ul>
       <li>
-        <a href="/container/{{.ID}}/logs">Logs TODO</a>
+        <a href="/container/{{ .Container.ID }}/logs">Logs TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/inspect">Inspect TODO</a>
+        <a href="/container/{{ .Container.ID }}/inspect">Inspect TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/stats">Stats TODO</a>
+        <a href="/container/{{ .Container.ID }}/stats">Stats TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/console">Console TODO</a>
+        <a href="/container/{{ .Container.ID }}/console">Console TODO</a>
       </li>
       <li>
-        <a href="/container/{{.ID}}/attach">Attach TODO</a>
+        <a href="/container/{{ .Container.ID }}/attach">Attach TODO</a>
       </li>
     </ul>
   </div>
@@ -92,7 +96,8 @@
         <tr>
           <td>Image</td>
           <td>
-            <a href="TODO">{{ .Config.Image }}</a>
+            <a href="/images/{{ .Container.Image }}">{{ .Config.Image }}</a>
+            {{ .Container.Image }}
           </td>
         </tr>
         <tr>
