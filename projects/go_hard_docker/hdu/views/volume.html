@@ -1,4 +1,5 @@
-{{define "volume"}} {{ template "header" . }}
+{{ template "base" . }}
+{{define "content"}} 
 
 <h1>Volume: {{ .Volume.Name }}</h1>
 
@@ -29,4 +30,4 @@
   </div>
 </div>
 
-{{ template "footer" . }} {{end}}
+{{end}}

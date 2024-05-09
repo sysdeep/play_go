@@ -158,7 +158,7 @@ func (h *Handlers) ImagePage(c echo.Context) error {
 
 	// fmt.Printf("%+v\n", response)
 
-	return c.Render(http.StatusOK, "image", response)
+	return c.Render(http.StatusOK, "image.html", response)
 }
 
 func make_image_history_model(data image.HistoryResponseItem) imageHistoryModel {

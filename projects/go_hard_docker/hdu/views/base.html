@@ -14,21 +14,26 @@
     <meta name="copyright" content="Dune" />
 
     <link rel="stylesheet" href="/static/vendors/chota/chota.min.css" />
-    <link rel="stylesheet" href="/static/css/chota/chota.min.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
 
     <title>Dokcer hard manager</title>
   </head>
 
   <body>
     <div class="container">
-      <div>{{ template "main_menu" . }}</div>
+      <nav class="nav">
+        <div class="nav-left">
+          <a href="/">Main</a>
+          <a href="/containers">Containers</a>
+          <a href="/images">Images</a>
+          <a href="/volumes">Volumes</a>
+        </div>
+      </nav>
+
       BASE
       <div>{{ block "content" .}}{{ end }}</div>
 
-      <div>
-        <hr />
-        {{ template "footer" . }}
-      </div>
+      
     </div>
   </body>
 </html>

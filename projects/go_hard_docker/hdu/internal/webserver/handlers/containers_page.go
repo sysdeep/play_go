@@ -42,7 +42,7 @@ func (h *Handlers) ContainersPage(c echo.Context) error {
 		Containers: containers,
 	}
 
-	return c.Render(http.StatusOK, "containers", response)
+	return c.Render(http.StatusOK, "containers.html", response)
 }
 
 /*

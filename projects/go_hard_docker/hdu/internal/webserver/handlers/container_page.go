@@ -225,7 +225,7 @@ func (h *Handlers) ContainerPage(c echo.Context) error {
 	}
 	// fmt.Printf("\n%+v\n", response)
 
-	return c.Render(http.StatusOK, "container", response)
+	return c.Render(http.StatusOK, "container.html", response)
 }
 
 func make_container_model(data *types.ContainerJSONBase) containerModel {

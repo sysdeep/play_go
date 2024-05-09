@@ -110,7 +110,7 @@ func (h *Handlers) ImagesPage(c echo.Context) error {
 		Images: images,
 	}
 
-	return c.Render(http.StatusOK, "images", response)
+	return c.Render(http.StatusOK, "images.html", response)
 }
 
 // make model

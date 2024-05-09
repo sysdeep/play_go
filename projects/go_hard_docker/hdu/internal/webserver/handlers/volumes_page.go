@@ -74,7 +74,7 @@ func (h *Handlers) VolumesPage(c echo.Context) error {
 		Volumes: volumes,
 	}
 
-	return c.Render(http.StatusOK, "volumes", response)
+	return c.Render(http.StatusOK, "volumes.html", response)
 }
 
 func make_volume_list_model(data *volume.Volume) volumeListModel {

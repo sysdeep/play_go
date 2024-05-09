@@ -37,7 +37,7 @@ func (h *Handlers) VolumePage(c echo.Context) error {
 		Volume: make_volume_model(&volume_data),
 	}
 
-	return c.Render(http.StatusOK, "volume", response)
+	return c.Render(http.StatusOK, "volume.html", response)
 }
 
 func make_volume_model(data *volume.Volume) volumeModel {
