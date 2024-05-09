@@ -72,10 +72,10 @@ type systemInfo struct {
 	// CgroupDriver       string
 	// CgroupVersion      string `json:",omitempty"`
 	// NEventsListener    int
-	// KernelVersion      string
-	// OperatingSystem    string
-	// OSVersion          string
-	// OSType             string
+	KernelVersion   string
+	OperatingSystem string
+	OSVersion       string
+	OSType          string
 	// Architecture       string
 	// IndexServerAddress string
 	// RegistryConfig     *registry.ServiceConfig
@@ -126,5 +126,9 @@ func make_system_info(data system.Info) systemInfo {
 		ContainersStopped: data.ContainersStopped,
 		Images:            data.Images,
 		Driver:            data.Driver,
+		KernelVersion:     data.KernelVersion,
+		OperatingSystem:   data.OperatingSystem,
+		OSVersion:         data.OSVersion,
+		OSType:            data.OSType,
 	}
 }
