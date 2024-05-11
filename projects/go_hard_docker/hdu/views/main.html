@@ -18,29 +18,6 @@
       </table>
     </div>
     <div class="col">
-      <div>
-        <h3>Containers</h3>
-        <hr />
-        <i class="fa fa-stop" aria-hidden="true"></i>
-        <hr />
-        <table>
-          <tbody>
-            <tr>
-              <td>total</td>
-              <td>{{ .SystemInfo.Containers }}</td>
-            </tr>
-            <tr>
-              <td>running</td>
-              <td>{{ .SystemInfo.ContainersRunning }}</td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-stop" aria-hidden="true"></i> stopped</td>
-              <td>{{ .SystemInfo.ContainersStopped }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
       <h2>Info</h2>
       <table>
         <tbody>
@@ -49,7 +26,10 @@
             <td>{{ .SystemInfo.ID }}</td>
           </tr>
           <tr>
-            <td><i class="fa fa-cubes" aria-hidden="true"></i> Containers</td>
+            <td>
+              <i class="fa fa-cubes" aria-hidden="true"></i>
+              <a href="/containers">Containers</a>
+            </td>
             <td class="text-right">
               <span style="margin-left: 2rem" title="total">
                 <i class="fa fa-cubes" aria-hidden="true"></i>
@@ -70,22 +50,6 @@
             </td>
           </tr>
           <tr>
-            <td>Containers</td>
-            <td>{{ .SystemInfo.Containers }}</td>
-          </tr>
-          <tr>
-            <td>ContainersRunning</td>
-            <td>{{ .SystemInfo.ContainersRunning }}</td>
-          </tr>
-          <tr>
-            <td>ContainersPaused</td>
-            <td>{{ .SystemInfo.ContainersPaused }}</td>
-          </tr>
-          <tr>
-            <td>ContainersStopped</td>
-            <td>{{ .SystemInfo.ContainersStopped }}</td>
-          </tr>
-          <tr>
             <td>Images</td>
             <td>{{ .SystemInfo.Images }}</td>
           </tr>
@@ -94,20 +58,10 @@
             <td>{{ .SystemInfo.Driver }}</td>
           </tr>
           <tr>
-            <td>KernelVersion</td>
-            <td>{{ .SystemInfo.KernelVersion }}</td>
-          </tr>
-          <tr>
             <td>OperatingSystem</td>
-            <td>{{ .SystemInfo.OperatingSystem }}</td>
-          </tr>
-          <tr>
-            <td>OSVersion</td>
-            <td>{{ .SystemInfo.OSVersion }}</td>
-          </tr>
-          <tr>
-            <td>OSType</td>
-            <td>{{ .SystemInfo.OSType }}</td>
+            <td class="text-right">
+              {{ .SystemInfo.OperatingSystem }}({{ .SystemInfo.KernelVersion }})
+            </td>
           </tr>
           <tr>
             <td></td>

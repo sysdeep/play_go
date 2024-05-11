@@ -14,7 +14,10 @@
     <meta name="copyright" content="Dune" />
 
     <link rel="stylesheet" href="/static/vendors/chota/chota.min.css" />
-    <link rel="stylesheet" href="/static/vendors/font-awesome4/css/font-awesome.min.css" />
+    <link
+      rel="stylesheet"
+      href="/static/vendors/font-awesome4/css/font-awesome.min.css"
+    />
     <link rel="stylesheet" href="/static/css/style.css" />
 
     <title>Dokcer hard manager</title>
@@ -25,15 +28,16 @@
       <nav class="nav">
         <div class="nav-left">
           <a href="/">Main</a>
-          <a href="/containers">Containers</a>
+          <a href="/containers">
+            <i class="fa fa-cubes" aria-hidden="true"></i>
+            Containers
+          </a>
           <a href="/images">Images</a>
           <a href="/volumes">Volumes</a>
         </div>
       </nav>
 
       <div>{{ block "content" .}}{{ end }}</div>
-
-      
     </div>
   </body>
 </html>
