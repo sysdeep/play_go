@@ -19,3 +19,12 @@
   --color-primary: #da1d50; /* brand color */
   --grid-maxWidth: 120rem; /* max container width 1080px */
 }
+
+span.ml-2 {
+  margin-left: 2rem;
+}
+
+table.table-small td,
+th {
+  padding: 0.25rem 0.25rem;
+}

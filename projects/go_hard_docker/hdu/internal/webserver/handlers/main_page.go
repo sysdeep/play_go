@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/docker/docker/api/types/swarm"
 	"github.com/docker/docker/api/types/system"
 	"github.com/labstack/echo/v4"
 )
@@ -29,6 +30,9 @@ func (h *Handlers) MainPage(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
+
+	// NOTE: for debug
+	// utils.PrintAsJson(sys_info)
 
 	response := mainPageModel{
 		DaemonHost:    h.docker_client.DaemonHost(),
@@ -79,20 +83,20 @@ type systemInfo struct {
 	// Architecture       string
 	// IndexServerAddress string
 	// RegistryConfig     *registry.ServiceConfig
-	// NCPU               int
-	// MemTotal           int64
+	NCPU     int
+	MemTotal int64
 	// GenericResources   []swarm.GenericResource
 	// DockerRootDir      string
 	// HTTPProxy          string `json:"HttpProxy"`
 	// HTTPSProxy         string `json:"HttpsProxy"`
 	// NoProxy            string
-	// Name               string
+	Name string
 	// Labels             []string
 	// ExperimentalBuild  bool
-	// ServerVersion      string
+	ServerVersion string // docker engine server version
 	// Runtimes           map[string]RuntimeWithStatus
-	// DefaultRuntime     string
-	// Swarm              swarm.Info
+	DefaultRuntime string // runc
+	Swarm          swarmInfo
 	// // LiveRestoreEnabled determines whether containers should be kept
 	// // running when the daemon is shutdown or upon daemon start if
 	// // running containers are detected
@@ -104,7 +108,7 @@ type systemInfo struct {
 	// InitCommit          Commit
 	// SecurityOptions     []string
 	// ProductLicense      string               `json:",omitempty"`
-	// DefaultAddressPools []NetworkAddressPool `json:",omitempty"`
+	DefaultAddressPools []networkAddressPool
 	// CDISpecDirs         []string
 	//
 	// // Legacy API fields for older API versions.
@@ -117,18 +121,61 @@ type systemInfo struct {
 	// Warnings []string
 }
 
+// NetworkAddressPool is a temp struct used by [Info] struct.
+type networkAddressPool struct {
+	Base string
+	Size int
+}
+
+// Info represents generic information about swarm.
+type swarmInfo struct {
+	NodeID   string
+	NodeAddr string
+
+	// LocalNodeState   LocalNodeState
+	// ControlAvailable bool
+	// Error            string
+	//
+	// RemoteManagers []Peer
+	// Nodes          int `json:",omitempty"`
+	// Managers       int `json:",omitempty"`
+	//
+	// Cluster *ClusterInfo `json:",omitempty"`
+	//
+	// Warnings []string `json:",omitempty"`
+}
+
+func make_swarm_info(data swarm.Info) swarmInfo {
+	return swarmInfo{
+		NodeID:   data.NodeID,
+		NodeAddr: data.NodeAddr,
+	}
+}
+
 func make_system_info(data system.Info) systemInfo {
+	var network_pool []networkAddressPool
+	for _, np := range data.DefaultAddressPools {
+		network_pool = append(network_pool, networkAddressPool{Base: np.Base, Size: np.Size})
+	}
+
 	return systemInfo{
-		ID:                data.ID,
-		Containers:        data.Containers,
-		ContainersRunning: data.ContainersRunning,
-		ContainersPaused:  data.ContainersPaused,
-		ContainersStopped: data.ContainersStopped,
-		Images:            data.Images,
-		Driver:            data.Driver,
-		KernelVersion:     data.KernelVersion,
-		OperatingSystem:   data.OperatingSystem,
-		OSVersion:         data.OSVersion,
-		OSType:            data.OSType,
+		ID:                  data.ID,
+		Containers:          data.Containers,
+		ContainersRunning:   data.ContainersRunning,
+		ContainersPaused:    data.ContainersPaused,
+		ContainersStopped:   data.ContainersStopped,
+		Images:              data.Images,
+		Driver:              data.Driver,
+		KernelVersion:       data.KernelVersion,
+		OperatingSystem:     data.OperatingSystem,
+		OSVersion:           data.OSVersion,
+		OSType:              data.OSType,
+		NCPU:                data.NCPU,
+		MemTotal:            data.MemTotal,
+		DefaultAddressPools: network_pool,
+		DefaultRuntime:      data.DefaultRuntime,
+		ServerVersion:       data.ServerVersion,
+		Name:                data.Name,
+		Swarm:               make_swarm_info(data.Swarm),
 	}
 }
