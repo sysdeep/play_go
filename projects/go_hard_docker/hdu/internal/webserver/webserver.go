@@ -56,6 +56,15 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	// images
 	e.GET("/images/:id", hndls.ImagePage)
 	e.GET("/images", hndls.ImagesPage)
+
+	// networks
+	e.GET("/networks", hndls.NetworksPage)
+
+	// configs
+	e.GET("/configs", hndls.ConfigsPage)
+
+	// secrets
+	e.GET("/secrets", hndls.SecretsPage)
 	// e.GET("/qqq", func(c echo.Context) error {
 
 	// 	// return c.Render(200, "aaa", 0)

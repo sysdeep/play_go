@@ -1,0 +1,51 @@
+{{ template "base" . }} {{define "content"}}
+
+<h1>
+  <i class="fa fa-inbox" aria-hidden="true"></i>
+  Configs
+</h1>
+
+TODO
+
+<!-- actions -->
+<div>
+  <a href="/configs/actions/prune" class="button error">
+    <i class="fa fa-trash-o" aria-hidden="true"></i>
+    Prune
+  </a>
+</div>
+
+<table class="table-small">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Stack</th>
+      <th>Driver</th>
+      <!-- <th>Mount point</th> -->
+      <th>Created</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{range .Configs}}
+    <tr>
+      <td>
+        <a href="/networks/{{.Name}}">{{.Name}}</a>
+      </td>
+      <td>{{ .StackName }}</td>
+      <td>{{ .Driver }}</td>
+      <!-- <td>{{ .Mountpoint }}</td> -->
+      <td>{{ .CreatedAt }}</td>
+      <td>
+        <a href="/volumes/actions/remove/{{ .Name }}" class="button1 error">
+          <i class="fa fa-trash-o" aria-hidden="true"></i>
+          Remove
+        </a>
+      </td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+
+<div>Total: {{ .Total }}</div>
+{{end}}

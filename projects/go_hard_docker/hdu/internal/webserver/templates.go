@@ -54,6 +54,9 @@ func NewTemplater() *Templater {
 		"containers.html",
 		"image.html",
 		"images.html",
+		"networks.html",
+		"configs.html",
+		"secrets.html",
 	}
 
 	for _, name := range from_base_templates {
