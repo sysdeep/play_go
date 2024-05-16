@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
+	"sort"
 
 	"github.com/docker/docker/api/types/volume"
 	"github.com/labstack/echo/v4"
@@ -52,10 +52,12 @@ type volumeListModel struct {
 	// usage data
 	// UsageData *UsageData `json:"UsageData,omitempty"`
 
+	StackName string
 }
 
 type volumesPageModel struct {
 	Volumes []volumeListModel
+	Total   int
 }
 
 // handler
@@ -70,19 +72,38 @@ func (h *Handlers) VolumesPage(c echo.Context) error {
 		volumes = append(volumes, make_volume_list_model(v))
 	}
 
+	sort.SliceStable(volumes, func(i, j int) bool {
+		return volumes[i].Name < volumes[j].Name
+	})
+
 	response := volumesPageModel{
 		Volumes: volumes,
+		Total:   len(volumes),
 	}
 
 	return c.Render(http.StatusOK, "volumes.html", response)
 }
 
+const volume_stack_label = "com.docker.stack.namespace"
+
 func make_volume_list_model(data *volume.Volume) volumeListModel {
-	fmt.Printf("%+v\n", data)
+	// fmt.Printf("%+v\n", data)
+	// utils.PrintAsJson(data)
+
+	// if data.Name == "portainer_data" {
+	// 	utils.PrintAsJson(data)
+	// }
+
+	stack_name := ""
+	if stack_name_labeled, ok := data.Labels[volume_stack_label]; ok {
+		stack_name = stack_name_labeled
+	}
+
 	return volumeListModel{
 		Name:       data.Name,
 		CreatedAt:  data.CreatedAt,
 		Driver:     data.Driver,
 		Mountpoint: data.Mountpoint,
+		StackName:  stack_name,
 	}
 }

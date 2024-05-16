@@ -18,9 +18,10 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 		Message: err.Error(),
 	}
 
-	if err := c.Render(http.StatusOK, "error.html", response); err != nil {
-		c.Logger().Error(err)
-	}
+	c.Render(http.StatusOK, "error.html", response)
+	// if err := c.Render(http.StatusOK, "error.html", response); err != nil {
+	// c.Logger().Error(err)
+	// }
 
 	// errorPage := fmt.Sprintf("%d.html", code)
 	// if err := c.File(errorPage); err != nil {

@@ -13,6 +13,12 @@
 - https://echo.labstack.com/docs
 - https://pkg.go.dev/github.com/docker/docker/client#section-readme
 - https://jenil.github.io/chota
+- https://prettier.io/docs/en/options
+
+### favicon
+
+- https://habr.com/ru/companies/htmlacademy/articles/578224/
+- https://favicon.io/
 
 ## Packages
 

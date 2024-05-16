@@ -24,6 +24,9 @@ span.ml-2 {
   margin-left: 2rem;
 }
 
+.mr-1 {
+  margin-right: 1rem;
+}
 table.table-small td,
 th {
   padding: 0.25rem 0.25rem;

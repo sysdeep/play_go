@@ -1,7 +1,10 @@
-{{ template "base" . }}
-{{define "content"}} 
+{{ template "base" . }} {{define "content"}}
 
-<h1>Volume: {{ .Volume.Name }}</h1>
+<h1>
+  <i class="fa fa-folder" aria-hidden="true"></i>
+
+  Volume: {{ .Volume.Name }}
+</h1>
 
 <div>
   <h2>Volume details</h2>
@@ -26,7 +29,13 @@
         </tr>
       </tbody>
     </table>
-    <button type="">Remove TODO</button>
+
+    <div>
+      <a href="/volumes/actions/remove/{{ .Volume.Name }}" class="button error">
+        <i class="fa fa-trash-o" aria-hidden="true"></i>
+        Remove
+      </a>
+    </div>
   </div>
 </div>
 

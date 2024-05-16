@@ -60,7 +60,7 @@ func NewTemplater() *Templater {
 		tpls[name] = template.Must(template.Must(base_template.Clone()).ParseFiles("./views/" + name))
 	}
 
-	tpls["error.html"] = template.Must(template.ParseFiles("./views/error.html"))
+	tpls["error.html"] = template.Must(template.New("error").ParseFiles("./views/error.html"))
 
 	return &Templater{
 		tts: tpls,

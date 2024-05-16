@@ -46,8 +46,14 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	e.GET("/", hndls.MainPage)
 	e.GET("/containers/:id", hndls.ContainerPage)
 	e.GET("/containers", hndls.ContainersPage)
+
+	// volumes
 	e.GET("/volumes/:name", hndls.VolumePage)
+	e.GET("/volumes/actions/prune", hndls.ActionVolumesPrune)
+	e.GET("/volumes/actions/remove/:name", hndls.ActionVolumeRemove)
 	e.GET("/volumes", hndls.VolumesPage)
+
+	// images
 	e.GET("/images/:id", hndls.ImagePage)
 	e.GET("/images", hndls.ImagesPage)
 	// e.GET("/qqq", func(c echo.Context) error {
