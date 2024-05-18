@@ -57,6 +57,7 @@ func NewTemplater() *Templater {
 		"networks.html",
 		"configs.html",
 		"secrets.html",
+		"secret.html",
 	}
 
 	for _, name := range from_base_templates {

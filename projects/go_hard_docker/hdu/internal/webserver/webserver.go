@@ -64,6 +64,7 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	e.GET("/configs", hndls.ConfigsPage)
 
 	// secrets
+	e.GET("/secrets/:id", hndls.SecretPage)
 	e.GET("/secrets", hndls.SecretsPage)
 	// e.GET("/qqq", func(c echo.Context) error {
 
