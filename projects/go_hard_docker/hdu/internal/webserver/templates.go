@@ -47,17 +47,18 @@ func NewTemplater() *Templater {
 	base_template := template.Must(template.New("base_template").ParseFiles("./views/base.html"))
 
 	from_base_templates := []string{
-		"main.html",
-		"volume.html",
-		"volumes.html",
+		"config.html",
+		"configs.html",
 		"container.html",
 		"containers.html",
 		"image.html",
 		"images.html",
+		"main.html",
 		"networks.html",
-		"configs.html",
-		"secrets.html",
 		"secret.html",
+		"secrets.html",
+		"volume.html",
+		"volumes.html",
 	}
 
 	for _, name := range from_base_templates {
