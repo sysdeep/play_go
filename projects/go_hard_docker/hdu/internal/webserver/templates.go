@@ -54,6 +54,7 @@ func NewTemplater() *Templater {
 		"image.html",
 		"images.html",
 		"main.html",
+		"network.html",
 		"networks.html",
 		"secret.html",
 		"secrets.html",

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"hdu/internal/utils"
 	"net/http"
 	"sort"
 
@@ -60,7 +59,7 @@ func (h *Handlers) NetworksPage(c echo.Context) error {
 }
 
 func make_nerwork_list_model(model types.NetworkResource) networkListModel {
-	utils.PrintAsJson(model)
+	// utils.PrintAsJson(model)
 	return networkListModel{
 		ID:      model.ID,
 		Name:    model.Name,

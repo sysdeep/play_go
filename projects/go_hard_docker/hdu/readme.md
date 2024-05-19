@@ -14,6 +14,7 @@
 - https://pkg.go.dev/github.com/docker/docker/client#section-readme
 - https://jenil.github.io/chota
 - https://prettier.io/docs/en/options
+- https://vonheikemen.github.io/devlog/tools/how-to-survive-without-multiple-cursors-in-vim/
 
 ### favicon
 

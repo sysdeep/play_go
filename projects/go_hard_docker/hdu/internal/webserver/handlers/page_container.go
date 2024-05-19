@@ -166,7 +166,7 @@ type networkEndpointSettings struct {
 	// generated address).
 	MacAddress string
 	// Operational data
-	// NetworkID           string
+	NetworkID string
 	// EndpointID          string
 	Gateway   string
 	IPAddress string
@@ -277,7 +277,7 @@ func make_network_settings_view(settings *types.NetworkSettings) networkSettings
 	// convert ports
 	ports_map := make(PortMap)
 	for key, value := range settings.Ports {
-		fmt.Println(key, value)
+		// fmt.Println(key, value)
 
 		var ports []PortBinding
 		for _, pb := range value {
@@ -293,6 +293,7 @@ func make_network_settings_view(settings *types.NetworkSettings) networkSettings
 			Gateway:    ep_settings.Gateway,
 			IPAddress:  ep_settings.IPAddress,
 			MacAddress: ep_settings.MacAddress,
+			NetworkID:  ep_settings.NetworkID,
 		}
 	}
 

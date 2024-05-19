@@ -1,5 +1,4 @@
-{{ template "base" . }}
-{{define "content"}} 
+{{ template "base" . }} {{define "content"}}
 
 <h1>Container</h1>
 
@@ -190,7 +189,7 @@
       <tbody>
         {{ range $endpoint, $ep_settings := .Network.Networks }}
         <tr>
-          <td>{{ $endpoint }}</td>
+          <td><a href="/networks/{{ $ep_settings.NetworkID }}">{{ $endpoint }}</a></td>
           <td>{{ $ep_settings.IPAddress }}</td>
           <td>{{ $ep_settings.Gateway }}</td>
           <td>{{ $ep_settings.MacAddress }}</td>

@@ -58,10 +58,12 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	e.GET("/images", hndls.ImagesPage)
 
 	// networks
+	e.GET("/networks/:id", hndls.NetworkPage)
 	e.GET("/networks", hndls.NetworksPage)
 
 	// configs
 	e.GET("/configs/:id", hndls.ConfigPage)
+	e.GET("/configs/actions/remove/:id", hndls.ActionConfigRemove)
 	e.GET("/configs", hndls.ConfigsPage)
 
 	// secrets
