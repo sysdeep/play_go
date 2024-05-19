@@ -60,6 +60,7 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	// networks
 	e.GET("/networks/:id", hndls.NetworkPage)
 	e.GET("/networks", hndls.NetworksPage)
+	e.GET("/networks/actions/remove/:id", hndls.ActionNetworkRemove)
 
 	// configs
 	e.GET("/configs/:id", hndls.ConfigPage)
@@ -68,6 +69,7 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 
 	// secrets
 	e.GET("/secrets/:id", hndls.SecretPage)
+	e.GET("/secrets/actions/remove/:name", hndls.ActionSecretRemove)
 	e.GET("/secrets", hndls.SecretsPage)
 	// e.GET("/qqq", func(c echo.Context) error {
 

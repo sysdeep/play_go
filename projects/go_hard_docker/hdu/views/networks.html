@@ -20,7 +20,7 @@
       <th>Driver</th>
       <!-- <th>Mount point</th> -->
       <th>Created</th>
-      <!-- <th>Options</th> -->
+      <th>Options</th>
     </tr>
   </thead>
   <tbody>
@@ -32,12 +32,12 @@
       <td>{{ .Driver }}</td>
       <!-- <td>{{ .Name }}</td> -->
       <td>{{ .Created }}</td>
-      <!-- <td> -->
-      <!--   <a href="/networks/actions/remove/{{ .Name }}" class="button1 error"> -->
-      <!--     <i class="fa fa-trash-o" aria-hidden="true"></i> -->
-      <!--     Remove -->
-      <!--   </a> -->
-      <!-- </td> -->
+      <td>
+        <a href="/networks/actions/remove/{{ .Name }}" class="button1 error">
+          <i class="fa fa-trash-o" aria-hidden="true"></i>
+          Remove
+        </a>
+      </td>
     </tr>
     {{end}}
   </tbody>
