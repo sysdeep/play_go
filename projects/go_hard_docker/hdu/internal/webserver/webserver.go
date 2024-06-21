@@ -55,6 +55,7 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 
 	// images
 	e.GET("/images/:id", hndls.ImagePage)
+	e.GET("/images/actions/remove/:id", hndls.ActionImageRemove)
 	e.GET("/images", hndls.ImagesPage)
 
 	// networks

@@ -9,6 +9,7 @@
       <th>Tags</th>
       <th>Size</th>
       <th>Created</th>
+      <th>Options</th>
     </tr>
   </thead>
   <tbody>
@@ -28,9 +29,17 @@
       </td>
       <td>{{ .Size }}</td>
       <td>{{ .Created }}</td>
+      <td>
+        <a href="/images/actions/remove/{{ .ID }}" class="button1 error">
+          <i class="fa fa-trash-o" aria-hidden="true"></i>
+          Remove
+        </a>
+      </td>
     </tr>
     {{ end }}
   </tbody>
 </table>
+
+<div>Total: {{ .Total }}</div>
 
 {{end}}

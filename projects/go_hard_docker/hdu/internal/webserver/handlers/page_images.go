@@ -88,6 +88,7 @@ type imageListModel struct {
 
 type imagesPageModel struct {
 	Images []imageListModel
+	Total  int
 }
 
 // handler
@@ -104,6 +105,7 @@ func (h *Handlers) ImagesPage(c echo.Context) error {
 
 	response := imagesPageModel{
 		Images: images,
+		Total:  len(images),
 	}
 
 	return c.Render(http.StatusOK, "images.html", response)
