@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/docker/docker/api/types/image"
 	"github.com/labstack/echo/v4"
@@ -21,11 +21,7 @@ type imageListModel struct {
 	// Required: true
 	Containers int64 `json:"Containers"`
 
-	// Date and time at which the image was created as a Unix timestamp
-	// (number of seconds sinds EPOCH).
-	//
-	// Required: true
-	Created int64 `json:"Created"`
+	Created string
 
 	// ID is the content-addressable ID of an image.
 	//
@@ -115,10 +111,14 @@ func (h *Handlers) ImagesPage(c echo.Context) error {
 
 // make model
 func make_image_list_model(data image.Summary) imageListModel {
-	fmt.Printf("\n%+v\n", data)
+	// fmt.Printf("\n%+v\n", data)
+
+	created_time := time.Unix(data.Created, 0)
+	created_string := created_time.Format("2006-01-02 15:04:05")
+
 	return imageListModel{
 		Containers: data.Containers,
-		Created:    data.Created,
+		Created:    created_string,
 		ID:         data.ID,
 		RepoTags:   data.RepoTags,
 		Size:       data.Size,

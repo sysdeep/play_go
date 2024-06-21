@@ -1,16 +1,25 @@
-{{ template "base" . }}
-{{define "content"}} 
+{{ template "base" . }} {{define "content"}}
 
 <h1>Image</h1>
 
 <div>
   <h2>Image details</h2>
   <div>
-    <table>
+    <table class="table-small">
       <tbody>
         <tr>
           <td>ID</td>
           <td>{{ .Image.ID }}</td>
+        </tr>
+        <tr>
+          <td>Tags</td>
+          <td>
+            {{ range .Image.RepoTags }}
+            <ul class="table-ui">
+              <li>{{ . }}</li>
+            </ul>
+            {{ end }}
+          </td>
         </tr>
         <tr>
           <td>Parent</td>
@@ -19,14 +28,6 @@
         <tr>
           <td>Comment</td>
           <td>{{ .Image.Comment }}</td>
-        </tr>
-        <tr>
-          <td>Tags</td>
-          <td>
-            {{ range .Image.RepoTags }}
-            <span>{{ . }}</span>
-            {{ end }}
-          </td>
         </tr>
         <tr>
           <td>Size</td>
@@ -43,8 +44,28 @@
 </div>
 
 <div>
+  <h2>Containers</h2>
+  <table class="table-small">
+    <thead>
+      <tr>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ range .Containers }}
+      <tr>
+        <td>
+          <a href="/containers/{{ .ID }}">{{ .Name }}</a>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+
+<div>
   <h2>History</h2>
-  <table>
+  <table class="table-small">
     <thead>
       <tr>
         <th>ID</th>

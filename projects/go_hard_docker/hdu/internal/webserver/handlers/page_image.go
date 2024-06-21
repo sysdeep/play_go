@@ -2,17 +2,23 @@ package handlers
 
 import (
 	"context"
-	"fmt"
+	"hdu/internal/utils"
 	"net/http"
+	"time"
 
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/image"
 	"github.com/labstack/echo/v4"
 )
 
-// TODO: used by containers
-
 // models
+
+type imageContainerModel struct {
+	ID   string
+	Name string
+}
+
 type imageModel struct {
 	// holds digests of image manifests that reference the image.
 	ID string
@@ -96,6 +102,7 @@ type imageModel struct {
 	//
 	// This information is local to the daemon, and not part of the image itself.
 	// Metadata image.Metadata
+
 }
 
 type imageHistoryModel struct {
@@ -104,9 +111,7 @@ type imageHistoryModel struct {
 	// Required: true
 	// Comment string `json:"Comment"`
 
-	// created
-	// Required: true
-	Created int64
+	Created string
 
 	// created by
 	// Required: true
@@ -126,8 +131,9 @@ type imageHistoryModel struct {
 }
 
 type imagePageModel struct {
-	Image   imageModel
-	History []imageHistoryModel
+	Image      imageModel
+	History    []imageHistoryModel
+	Containers []imageContainerModel
 }
 
 // handler
@@ -144,16 +150,21 @@ func (h *Handlers) ImagePage(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	fmt.Printf("%+v\n", image_inspect)
+	raw_containers, err := h.docker_client.ContainerList(context.Background(), container.ListOptions{All: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
 
 	var history []imageHistoryModel
 	for _, h := range history_data {
 		history = append(history, make_image_history_model(h))
 	}
 
+	image_model := make_image_model(image_inspect)
 	response := imagePageModel{
-		Image:   make_image_model(image_inspect),
-		History: history,
+		Image:      image_model,
+		History:    history,
+		Containers: make_image_containers(image_model, raw_containers),
 	}
 
 	// fmt.Printf("%+v\n", response)
@@ -162,21 +173,40 @@ func (h *Handlers) ImagePage(c echo.Context) error {
 }
 
 func make_image_history_model(data image.HistoryResponseItem) imageHistoryModel {
+
+	created_time := time.Unix(data.Created, 0)
+	created_string := created_time.Format(utils.TIME_LAYOUT)
 	return imageHistoryModel{
 		ID:      data.ID,
-		Created: data.Created,
+		Created: created_string,
 		Size:    data.Size,
 		Tags:    data.Tags,
 	}
 }
 
 func make_image_model(data types.ImageInspect) imageModel {
+
+	created_time, _ := time.Parse(time.RFC3339Nano, data.Created)
+	created_string := created_time.Format(utils.TIME_LAYOUT)
+
 	return imageModel{
 		ID:       data.ID,
 		Size:     data.Size,
 		RepoTags: data.RepoTags,
-		Created:  data.Created,
+		Created:  created_string,
 		Parent:   data.Parent,
 		Comment:  data.Comment,
 	}
+}
+
+func make_image_containers(image imageModel, containers_list []types.Container) []imageContainerModel {
+	var result []imageContainerModel
+
+	for _, c := range containers_list {
+		if c.ImageID == image.ID {
+			// NOTE: берём только 1 имя, зачем это списком сделано - непонятно...
+			result = append(result, imageContainerModel{c.ID, c.Names[0]})
+		}
+	}
+	return result
 }

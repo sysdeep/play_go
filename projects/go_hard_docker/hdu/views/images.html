@@ -1,12 +1,10 @@
-{{ template "base" . }}
-{{define "content"}} 
+{{ template "base" . }} {{define "content"}}
 
 <h1>Images</h1>
 
-<table>
+<table class="table-small striped">
   <thead>
     <tr>
-      <th>ID</th>
       <th>Used</th>
       <th>Tags</th>
       <th>Size</th>
@@ -16,14 +14,17 @@
   <tbody>
     {{ range .Images }}
     <tr>
-      <td>
-        <a href="/images/{{ .ID }}">{{ .ID }}</a>
-      </td>
       <td>{{ .Containers }}</td>
       <td>
-        {{ range .RepoTags }}
-        <span>{{ . }}</span>
-        {{ end }}
+        {{ if eq (len .RepoTags) 0 }}
+        <ul class="table-ui">
+          <li><a href="/images/{{ .ID }}">no tag</a></li>
+        </ul>
+        {{ else }} {{ $id := .ID }} {{ range .RepoTags }}
+        <ul class="table-ui">
+          <li><a href="/images/{{ $id }}">{{ . }}</a></li>
+        </ul>
+        {{ end }} {{ end }}
       </td>
       <td>{{ .Size }}</td>
       <td>{{ .Created }}</td>
