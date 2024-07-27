@@ -22,6 +22,9 @@ func NewMainWindow(servs *services.Services) *MainWindow {
 	containers_page := NewContainersPage(tabs, servs.Containers)
 	tabs.AddTab(containers_page, "Containers")
 
+	images_page := NewImagesPage(tabs, servs.Images)
+	tabs.AddTab(images_page, "Images")
+
 	test_label := tk.NewLabel(tabs, "test")
 	tabs.AddTab(test_label, "Test")
 
@@ -32,12 +35,13 @@ func NewMainWindow(servs *services.Services) *MainWindow {
 
 	layout := tk.NewVPackLayout(mw)
 	layout.AddWidget(tabs,
-		tk.PackAttrFillX(),
-		tk.PackAttrPadx(10),
+		tk.PackAttrFillBoth(),
+		tk.PackAttrExpand(true),
+		tk.PackAttrPadx(4),
 		tk.PackAttrPady(10))
 
-	layout.AddWidget(tk.NewLayoutSpacer(mw, 0, true))
-	layout.AddWidget(btn)
+	// layout.AddWidget(tk.NewLayoutSpacer(mw, 0, true))
+	layout.AddWidget(btn, tk.PackAttrSideBottom())
 
 	return mw
 

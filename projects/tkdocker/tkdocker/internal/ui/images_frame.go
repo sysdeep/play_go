@@ -7,33 +7,32 @@ import (
 )
 
 // область со списком контейнеров
-type ContainersFrame struct {
+type ImagesFrame struct {
 	*tk.Frame
 	tree *tk.TreeView
 }
 
-func NewContainersFrame(parent tk.Widget) *ContainersFrame {
+func NewImagesFrame(parent tk.Widget) *ImagesFrame {
 
 	fr := tk.NewFrame(parent)
 
+	lbl := tk.NewLabel(fr, "Images list")
+
 	// tree
 	tree := tk.NewTreeView(fr)
-	labels := []string{"state", "name", "image"}
+	labels := []string{"ID", "-", "-"}
 	tree.SetColumnCount(len(labels))
 	tree.SetHeaderLabels(labels)
 
 	// layout
 	main_layout := tk.NewVPackLayout(fr)
-	main_layout.AddWidget(tree,
-		tk.PackAttrFillX(),
-		tk.PackAttrPadx(4),
-		tk.PackAttrPady(4),
-	)
+	main_layout.AddWidget(lbl)
+	main_layout.AddWidget(tree)
 
-	return &ContainersFrame{fr, tree}
+	return &ImagesFrame{fr, tree}
 }
 
-func (cf *ContainersFrame) SetItems(items []services.ContainerListModel) {
+func (cf *ImagesFrame) SetItems(items []services.ImageListModel) {
 
 	// clear all
 	cf.tree.DeleteAllItems()
@@ -41,6 +40,6 @@ func (cf *ContainersFrame) SetItems(items []services.ContainerListModel) {
 	// fill
 	root := cf.tree.RootItem()
 	for i, item := range items {
-		root.InsertItem(i, item.State, []string{item.Name, item.Image})
+		root.InsertItem(i, item.ID, []string{"", ""})
 	}
 }
