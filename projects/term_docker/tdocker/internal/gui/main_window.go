@@ -52,7 +52,9 @@ func (mw *MainWindow) Run() {
 		}
 	}
 
-	ui.Render(header, tabpane, p2)
+	cf := NewContainersFrame()
+
+	ui.Render(header, tabpane, p2, cf.List)
 
 	uiEvents := ui.PollEvents()
 

@@ -15,4 +15,11 @@
 ## TUI libs
 
 - [termui](https://github.com/gizak/termui)
+  - не нашёл модала
+  - сложная система обработки событий
 - [tcell](https://github.com/gdamore/tcell)
+- [gocui](https://github.com/jroimartin/gocui)
+  - от него сделан форк и на основе этого форка сделан lazydocker
+- https://github.com/charmbracelet/bubbletea
+- https://github.com/rivo/tview/
+  - мощная штука
