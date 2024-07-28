@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"fmt"
 	"tkdocker/internal/services"
 
 	"github.com/visualfc/atk/tk"
@@ -63,6 +64,8 @@ func NewContainersPage(parent tk.Widget, containers_service *services.Containers
 		page.refresh()
 	})
 
+	list.ConnectContainerSelected(page.OnContainerSelected)
+
 	return page
 }
 
@@ -70,4 +73,41 @@ func (cp *ContainersPage) refresh() {
 	items, _ := cp.container_service.GetAll()
 
 	cp.list_frame.SetItems(items)
+}
+
+func (cp *ContainersPage) OnContainerSelected(model *services.ContainerListModel) {
+	fmt.Println(model)
+
+	// TODO: in new type
+	top := tk.NewWindow()
+
+	view := NewContainerView(top, NewFakeContainerProvider())
+	layout := tk.NewVPackLayout(top)
+	layout.AddWidget(view, tk.PackAttrFillBoth(), tk.PackAttrExpand(true))
+
+	top.SetTitle("Container view")
+	top.ShowNormal()
+}
+
+// TODO: only for tests
+type FakeContainerProvider struct{}
+
+func NewFakeContainerProvider() *FakeContainerProvider {
+	return &FakeContainerProvider{}
+}
+
+func (cp *FakeContainerProvider) GetContainer() (services.ContainerListModel, error) {
+
+	addrs := make([]string, 0)
+	ports := make([]string, 0)
+
+	return services.ContainerListModel{
+		ID:          "string",
+		Name:        "string",
+		Image:       "string",
+		State:       "string",
+		CreatedStr:  "string",
+		IPAddresses: addrs,
+		Ports:       ports,
+	}, nil
 }
