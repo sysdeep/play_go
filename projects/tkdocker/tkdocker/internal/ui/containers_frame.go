@@ -13,7 +13,7 @@ type onContainerSelectedHandler = func(model *services.ContainerListModel)
 type ContainersFrame struct {
 	*tk.Frame
 	tree                          *tk.TreeView
-	current_map                   map[string]*services.ContainerListModel
+	current_map                   map[string]services.ContainerListModel
 	on_container_selected_handler onContainerSelectedHandler
 }
 
@@ -30,12 +30,13 @@ func NewContainersFrame(parent tk.Widget) *ContainersFrame {
 	// layout
 	main_layout := tk.NewVPackLayout(fr)
 	main_layout.AddWidget(tree,
-		tk.PackAttrFillX(),
+		tk.PackAttrFillBoth(),
 		tk.PackAttrPadx(4),
 		tk.PackAttrPady(4),
+		tk.PackAttrExpand(true),
 	)
 
-	current_map := make(map[string]*services.ContainerListModel)
+	current_map := make(map[string]services.ContainerListModel)
 	cf := &ContainersFrame{fr, tree, current_map, nil}
 
 	// events
@@ -71,7 +72,7 @@ func (cf *ContainersFrame) SetItems(items []services.ContainerListModel) {
 	for i, item := range items {
 		row := root.InsertItem(i*10, item.State, []string{item.Name, item.Image})
 		fmt.Println(row.Id())
-		cf.current_map[row.Id()] = &item
+		cf.current_map[row.Id()] = item
 	}
 }
 
@@ -83,7 +84,7 @@ func (cf *ContainersFrame) onSelected(item *tk.TreeItem) {
 	// utils.PrintAsJson(model)
 
 	if cf.on_container_selected_handler != nil {
-		cf.on_container_selected_handler(model)
+		cf.on_container_selected_handler(&model)
 	}
 }
 

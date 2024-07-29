@@ -29,7 +29,7 @@ func NewImagesPage(parent tk.Widget, images_service *services.ImagesService) *Im
 	main_layout := tk.NewVPackLayout(fr)
 	main_layout.AddWidget(lbl)
 	main_layout.AddWidget(list,
-		tk.PackAttrFill(tk.FillBoth),
+		tk.PackAttrFillBoth(),
 		tk.PackAttrExpand(true),
 	)
 	main_layout.AddWidget(refresh_button)
