@@ -25,6 +25,9 @@ func NewMainWindow(servs *services.Services) *MainWindow {
 	images_page := NewImagesPage(tabs, servs.Images)
 	tabs.AddTab(images_page, "Images")
 
+	volumes_page := NewVolumesPage(tabs, servs.Images)
+	tabs.AddTab(volumes_page, "Volumes")
+
 	test_label := tk.NewLabel(tabs, "test")
 	tabs.AddTab(test_label, "Test")
 
