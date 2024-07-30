@@ -3,7 +3,7 @@ module hdu
 go 1.21.1
 
 require (
-	github.com/docker/docker v26.1.1+incompatible
+	github.com/docker/docker v26.1.4+incompatible
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/sirupsen/logrus v1.9.3
 )
