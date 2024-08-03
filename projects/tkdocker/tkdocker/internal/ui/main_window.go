@@ -36,13 +36,6 @@ func NewMainWindow(servs *services.Services) *MainWindow {
 		tk.PackAttrPadx(4),
 		tk.PackAttrPady(4),
 	)
-	// layout.AddWidget(tabs,
-	// 	tk.PackAttrFillBoth(),
-	// 	tk.PackAttrExpand(true),
-	// 	tk.PackAttrPadx(4),
-	// 	tk.PackAttrPady(10))
-	//
-	// layout.AddWidget(tk.NewLayoutSpacer(mw, 0, true))
 	main_layout.AddWidget(actions_bar,
 		tk.PackAttrSideBottom(),
 		tk.PackAttrExpand(false),
