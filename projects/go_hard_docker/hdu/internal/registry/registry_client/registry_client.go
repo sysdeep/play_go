@@ -1,10 +1,10 @@
 package registry_client
 
 type RegistryClient interface {
-	GetCatalog(n int) Catalog
-	GetRepository(image_name string) Repository
-	GetManivestV2(image_name string, tag_name string)
-	RemoveManifest(image_name string, digest string)
+	GetCatalog(n int) (Catalog, error)
+	GetRepository(image_name string) (Repository, error)
+	GetManivestV2(image_name string, tag_name string) (ManifestV2, error)
+	RemoveManifest(image_name string, digest string) error
 }
 
 type Catalog struct {
@@ -19,15 +19,15 @@ type Repository struct {
 type ManifestV2 struct {
 	SchemaVersion     int
 	MediaType         string
-	DonfigDescriptor  Descriptor
+	ConfigDescriptor  Descriptor
 	LayersDescriptors []Descriptor
-	TotalSize         int
+	TotalSize         int64
 	ContentDigest     string
 }
 
 type Descriptor struct {
 	MediaType string
-	Size      int
+	Size      int64
 	Digest    string
 }
 

@@ -14,11 +14,21 @@ import (
 	"time"
 )
 
+const (
+	// scheme version of manifest file
+	// for details about scheme version goto https://docs.docker.com/registry/spec/manifest-v2-2/
+	manifestSchemeV2 = "application/vnd.docker.distribution.manifest.v2+json"
+
+	//  It uniquely identifies content by taking a collision-resistant hash of the bytes.
+	contentDigestHeader = "docker-content-digest"
+)
+
 type HTTPRegistryClient struct {
 	address string
 	client  *http.Client
 }
 
+// create client
 func NewHTTPRegistryClient(address string) *HTTPRegistryClient {
 
 	// for https ignoring
@@ -30,26 +40,154 @@ func NewHTTPRegistryClient(address string) *HTTPRegistryClient {
 	return &HTTPRegistryClient{address, &client}
 }
 
-func (c *HTTPRegistryClient) GetCatalog(n int) Catalog {
+// GetCatalog
+func (c *HTTPRegistryClient) GetCatalog(n int) (Catalog, error) {
 
+	// make endpoint address
 	url := c.make_url(fmt.Sprintf("/v2/_catalog?n={%d}", n))
-	fmt.Println(url)
+
+	// fetch
+	body, err := c.make_get(url)
+	if err != nil {
+		return Catalog{}, err
+	}
+
+	// parse
+	result := catalogResponse{}
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return Catalog{}, err
+	}
+
+	return Catalog{
+		Repositories: result.Repositories,
+	}, nil
+
+}
+
+// GetRepository
+func (c *HTTPRegistryClient) GetRepository(image_name string) (Repository, error) {
+	url := c.make_url(fmt.Sprintf("/v2/%s/tags/list", image_name))
+
+	body, err := c.make_get(url)
+	if err != nil {
+		return Repository{}, err
+	}
+
+	result := repositoryResponse{}
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return Repository{}, err
+	}
+
+	return Repository{
+		Name: result.Name,
+		Tags: result.Tags,
+	}, nil
+
+}
+
+// GetManivestV2
+func (c *HTTPRegistryClient) GetManivestV2(image_name string, tag_name string) (ManifestV2, error) {
+	url := c.make_url(fmt.Sprintf("/v2/%s/manifests/%s", image_name, tag_name))
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return ManifestV2{}, err
+	}
+	req.Header.Add("Accept", manifestSchemeV2)
+	res, err := c.client.Do(req)
+
+	if err != nil {
+		return ManifestV2{}, err
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return ManifestV2{}, err
+	}
+
+	schema := manifestV2ResponseSchema{}
+	err = json.Unmarshal(body, &schema)
+	if err != nil {
+		return ManifestV2{}, err
+	}
+
+	content_digest := res.Header.Get(contentDigestHeader)
+
+	var layers_descriptors []Descriptor
+
+	for _, ld := range schema.LayersDescriptors {
+		layers_descriptors = append(layers_descriptors, c.cd_from_response(ld))
+	}
+
+	return ManifestV2{
+		SchemaVersion:     schema.SchemaVersion,
+		MediaType:         schema.MediaType,
+		ConfigDescriptor:  c.cd_from_response(schema.ConfigDescriptor),
+		LayersDescriptors: layers_descriptors,
+		TotalSize:         schema.CalculateCompressedImageSize(),
+		ContentDigest:     content_digest,
+	}, nil
+
+}
+
+// DeleteTag will delete the manifest identified by name and reference. Note that a manifest can only be deleted by digest.
+// A digest can be fetched from manifest get response header 'docker-content-digest'
+// после удаления необходимо выполнить чистку
+// docker exec -it registry bin/registry garbage-collect  /etc/docker/registry/config.yml
+func (c *HTTPRegistryClient) RemoveManifest(image_name string, digest string) error {
+	// curl -v --silent -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+	// -X DELETE http://127.0.0.1:5000/v2/ubuntu/manifests/sha256:7cc0576c7c0ec2384de5cbf245f41567e922aab1b075f3e8ad565f508032df17
+
+	fmt.Println("Client - remove: ", image_name, "/", digest)
+	// TODO:
+	// url, _ := url.JoinPath(c.address, "v2", reposytoryName, "/manifests/", digest)
+	// c.logger.Debug("sending request: " + url)
+	//
+	// fmt.Println("-----------------------------------------")
+	// fmt.Println(url)
+	// fmt.Println("-----------------------------------------")
+	//
+	// req, err := http.NewRequest("DELETE", url, nil)
+	// if err != nil {
+	// 	return err
+	// }
+	//
+	// req.Header.Add("Accept", manifestSchemeV2)
+	// res, err := c.http_client.Do(req)
+	// if err != nil {
+	// 	return err
+	// }
+	// defer res.Body.Close()
+	//
+	// body, err := io.ReadAll(res.Body)
+	// if err != nil {
+	// 	return err
+	// }
+	//
+	// fmt.Println("Delete body result ==================================================")
+	// fmt.Println("Status: ", res.Status)
+	// fmt.Println("StatusCode: ", res.StatusCode)
+	// fmt.Println("Body:", string(body))
+	// fmt.Println("=====================================================================")
+	return nil
+
+}
+
+// private --------------------------------------------------------------------
+func (c *HTTPRegistryClient) make_get(url string) ([]byte, error) {
 
 	resp, err := c.client.Get(url)
 	if err != nil {
 		fmt.Println(err)
-		return Catalog{}
+		return make([]byte, 0), err
 	}
 	defer resp.Body.Close()
 
-	body, _ := io.ReadAll(resp.Body)
-
-	result := catalogResponse{}
-	json.Unmarshal(body, &result)
-
-	return Catalog{
-		Repositories: result.Repositories,
-	}
+	body, err := io.ReadAll(resp.Body)
+	return body, err
 }
 
 func (c *HTTPRegistryClient) make_url(part string) string {
@@ -58,11 +196,32 @@ func (c *HTTPRegistryClient) make_url(part string) string {
 	end := strings.TrimPrefix(part, "/")
 
 	return start + "/" + end
-
 }
 
+func (c *HTTPRegistryClient) cd_from_response(data schema2Descriptor) Descriptor {
+	return Descriptor{
+		MediaType: data.MediaType,
+		Size:      data.Size,
+		Digest:    data.Digest,
+	}
+}
+
+// NOTE: идея определять транспорт, но и без этого работает
+// func makeHttpClient(address string) *http.Client{
+// 	if strings.HasPrefix(address, "https:"){
+//
+// 	}
+//
+// }
+
+// http models ----------------------------------------------------------------
 type catalogResponse struct {
 	Repositories []string `json:"repositories"`
+}
+
+type repositoryResponse struct {
+	Name string   `json:"name"`
+	Tags []string `json:"tags"`
 }
 
 /*
