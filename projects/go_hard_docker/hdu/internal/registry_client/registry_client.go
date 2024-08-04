@@ -9,7 +9,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -23,13 +25,13 @@ const (
 	contentDigestHeader = "docker-content-digest"
 )
 
-type HTTPRegistryClient struct {
+type RegistryClient struct {
 	address string
 	client  *http.Client
 }
 
 // create client
-func NewHTTPRegistryClient(address string) *HTTPRegistryClient {
+func NewRegistryClient(address string) *RegistryClient {
 
 	// for https ignoring
 	tr := &http.Transport{
@@ -37,11 +39,34 @@ func NewHTTPRegistryClient(address string) *HTTPRegistryClient {
 	}
 	client := http.Client{Transport: tr, Timeout: 5 * time.Second}
 
-	return &HTTPRegistryClient{address, &client}
+	return &RegistryClient{address, &client}
+}
+
+// TODO: check!!!
+func (c *RegistryClient) APIVersionCheck() error {
+	url, _ := url.JoinPath(c.address, "v2")
+
+	// TODO: вынести в отдельный метод - слишком много повторений
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Accept", manifestSchemeV2)
+	res, err := c.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	return nil
 }
 
 // GetCatalog
-func (c *HTTPRegistryClient) GetCatalog(n int) (Catalog, error) {
+func (c *RegistryClient) GetCatalog(n int) (Catalog, error) {
+
+	slog.Info("GetCatalog",
+		"n", n)
 
 	// make endpoint address
 	url := c.make_url(fmt.Sprintf("/v2/_catalog?n={%d}", n))
@@ -66,7 +91,7 @@ func (c *HTTPRegistryClient) GetCatalog(n int) (Catalog, error) {
 }
 
 // GetRepository
-func (c *HTTPRegistryClient) GetRepository(image_name string) (Repository, error) {
+func (c *RegistryClient) GetRepository(image_name string) (Repository, error) {
 	url := c.make_url(fmt.Sprintf("/v2/%s/tags/list", image_name))
 
 	body, err := c.make_get(url)
@@ -88,7 +113,7 @@ func (c *HTTPRegistryClient) GetRepository(image_name string) (Repository, error
 }
 
 // GetManivestV2
-func (c *HTTPRegistryClient) GetManivestV2(image_name string, tag_name string) (ManifestV2, error) {
+func (c *RegistryClient) GetManivestV2(image_name string, tag_name string) (ManifestV2, error) {
 	url := c.make_url(fmt.Sprintf("/v2/%s/manifests/%s", image_name, tag_name))
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -137,47 +162,48 @@ func (c *HTTPRegistryClient) GetManivestV2(image_name string, tag_name string) (
 // A digest can be fetched from manifest get response header 'docker-content-digest'
 // после удаления необходимо выполнить чистку
 // docker exec -it registry bin/registry garbage-collect  /etc/docker/registry/config.yml
-func (c *HTTPRegistryClient) RemoveManifest(image_name string, digest string) error {
+func (c *RegistryClient) RemoveManifest(image_name string, digest string) error {
 	// curl -v --silent -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
 	// -X DELETE http://127.0.0.1:5000/v2/ubuntu/manifests/sha256:7cc0576c7c0ec2384de5cbf245f41567e922aab1b075f3e8ad565f508032df17
+	slog.Info("RemoveManifest", image_name, digest)
 
-	fmt.Println("Client - remove: ", image_name, "/", digest)
-	// TODO:
+	url := c.make_url(fmt.Sprintf("/v2/%s/manifests/%s", image_name, digest))
+	// fmt.Println("Client - remove: ", image_name, "/", digest)
 	// url, _ := url.JoinPath(c.address, "v2", reposytoryName, "/manifests/", digest)
 	// c.logger.Debug("sending request: " + url)
 	//
-	// fmt.Println("-----------------------------------------")
-	// fmt.Println(url)
-	// fmt.Println("-----------------------------------------")
-	//
-	// req, err := http.NewRequest("DELETE", url, nil)
-	// if err != nil {
-	// 	return err
-	// }
-	//
-	// req.Header.Add("Accept", manifestSchemeV2)
-	// res, err := c.http_client.Do(req)
-	// if err != nil {
-	// 	return err
-	// }
-	// defer res.Body.Close()
-	//
-	// body, err := io.ReadAll(res.Body)
-	// if err != nil {
-	// 	return err
-	// }
-	//
-	// fmt.Println("Delete body result ==================================================")
-	// fmt.Println("Status: ", res.Status)
-	// fmt.Println("StatusCode: ", res.StatusCode)
-	// fmt.Println("Body:", string(body))
-	// fmt.Println("=====================================================================")
+	fmt.Println("-----------------------------------------")
+	fmt.Println(url)
+	fmt.Println("-----------------------------------------")
+
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Accept", manifestSchemeV2)
+	res, err := c.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Delete body result ==================================================")
+	fmt.Println("Status: ", res.Status)
+	fmt.Println("StatusCode: ", res.StatusCode)
+	fmt.Println("Body:", string(body))
+	fmt.Println("=====================================================================")
 	return nil
 
 }
 
 // private --------------------------------------------------------------------
-func (c *HTTPRegistryClient) make_get(url string) ([]byte, error) {
+func (c *RegistryClient) make_get(url string) ([]byte, error) {
 
 	resp, err := c.client.Get(url)
 	if err != nil {
@@ -190,7 +216,7 @@ func (c *HTTPRegistryClient) make_get(url string) ([]byte, error) {
 	return body, err
 }
 
-func (c *HTTPRegistryClient) make_url(part string) string {
+func (c *RegistryClient) make_url(part string) string {
 
 	start := strings.TrimSuffix(c.address, "/")
 	end := strings.TrimPrefix(part, "/")
@@ -198,7 +224,7 @@ func (c *HTTPRegistryClient) make_url(part string) string {
 	return start + "/" + end
 }
 
-func (c *HTTPRegistryClient) cd_from_response(data schema2Descriptor) Descriptor {
+func (c *RegistryClient) cd_from_response(data schema2Descriptor) Descriptor {
 	return Descriptor{
 		MediaType: data.MediaType,
 		Size:      data.Size,
@@ -225,13 +251,6 @@ type repositoryResponse struct {
 }
 
 /*
-import requests
-import urllib3
-
-from registry_cli.registry_client.client_interface import ClientInterface
-from registry_cli.registry_client.models import Catalog, Descriptor, ManifestV2, Repository
-from registry_cli.registry_client.registry_client_params import RegistryClientParams
-
 
 class RegistryClient(ClientInterface):
     _timeout = 5
@@ -242,43 +261,7 @@ class RegistryClient(ClientInterface):
         self._params = params
         urllib3.disable_warnings()
 
-    def get_catalog(self, n: int) -> Catalog:
-        url = self._make_url(f"/v2/_catalog?n={n}")
-        resp = requests.get(url, verify=False, timeout=self._timeout)
-        data = resp.json()
 
-        return Catalog(repositories=[*data['repositories']])
-
-    def get_repository(self, image_name: str) -> Repository:
-
-        url = self._make_url(f"/v2/{image_name}/tags/list")
-        resp = requests.get(url, verify=False, timeout=self._timeout)
-        data = resp.json()
-
-        tags = data['tags'] or []
-        return Repository(name=data['name'], tags=tags)
-
-    def get_manifest_v2(self, image_name: str, tag_name: str) -> ManifestV2:
-        url = self._make_url(f"/v2/{image_name}/manifests/{tag_name}")
-        headers = {
-            'Accept': self._manifest_scheme_v2_header
-        }
-        resp = requests.get(url, verify=False, timeout=self._timeout, headers=headers)
-        data = resp.json()
-
-        result = ManifestV2(
-            schema_version=data.get('schemaVersion'),
-            media_type=data.get('mediaType'),
-            config_descriptor=Descriptor.from_response(data.get('config')),
-            layers_descriptors=[Descriptor.from_response(r) for r in data.get('layers')],
-
-            total_size=0,
-            content_digest=resp.headers.get(self._content_digest_header)
-        )
-
-        result.total_size = sum(d.size for d in result.layers_descriptors)
-
-        return result
 
     def remove_manifest(self, image_name: str, digest: str):
         url = self._make_url(f"/v2/{image_name}/manifests/{digest}")

@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-	"hdu/internal/registry/registry_client"
+	"hdu/internal/registry_client"
 	"hdu/internal/utils"
 	"log"
 )
 
 func main() {
 
-	client := registry_client.NewHTTPRegistryClient("http://localhost:5000")
+	client := registry_client.NewRegistryClient("http://localhost:5000")
 	catalog, err := client.GetCatalog(1)
 	_check_error(err)
 	utils.PrintAsJson(catalog)

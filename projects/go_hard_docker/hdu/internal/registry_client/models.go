@@ -1,11 +1,11 @@
 package registry_client
 
-type RegistryClient interface {
-	GetCatalog(n int) (Catalog, error)
-	GetRepository(image_name string) (Repository, error)
-	GetManivestV2(image_name string, tag_name string) (ManifestV2, error)
-	RemoveManifest(image_name string, digest string) error
-}
+// type RegistryClient interface {
+// 	GetCatalog(n int) (Catalog, error)
+// 	GetRepository(image_name string) (Repository, error)
+// 	GetManivestV2(image_name string, tag_name string) (ManifestV2, error)
+// 	RemoveManifest(image_name string, digest string) error
+// }
 
 type Catalog struct {
 	Repositories []string
