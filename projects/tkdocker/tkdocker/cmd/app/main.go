@@ -28,11 +28,13 @@ func main() {
 	// start mainloop
 	tk.MainLoop(func() {
 		mw := ui.NewMainWindow(servs)
-		mw.ResizeN(800, 600)
+		mw.ResizeN(1024, 800)
 		// mw := NewWindow()
-		mw.SetTitle("ATK Sample")
+		mw.SetTitle("Docker Sample")
 		mw.Center(nil)
 		mw.ShowNormal()
+		// mw.ShowMaximized()
+		// mw.ShowFullScreen()
 		fmt.Println(tk.DumpWidget(mw))
 	})
 
