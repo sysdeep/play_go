@@ -2,6 +2,7 @@ package ui
 
 import (
 	"tkdocker/internal/services"
+	"tkdocker/internal/ui/volumes_page"
 
 	"github.com/visualfc/atk/tk"
 )
@@ -61,7 +62,7 @@ func (mw *MainWindow) makeTabs(root tk.Widget, servs *services.Services) *tk.Not
 	images_page := NewImagesPage(tabs, servs.Images)
 	tabs.AddTab(images_page, "Images")
 
-	volumes_page := NewVolumesPage(tabs, servs.Images)
+	volumes_page := volumes_page.NewVolumesPage(tabs, volumes_page.NewVolumesPageVM(servs.Volumes))
 	tabs.AddTab(volumes_page, "Volumes")
 
 	test_label := tk.NewLabel(tabs, "test")
