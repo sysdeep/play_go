@@ -25,7 +25,11 @@ func NewMainWindow(servs *services.Services) *MainWindow {
 	tabs := mw.makeTabs(mw, servs)
 
 	content_layout.AddWidget(sidebar, tk.PackAttrFillY(), tk.PackAttrSideLeft())
-	content_layout.AddWidget(tabs, tk.PackAttrFillY(), tk.PackAttrSideRight())
+	content_layout.AddWidget(tabs,
+		// tk.PackAttrFillY(),
+		tk.PackAttrFillBoth(),
+		tk.PackAttrExpand(true),
+		tk.PackAttrSideRight())
 
 	actions_bar := mw.makeActionsBar(mw)
 

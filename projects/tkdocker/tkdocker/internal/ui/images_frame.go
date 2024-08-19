@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"strings"
 	"tkdocker/internal/services"
 	"tkdocker/internal/utils"
 
@@ -21,7 +22,7 @@ func NewImagesFrame(parent tk.Widget) *ImagesFrame {
 
 	// tree
 	tree := tk.NewTreeView(fr)
-	labels := []string{"tag", "ID", "Created", "Size"}
+	labels := []string{"REPOSITORY", "TAG", "IMAGE ID", "CREATED", "SIZE"}
 	tree.SetColumnCount(len(labels))
 	tree.SetHeaderLabels(labels)
 
@@ -71,11 +72,15 @@ func (cf *ImagesFrame) SetItems(items []services.ImageListModel) {
 
 		for j, tag := range item.RepoTags {
 
-			// TODO: size view
-
 			row_id := i*100 + j
-			row := root.InsertItem(row_id, tag, []string{item.ID, item.Created, fmt.Sprintf("%d", item.Size)})
-			fmt.Println(row.Id())
+
+			short_image_id := utils.ShortImageID(item.ID)
+			display_size := utils.ByteCountToDisplaySize(item.Size)
+			repo, short_tag := cf.splitTag(tag)
+
+			row := root.InsertItem(row_id, repo, []string{short_tag, short_image_id, item.Created, display_size})
+			// fmt.Println(row.Id())
+			// fmt.Println(item.ID)
 			cf.current_map[row.Id()] = item
 
 		}
@@ -93,4 +98,11 @@ func (cf *ImagesFrame) onSelected(item *tk.TreeItem) {
 	// if cf.on_container_selected_handler != nil {
 	// 	cf.on_container_selected_handler(model)
 	// }
+}
+
+func (cf *ImagesFrame) splitTag(full_tag string) (string, string) {
+	result := strings.Split(full_tag, ":")
+
+	repo := strings.Join(result[:len(result)-1], ":")
+	return repo, result[len(result)-1]
 }
