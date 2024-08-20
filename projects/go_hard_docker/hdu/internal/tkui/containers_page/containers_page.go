@@ -1,4 +1,4 @@
-package tkui
+package containers_page
 
 import (
 	"fmt"
@@ -9,11 +9,12 @@ import (
 
 type ContainersPage struct {
 	*tk.Frame
-	container_service *services.ContainersService
-	list_frame        *ContainersFrame
+	list_frame  *ContainersFrame
+	actions_bar *actionsBar
+	vm          *ContainersVM
 }
 
-func NewContainersPage(parent tk.Widget, containers_service *services.ContainersService) *ContainersPage {
+func NewContainersPage(parent tk.Widget, vm *ContainersVM) *ContainersPage {
 
 	fr := tk.NewFrame(parent)
 
@@ -21,23 +22,7 @@ func NewContainersPage(parent tk.Widget, containers_service *services.Containers
 	lbl := tk.NewLabel(fr, "Containers")
 
 	// list
-	list := NewContainersFrame(fr)
-
-	// controls bar
-	controls := tk.NewFrame(fr)
-	controls_layout := tk.NewHPackLayout(controls)
-	// refresh button
-	refresh_button := tk.NewButton(controls, "Refresh")
-	controls_layout.AddWidget(tk.NewLayoutSpacer(controls, 1, true))
-	controls_layout.AddWidget(refresh_button, tk.PackAttrSideRight())
-
-	// layout
-	main_layout := tk.NewVPackLayout(fr)
-	main_layout.AddWidget(lbl)
-	main_layout.AddWidget(list,
-		tk.PackAttrFillX(),
-	)
-	main_layout.AddWidget(controls, tk.PackAttrFillX(), tk.PackAttrPadx(4), tk.PackAttrPady(4))
+	list := NewContainersFrame(fr, vm)
 
 	// fr.BindEvent("<Enter>", func(e *tk.Event) {
 	// 	fmt.Println("Enter")
@@ -48,32 +33,40 @@ func NewContainersPage(parent tk.Widget, containers_service *services.Containers
 	// })
 
 	page := &ContainersPage{
-		fr,
-		containers_service,
-		list,
+		Frame:       fr,
+		list_frame:  list,
+		actions_bar: newActionsBar(fr, vm),
+		vm:          vm,
 	}
+
+	// layout
+	main_layout := tk.NewVPackLayout(fr)
+	main_layout.AddWidget(lbl)
+	main_layout.AddWidget(list,
+		tk.PackAttrFillBoth(),
+		tk.PackAttrExpand(true),
+	)
+	main_layout.AddWidget(page.actions_bar,
+		tk.PackAttrFillX(),
+	)
 
 	// bind events --------------------------------------------------------------
 
 	// событие отображения(при переключении вкладок)
 	fr.BindEvent("<Visibility>", func(e *tk.Event) {
-		page.refresh()
+		vm.refresh()
 	})
 
-	refresh_button.OnCommand(func() {
-		page.refresh()
-	})
-
-	list.ConnectContainerSelected(page.OnContainerSelected)
+	// list.ConnectContainerSelected(page.OnContainerSelected)
 
 	return page
 }
 
-func (cp *ContainersPage) refresh() {
-	items, _ := cp.container_service.GetAll()
-
-	cp.list_frame.SetItems(items)
-}
+// func (cp *ContainersPage) refresh() {
+// 	items := cp.vm.get_containers()
+//
+// 	cp.list_frame.SetItems(items)
+// }
 
 func (cp *ContainersPage) OnContainerSelected(model *services.ContainerListModel) {
 	fmt.Println(model)
@@ -81,9 +74,9 @@ func (cp *ContainersPage) OnContainerSelected(model *services.ContainerListModel
 	// TODO: in new type
 	top := tk.NewWindow()
 
-	view := NewContainerView(top, NewFakeContainerProvider())
-	layout := tk.NewVPackLayout(top)
-	layout.AddWidget(view, tk.PackAttrFillBoth(), tk.PackAttrExpand(true))
+	// view := NewContainerView(top, NewFakeContainerProvider())
+	// layout := tk.NewVPackLayout(top)
+	// layout.AddWidget(view, tk.PackAttrFillBoth(), tk.PackAttrExpand(true))
 
 	top.SetTitle("Container view")
 	top.ShowNormal()

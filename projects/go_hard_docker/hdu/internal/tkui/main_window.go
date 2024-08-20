@@ -1,7 +1,9 @@
 package tkui
 
 import (
+	"fmt"
 	"hdu/internal/services"
+	"hdu/internal/tkui/containers_page"
 	"hdu/internal/tkui/volumes_page"
 
 	"github.com/visualfc/atk/tk"
@@ -56,7 +58,9 @@ func NewMainWindow(servs *services.Services) *MainWindow {
 func (mw *MainWindow) makeTabs(root tk.Widget, servs *services.Services) *tk.Notebook {
 	tabs := tk.NewNotebook(root)
 
-	containers_page := NewContainersPage(tabs, servs.Containers)
+	actions_handler := &RootActionsHandler{}
+
+	containers_page := containers_page.NewContainersPage(tabs, containers_page.NewContainersVM(servs.Containers, actions_handler))
 	tabs.AddTab(containers_page, "Containers")
 
 	images_page := NewImagesPage(tabs, servs.Images)
@@ -87,4 +91,22 @@ func (mw *MainWindow) makeActionsBar(root tk.Widget) *tk.Frame {
 func (mw *MainWindow) exit() {
 
 	tk.Quit()
+}
+
+// TODO: move to file
+type RootActionsHandler struct{}
+
+func (ah *RootActionsHandler) ShowContainer(container_id string) {
+	fmt.Println("root: show container")
+
+	// TODO: in new type
+	top := tk.NewWindow()
+
+	// view := NewContainerView(top, NewFakeContainerProvider())
+	// layout := tk.NewVPackLayout(top)
+	// layout.AddWidget(view, tk.PackAttrFillBoth(), tk.PackAttrExpand(true))
+
+	top.SetTitle("Container view")
+	top.ShowNormal()
+
 }
