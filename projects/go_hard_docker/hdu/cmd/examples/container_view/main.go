@@ -1,8 +1,8 @@
 package main
 
 import (
-	"tkdocker/internal/services"
-	"tkdocker/internal/ui"
+	"hdu/internal/services"
+	"hdu/internal/tkui"
 
 	"github.com/visualfc/atk/tk"
 )
@@ -19,7 +19,7 @@ func main() {
 	tk.MainLoop(func() {
 		mw := tk.RootWindow()
 
-		view := ui.NewContainerView(mw, NewFakeContainerProvider())
+		view := tkui.NewContainerView(mw, NewFakeContainerProvider())
 
 		tk.NewVPackLayout(mw).AddWidget(view, tk.PackAttrFillBoth(), tk.PackAttrExpand(true))
 

@@ -1,6 +1,6 @@
 package registry_service
 
-import "hdu/internal/registry/registry_client"
+import "hdu/internal/registry_client"
 
 type RegistryService struct {
 	client *registry_client.RegistryClient
