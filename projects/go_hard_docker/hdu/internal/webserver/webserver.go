@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"hdu/internal/logger"
+	"hdu/internal/services"
 	"hdu/internal/webserver/handlers"
 
 	"github.com/docker/docker/client"
@@ -14,7 +15,7 @@ type Webserver struct {
 	// docker *client.Client
 }
 
-func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
+func NewWebserver(docker *client.Client, services *services.Services, logger *logger.Logger) *Webserver {
 
 	e := echo.New()
 
@@ -41,7 +42,7 @@ func NewWebserver(docker *client.Client, logger *logger.Logger) *Webserver {
 	// setup custom error renderer
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
-	hndls := handlers.NewHandlers(docker, logger)
+	hndls := handlers.NewHandlers(docker, services, logger)
 
 	e.GET("/", hndls.MainPage)
 	e.GET("/containers/:id", hndls.ContainerPage)

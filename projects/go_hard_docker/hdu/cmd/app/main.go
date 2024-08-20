@@ -2,6 +2,7 @@ package main
 
 import (
 	"hdu/internal/logger"
+	"hdu/internal/services"
 	"hdu/internal/webserver"
 
 	"github.com/docker/docker/client"
@@ -31,7 +32,10 @@ func main() {
 	// 	fmt.Printf("%s %s (status: %s)\n", container.ID, container.Image, container.Status)
 	// }
 
+	// core
+	servs := services.NewServices(cli)
+
 	// web server
-	web_server := webserver.NewWebserver(cli, log)
+	web_server := webserver.NewWebserver(cli, servs, log)
 	web_server.Start()
 }
