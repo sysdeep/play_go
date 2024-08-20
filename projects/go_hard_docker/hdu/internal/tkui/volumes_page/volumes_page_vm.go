@@ -1,6 +1,6 @@
 package volumes_page
 
-import "tkdocker/internal/services"
+import "hdu/internal/services"
 
 const (
 	EV_REFRESH = "refresh"

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"tkdocker/internal/services"
-	"tkdocker/internal/ui"
+	"hdu/internal/services"
+	"hdu/internal/tkui"
 
 	"github.com/docker/docker/client"
 	"github.com/visualfc/atk/tk"
@@ -27,7 +27,7 @@ func main() {
 
 	// start mainloop
 	tk.MainLoop(func() {
-		mw := ui.NewMainWindow(servs)
+		mw := tkui.NewMainWindow(servs)
 		// mw.ResizeN(1024, 800)
 		// mw := NewWindow()
 		mw.SetTitle("Docker Sample")

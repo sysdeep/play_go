@@ -1,8 +1,8 @@
-package ui
+package tkui
 
 import (
 	"fmt"
-	"tkdocker/internal/services"
+	"hdu/internal/services"
 
 	"github.com/visualfc/atk/tk"
 )

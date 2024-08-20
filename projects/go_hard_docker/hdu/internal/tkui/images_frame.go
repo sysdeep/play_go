@@ -1,10 +1,10 @@
-package ui
+package tkui
 
 import (
 	"fmt"
+	"hdu/internal/services"
+	"hdu/internal/utils"
 	"strings"
-	"tkdocker/internal/services"
-	"tkdocker/internal/utils"
 
 	"github.com/visualfc/atk/tk"
 )

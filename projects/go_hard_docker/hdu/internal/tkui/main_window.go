@@ -1,8 +1,8 @@
-package ui
+package tkui
 
 import (
-	"tkdocker/internal/services"
-	"tkdocker/internal/ui/volumes_page"
+	"hdu/internal/services"
+	"hdu/internal/tkui/volumes_page"
 
 	"github.com/visualfc/atk/tk"
 )

@@ -1,4 +1,4 @@
-package ui
+package tkui
 
 import "github.com/visualfc/atk/tk"
 

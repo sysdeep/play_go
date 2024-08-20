@@ -1,7 +1,7 @@
-package ui
+package tkui
 
 import (
-	"tkdocker/internal/services"
+	"hdu/internal/services"
 
 	"github.com/visualfc/atk/tk"
 )
