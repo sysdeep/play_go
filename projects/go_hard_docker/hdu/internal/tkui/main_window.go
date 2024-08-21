@@ -24,17 +24,17 @@ func NewMainWindow(servs *services.Services) *MainWindow {
 	content_frame := tk.NewFrame(mw)
 	content_layout := tk.NewHPackLayout(content_frame)
 
-	sidebar := NewNavSidebar(mw)
+	// sidebar := NewNavSidebar(mw)
 	tabs := mw.makeTabs(mw, servs)
+	actions_bar := mw.makeActionsBar(mw)
 
-	content_layout.AddWidget(sidebar, tk.PackAttrFillY(), tk.PackAttrSideLeft())
+	// layout
+	// content_layout.AddWidget(sidebar, tk.PackAttrFillY(), tk.PackAttrSideLeft())
 	content_layout.AddWidget(tabs,
 		// tk.PackAttrFillY(),
 		tk.PackAttrFillBoth(),
 		tk.PackAttrExpand(true),
 		tk.PackAttrSideRight())
-
-	actions_bar := mw.makeActionsBar(mw)
 
 	main_layout := tk.NewVPackLayout(mw)
 	main_layout.AddWidget(content_frame,

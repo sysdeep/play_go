@@ -9,7 +9,7 @@ import (
 
 type ContainersPage struct {
 	*tk.Frame
-	list_frame  *ContainersFrame
+	list_frame  *listBar
 	actions_bar *actionsBar
 	vm          *ContainersVM
 }
@@ -21,8 +21,10 @@ func NewContainersPage(parent tk.Widget, vm *ContainersVM) *ContainersPage {
 	// label
 	lbl := tk.NewLabel(fr, "Containers")
 
+	filter := newFilterBar(fr, vm)
+
 	// list
-	list := NewContainersFrame(fr, vm)
+	list := newListBar(fr, vm)
 
 	// fr.BindEvent("<Enter>", func(e *tk.Event) {
 	// 	fmt.Println("Enter")
@@ -42,6 +44,9 @@ func NewContainersPage(parent tk.Widget, vm *ContainersVM) *ContainersPage {
 	// layout
 	main_layout := tk.NewVPackLayout(fr)
 	main_layout.AddWidget(lbl)
+	main_layout.AddWidget(filter,
+		tk.PackAttrFillX(),
+	)
 	main_layout.AddWidget(list,
 		tk.PackAttrFillBoth(),
 		tk.PackAttrExpand(true),

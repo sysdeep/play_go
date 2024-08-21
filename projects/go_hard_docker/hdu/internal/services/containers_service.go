@@ -46,6 +46,7 @@ func make_container_list_model(c types.Container) ContainerListModel {
 	// fmt.Println("------------------------------")
 	// fmt.Printf("%+v\n", c)
 
+	// utils.PrintAsJson(c)
 	// time format
 	unixTimeUTC := time.Unix(c.Created, 0) //gives unix time stamp in utc
 
@@ -64,3 +65,20 @@ func make_container_list_model(c types.Container) ContainerListModel {
 		Ports:       make([]string, 0), // TODO
 	}
 }
+
+/*
+	"Ports": [
+        {
+            "IP": "127.0.0.1",
+            "PrivatePort": 5000,
+            "PublicPort": 5000,
+            "Type": "tcp"
+        },
+        {
+            "IP": "172.28.1.1",
+            "PrivatePort": 5000,
+            "PublicPort": 5000,
+            "Type": "tcp"
+        }
+    ]
+*/
