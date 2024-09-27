@@ -3,6 +3,7 @@ package webserver
 import (
 	"hdu/internal/logger"
 	"hdu/internal/services"
+	"hdu/internal/webserver/api"
 	"hdu/internal/webserver/handlers"
 
 	"github.com/docker/docker/client"
@@ -21,10 +22,16 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 
 	e.Static("/static", "public")
 
+	// logger
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
+
+	// recover
 	e.Use(middleware.Recover())
+
+	// CORS
+	e.Use(middleware.CORS())
 
 	// setup custom renderer
 	tplr := NewTemplater()
@@ -78,6 +85,13 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 	// 	// return c.Render(200, "aaa", 0)
 	// 	return c.Render(200, "aaa.html", 0)
 	// })
+
+	// api ----------------------------------------------------------------------
+	api_handlers := api.NewApi(docker, services, logger)
+
+	// images
+	e.GET("/api/images", api_handlers.GetImages)
+	e.DELETE("/api/images/:id", api_handlers.RemoveImage)
 
 	return &Webserver{
 		e: e,
