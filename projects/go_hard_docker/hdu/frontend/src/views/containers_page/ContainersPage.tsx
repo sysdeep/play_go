@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ContainersTable from './ContainersTable';
 import ContainerListModel from '../../models/container_list_model';
 import ContainersService from '../../services/containers_service';
+import TotalReport from './TotalReport';
 
 export default function ContainersPage() {
   const containers_service = useMemo(() => {
@@ -60,7 +61,7 @@ export default function ContainersPage() {
     <div>
       <PageTitle>Containers</PageTitle>
       <ContainersTable containers={containers} />
-
+      <TotalReport total={containers.length} />
       {/* <FilterPanel filter={filter} on_date={on_date} />
       <div>
         <span>loading: {loading}</span>
@@ -74,7 +75,7 @@ export default function ContainersPage() {
         on_remove={remove_image}
         on_date={on_date}
       />
-      <TotalReport total={images.length} /> */}
+       */}
     </div>
   );
 }

@@ -1,16 +1,15 @@
 import ContainerListModel from '../models/container_list_model';
 
-interface ApiImageListModel {
-  containers: number;
-  created: string;
+interface ApiContainerListModel {
   id: string;
-  tags: string[];
-  size: number;
+  name: string;
+  created: string;
+  image: string;
+  state: string;
 }
 
-interface ApiImagesListModel {
-  images: ApiImageListModel[];
-  total: number;
+interface ApiContainersListModel {
+  containers: ApiContainerListModel[];
 }
 
 export default class ContainersService {
@@ -21,20 +20,15 @@ export default class ContainersService {
   async get_containers(): Promise<ContainerListModel[]> {
     let response = await fetch('http://localhost:1313/api/containers');
 
-    let data = (await response.json()) as ApiImagesListModel;
-    console.log(data);
+    let data = (await response.json()) as ApiContainersListModel;
 
-    let dataset = data.images.map((model) => {
+    let dataset = data.containers.map((model) => {
       let dmodel: ContainerListModel = {
         id: model.id,
         created: model.created,
-
-        // TODO
-        name: '',
-        image: '',
-        state: '',
-        // tags: model.tags,
-        // size: model.size,
+        name: model.name,
+        image: model.image,
+        state: model.state,
       };
       return dmodel;
     });
@@ -42,11 +36,31 @@ export default class ContainersService {
     return dataset;
   }
 
-  async remove_container(id: string): Promise<void> {
-    await fetch('http://localhost:1313/api/containers/' + id, {
-      method: 'DELETE',
-    });
+  // async remove_container(id: string): Promise<void> {
+  //   await fetch('http://localhost:1313/api/containers/' + id, {
+  //     method: 'DELETE',
+  //   });
 
-    return;
+  //   return;
+  // }
+
+  async get_container(id: string): Promise<ApiContainerResponseModel> {
+    let response = await fetch('http://localhost:1313/api/containers/' + id);
+    let data = (await response.json()) as ApiContainerResponseModel;
+    return data;
   }
+}
+
+interface ApiContainerModel {}
+interface ApiContainerStateModel {}
+interface ApiContainerMountsModel {}
+interface ApiContainerConfigModel {}
+interface ApiContainerNetworkModel {}
+
+interface ApiContainerResponseModel {
+  container: ApiContainerModel;
+  state: ApiContainerStateModel;
+  mounts: ApiContainerMountsModel;
+  config: ApiContainerConfigModel;
+  network: ApiContainerNetworkModel;
 }

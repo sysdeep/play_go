@@ -1,5 +1,6 @@
 import ContainerListModel from '@src/models/container_list_model';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface ContainersTableProps {
   containers: ContainerListModel[];
@@ -11,7 +12,7 @@ export default function ContainersTable({ containers }: ContainersTableProps) {
   });
 
   return (
-    <table>
+    <table className='table-small striped'>
       <thead>
         <tr>
           <th>Name</th>
@@ -36,7 +37,7 @@ function ContainerRow({ container }: ContainerRowProps) {
   return (
     <tr>
       <td>
-        <a href='/containers/{container.id}'>{container.name}</a>
+        <Link to={`/container/` + container.id}>{container.name}</Link>
       </td>
       <td>{container.state}</td>
       <td>{container.image}</td>

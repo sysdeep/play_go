@@ -89,6 +89,10 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 	// api ----------------------------------------------------------------------
 	api_handlers := api.NewApi(docker, services, logger)
 
+	// containers
+	e.GET("/api/containers", api_handlers.GetContainers)
+	e.GET("/api/containers/:id", api_handlers.GetContainer)
+
 	// images
 	e.GET("/api/images", api_handlers.GetImages)
 	e.DELETE("/api/images/:id", api_handlers.RemoveImage)
