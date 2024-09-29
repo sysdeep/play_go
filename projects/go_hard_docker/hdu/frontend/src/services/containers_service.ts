@@ -51,13 +51,41 @@ export default class ContainersService {
   }
 }
 
-interface ApiContainerModel {}
-interface ApiContainerStateModel {}
+interface ApiContainerModel {
+  id: string;
+  created: string;
+  name: string;
+  restart_count: number;
+}
+interface ApiContainerStateModel {
+  status: string;
+  started: string;
+}
 interface ApiContainerMountsModel {}
-interface ApiContainerConfigModel {}
-interface ApiContainerNetworkModel {}
+interface ApiContainerConfigModel {
+  env: string[];
+  cmd: string;
+  image: string;
+  entrypoint: string;
+}
+interface ApiNetworkSegment {
+  gateway: string;
+  ip_address: string;
+  mac_address: string;
+  network_id: string;
+}
+interface ApiPortSegment {
+  host_ip: string;
+  host_port: string;
+}
+type ApiNetworkMap = { [id: string]: ApiNetworkSegment };
+type ApiPortMap = { [id: string]: ApiPortMap };
+interface ApiContainerNetworkModel {
+  networks: ApiNetworkMap;
+  ports: ApiPortMap;
+}
 
-interface ApiContainerResponseModel {
+export interface ApiContainerResponseModel {
   container: ApiContainerModel;
   state: ApiContainerStateModel;
   mounts: ApiContainerMountsModel;

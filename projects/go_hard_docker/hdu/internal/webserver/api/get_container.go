@@ -115,14 +115,14 @@ type containerConfig struct {
 	// Tty             bool                // Attach standard streams to a tty, including stdin if it is not closed.
 	// OpenStdin       bool                // Open stdin
 	// StdinOnce       bool                // If true, close stdin after the 1 attached client disconnects.
-	Env []string // List of environment variable to set in the container
-	Cmd string   // Command to run when starting the container
+	Env []string `json:"env"` // List of environment variable to set in the container
+	Cmd string   `json:"cmd"` // Command to run when starting the container
 	// Healthcheck     *HealthConfig       `json:",omitempty"` // Healthcheck describes how to check the container is healthy
 	// ArgsEscaped     bool                `json:",omitempty"` // True if command is already escaped (meaning treat as a command line) (Windows specific).
-	Image string // Name of the image as it was passed by the operator (e.g. could be symbolic)
+	Image string `json:"image"` // Name of the image as it was passed by the operator (e.g. could be symbolic)
 	// Volumes         map[string]struct{} // List of volumes (mounts) used for the container
 	// WorkingDir      string              // Current directory (PWD) in the command will be launched
-	Entrypoint string // Entrypoint to run when starting the container
+	Entrypoint string `json:"entrypoint"` // Entrypoint to run when starting the container
 	// NetworkDisabled bool                `json:",omitempty"` // Is network disabled
 
 	// Mac Address of the container.
@@ -139,9 +139,9 @@ type containerConfig struct {
 // PortBinding represents a binding between a Host IP address and a Host Port
 type PortBinding struct {
 	// HostIP is the host IP Address
-	HostIP string
+	HostIP string `json:"host_ip"`
 	// HostPort is the host port number
-	HostPort string
+	HostPort string `json:"host_port"`
 }
 
 // PortMap is a collection of PortBinding indexed by Port
@@ -163,12 +163,12 @@ type networkEndpointSettings struct {
 	// MacAddress may be used to specify a MAC address when the container is created.
 	// Once the container is running, it becomes operational data (it may contain a
 	// generated address).
-	MacAddress string
+	MacAddress string `json:"mac_address"`
 	// Operational data
-	NetworkID string
+	NetworkID string `json:"network_id"`
 	// EndpointID          string
-	Gateway   string
-	IPAddress string
+	Gateway   string `json:"gateway"`
+	IPAddress string `json:"ip_address"`
 	// IPPrefixLen         int
 	// IPv6Gateway         string
 	// GlobalIPv6Address   string
@@ -182,9 +182,9 @@ type networkEndpointSettings struct {
 // networkSettings exposes the network settings in the api
 type networkSettings struct {
 	// NetworkSettingsBase
-	Ports PortMap // Ports is a collection of PortBinding indexed by Port
+	Ports PortMap `json:"ports"` // Ports is a collection of PortBinding indexed by Port
 	// DefaultNetworkSettings
-	Networks map[string]networkEndpointSettings
+	Networks map[string]networkEndpointSettings `json:"networks"`
 }
 
 type containerPageModel struct {
