@@ -7,6 +7,8 @@ import PageTitle from '../../components/PageTitle';
 import ContainersService from '../../services/containers_service';
 import { ApiContainerResponseModel } from '../../services/containers_service';
 import DetailsFrame from './details_frame';
+import VolumesFrame from './volumes_frame';
+import NetworksFrame from './networks_frame';
 
 export default function ContainerPage() {
   const { id } = useParams();
@@ -50,6 +52,8 @@ export default function ContainerPage() {
         <ActionsFrame id={id} />
         <StatusFrame container={container} />
         <DetailsFrame container={container} />
+        <VolumesFrame container={container} />
+        <NetworksFrame container={container} />
       </>
     );
   };

@@ -6,6 +6,24 @@ interface DetailsFrameProps {
 }
 
 export default function DetailsFrame({ container }: DetailsFrameProps) {
+  const ports_view = Object.keys(container.network.ports).map(
+    (port_name, idx) => {
+      const values = container.network.ports[port_name];
+
+      if (!values) {
+        return <li key={idx * 100000}>{port_name} - not defined</li>;
+      }
+
+      return values.map((segment, idi) => {
+        return (
+          <li key={(idx + 1) * (idi + 2)}>
+            {port_name} - {segment.host_ip}:{segment.host_port}
+          </li>
+        );
+      });
+    },
+  );
+
   return (
     <div>
       <h2>Container details</h2>
@@ -15,7 +33,7 @@ export default function DetailsFrame({ container }: DetailsFrameProps) {
             <tr>
               <td>Image</td>
               <td>
-                <a href='/images/{container.config.image}'>
+                <a href={'/images/' + container.container.image}>
                   {container.config.image}
                 </a>
                 {/* {container.config.image} */}
@@ -24,14 +42,7 @@ export default function DetailsFrame({ container }: DetailsFrameProps) {
             <tr>
               <td>Ports</td>
               <td>
-                range $pt, $ports := .Network.Ports
-                <ul>
-                  {/* {container.network.ports} */}
-                  range $ports
-                  <li> .HostIP : .HostPort "-" $pt </li>
-                  end
-                </ul>
-                end
+                <ul>{ports_view}</ul>
               </td>
             </tr>
             <tr>
@@ -68,16 +79,8 @@ interface EnvTableProps {
 }
 function EnvTable({ env }: EnvTableProps) {
   const rows = env.map((row, idx) => {
-    return (
-      <tr key='idx'>
-        <td>{row}</td>
-      </tr>
-    );
+    return <li key={idx}>{row}</li>;
   });
 
-  return (
-    <table>
-      <tbody>{rows}</tbody>
-    </table>
-  );
+  return <ul>{rows}</ul>;
 }

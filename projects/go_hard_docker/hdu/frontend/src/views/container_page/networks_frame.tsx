@@ -1,6 +1,30 @@
 import React from 'react';
+import { ApiContainerResponseModel } from '../../services/containers_service';
 
-export default function NetworksFrame() {
+interface NetworksFrameProps {
+  container: ApiContainerResponseModel;
+}
+
+export default function NetworksFrame({ container }: NetworksFrameProps) {
+  const networks_view = Object.keys(container.network.networks).map(
+    (endpoint, idx) => {
+      const net = container.network.networks[endpoint];
+      return (
+        <tr key={idx}>
+          <td>
+            <a href={'/networks/' + net.network_id}>{endpoint}</a>
+          </td>
+          <td>{net.ip_address}</td>
+          <td>{net.gateway}</td>
+          <td>{net.mac_address}</td>
+          {/* <!-- TODO --> */}
+          {/* <!-- <td> --> */}
+          {/* <!--   <a href="TODO">Leave TODO</a> --> */}
+          {/* <!-- </td> --> */}
+        </tr>
+      );
+    },
+  );
   return (
     <div>
       <h2>Networks</h2>
@@ -17,22 +41,7 @@ export default function NetworksFrame() {
               {/* <!-- <th>Actions</th> --> */}
             </tr>
           </thead>
-          <tbody>
-            range $endpoint, $ep_settings := .Network.Networks
-            <tr>
-              <td>
-                <a href='/networks/ $ep_settings.NetworkID '> $endpoint </a>
-              </td>
-              <td> $ep_settings.IPAddress </td>
-              <td> $ep_settings.Gateway </td>
-              <td> $ep_settings.MacAddress </td>
-              {/* <!-- TODO --> */}
-              {/* <!-- <td> --> */}
-              {/* <!--   <a href="TODO">Leave TODO</a> --> */}
-              {/* <!-- </td> --> */}
-            </tr>
-            end
-          </tbody>
+          <tbody>{networks_view}</tbody>
         </table>
       </div>
     </div>

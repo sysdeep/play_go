@@ -36,7 +36,7 @@ type mountPoint struct {
 
 	// Name is the name reference to the underlying data defined by `Source`
 	// e.g., the volume name.
-	Name string
+	Name string `json:"name"`
 
 	// Source is the source location of the mount.
 	//
@@ -48,7 +48,7 @@ type mountPoint struct {
 
 	// Destination is the path relative to the container root (`/`) where the
 	// Source is mounted inside the container.
-	Destination string
+	Destination string `json:"destination"`
 
 	// Driver is the volume driver used to create the volume (if it is a volume).
 	// Driver string `json:",omitempty"`

@@ -1,6 +1,21 @@
+import { ApiContainerResponseModel } from '../../services/containers_service';
 import React from 'react';
 
-export default function VolumesFrame() {
+interface VolumesFrameProps {
+  container: ApiContainerResponseModel;
+}
+
+export default function VolumesFrame({ container }: VolumesFrameProps) {
+  const rows_view = container.mounts.map((volume, idx) => {
+    return (
+      <tr key={idx}>
+        <td>
+          <a href={'/volumes/' + volume.name}>{volume.name}</a>
+        </td>
+        <td>{volume.destination}</td>
+      </tr>
+    );
+  });
   return (
     <div>
       <h2>Volumes</h2>
@@ -12,16 +27,7 @@ export default function VolumesFrame() {
               <th>Path in container</th>
             </tr>
           </thead>
-          <tbody>
-            range .Mounts
-            <tr>
-              <td>
-                <a href='/volumes/.Name'>.Name</a>
-              </td>
-              <td>.Destination</td>
-            </tr>
-            end
-          </tbody>
+          <tbody>{rows_view}</tbody>
         </table>
       </div>
     </div>

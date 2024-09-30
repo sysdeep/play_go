@@ -56,12 +56,16 @@ interface ApiContainerModel {
   created: string;
   name: string;
   restart_count: number;
+  image: string;
 }
 interface ApiContainerStateModel {
   status: string;
   started: string;
 }
-interface ApiContainerMountsModel {}
+interface ApiContainerMountsModel {
+  name: string;
+  destination: string;
+}
 interface ApiContainerConfigModel {
   env: string[];
   cmd: string;
@@ -79,7 +83,7 @@ interface ApiPortSegment {
   host_port: string;
 }
 type ApiNetworkMap = { [id: string]: ApiNetworkSegment };
-type ApiPortMap = { [id: string]: ApiPortMap };
+type ApiPortMap = { [id: string]: ApiPortSegment[] | null };
 interface ApiContainerNetworkModel {
   networks: ApiNetworkMap;
   ports: ApiPortMap;
@@ -88,7 +92,7 @@ interface ApiContainerNetworkModel {
 export interface ApiContainerResponseModel {
   container: ApiContainerModel;
   state: ApiContainerStateModel;
-  mounts: ApiContainerMountsModel;
+  mounts: ApiContainerMountsModel[];
   config: ApiContainerConfigModel;
   network: ApiContainerNetworkModel;
 }
