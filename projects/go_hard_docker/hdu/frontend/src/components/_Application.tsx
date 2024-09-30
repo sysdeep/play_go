@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import ImagesPage from '../views/images_page/ImagesPage';
+import ImagesPage from '../views/images_page/images_page';
 
 const Application: React.FC = () => {
   const [counter, setCounter] = useState(0);

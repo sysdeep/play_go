@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import PageTitle from '../../components/PageTitle';
-import ImagesTable from './ImagesTable';
+import React, { useState, useEffect, useMemo } from 'react';
+import PageTitle from '../../components/page_title';
+import ImagesTable from './images_table';
 import ImageListModel from '../../models/image_list_model';
 import ImagesService from '../../services/images_service';
-import FilterPanel from './FilterPanel';
-import FilterModel from './FilterModel';
-import TotalReport from './TotalReport';
+import FilterPanel from './filter_panel';
+import FilterModel from './filter_model';
+import TotalReport from './total_report';
+import IconImages from '../../components/icon_images';
 
 export default function ImagesPage() {
   const images_service = useMemo(() => {
@@ -61,7 +62,10 @@ export default function ImagesPage() {
 
   return (
     <div>
-      <PageTitle>Images</PageTitle>
+      <PageTitle>
+        <IconImages />
+        &nbsp; Images
+      </PageTitle>
       <FilterPanel filter={filter} on_date={on_date} />
       <div>
         <span>loading: {loading}</span>

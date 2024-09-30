@@ -1,9 +1,10 @@
-import PageTitle from '../../components/PageTitle';
+import PageTitle from '../../components/page_title';
 import React, { useEffect, useMemo, useState } from 'react';
-import ContainersTable from './ContainersTable';
+import ContainersTable from './containers_table';
 import ContainerListModel from '../../models/container_list_model';
 import ContainersService from '../../services/containers_service';
-import TotalReport from './TotalReport';
+import TotalReport from './total_report';
+import IconContainers from '../../components/icon_containers';
 
 export default function ContainersPage() {
   const containers_service = useMemo(() => {
@@ -59,7 +60,10 @@ export default function ContainersPage() {
 
   return (
     <div>
-      <PageTitle>Containers</PageTitle>
+      <PageTitle>
+        <IconContainers />
+        &nbsp; Containers
+      </PageTitle>
       <ContainersTable containers={containers} />
       <TotalReport total={containers.length} />
       {/* <FilterPanel filter={filter} on_date={on_date} />

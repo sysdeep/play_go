@@ -3,12 +3,13 @@ import { useParams } from 'react-router-dom';
 
 import ActionsFrame from './actions_frame';
 import StatusFrame from './status_frame';
-import PageTitle from '../../components/PageTitle';
+import PageTitle from '../../components/page_title';
 import ContainersService from '../../services/containers_service';
 import { ApiContainerResponseModel } from '../../services/containers_service';
 import DetailsFrame from './details_frame';
 import VolumesFrame from './volumes_frame';
 import NetworksFrame from './networks_frame';
+import IconContainers from '@src/components/icon_containers';
 
 export default function ContainerPage() {
   const { id } = useParams();
@@ -60,7 +61,10 @@ export default function ContainerPage() {
 
   return (
     <div>
-      <PageTitle>Container: {id}</PageTitle>
+      <PageTitle>
+        <IconContainers />
+        &nbsp; Container: {id}
+      </PageTitle>
       {main_body()}
     </div>
   );

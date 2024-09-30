@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ImageListModel from '../../models/image_list_model';
-import FilterModel from './FilterModel';
+import FilterModel from './filter_model';
 import { format_size } from '@src/utils/humanize';
 
 interface ImagesTableProps {
@@ -114,9 +114,9 @@ function TableRow({ uid, tags, size, created, on_remove, on_date }: Props) {
         </a>
       </td>
       <td>
-        {/* <a href='javascript: void(0)' onClick={() => on_remove(uid)}> */}
         <a href='#' onClick={on_remove_click}>
-          remove
+          <i className='bi bi-trash'></i>
+          &nbsp; remove
         </a>
       </td>
     </tr>

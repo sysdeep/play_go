@@ -1,5 +1,5 @@
 import React from 'react';
-import FilterModel from './FilterModel';
+import FilterModel from './filter_model';
 
 interface FilterPanelProps {
   filter: FilterModel;

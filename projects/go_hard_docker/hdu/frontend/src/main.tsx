@@ -1,16 +1,13 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import {
-  RouterProvider,
-  createHashRouter,
-} from 'react-router-dom';
+import { RouterProvider, createHashRouter } from 'react-router-dom';
 
 import 'chota';
 import './style.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
-
-import {routes} from "./routes"
+import { routes } from './routes';
 
 // Say something
 console.log('[ERWT] : Renderer execution started');

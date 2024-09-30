@@ -97,6 +97,12 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 	e.GET("/api/images", api_handlers.GetImages)
 	e.DELETE("/api/images/:id", api_handlers.RemoveImage)
 
+	// volumes
+	e.GET("/api/volumes", api_handlers.GetVolumes)
+
+	// networks
+	e.GET("/api/networks", api_handlers.GetNetworks)
+
 	return &Webserver{
 		e: e,
 	}
