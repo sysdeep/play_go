@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 import ActionsFrame from './actions_frame';
 import StatusFrame from './status_frame';
 import PageTitle from '../../components/page_title';
-import ContainersService from '../../services/containers_service';
-import { ApiContainerResponseModel } from '../../services/containers_service';
+import ContainersService, { ApiContainerResponseModel } from '../../services/containers_service';
 import DetailsFrame from './details_frame';
 import VolumesFrame from './volumes_frame';
 import NetworksFrame from './networks_frame';
@@ -43,7 +42,7 @@ export default function ContainerPage() {
     refresh();
   }, []);
 
-  let main_body = () => {
+  const main_body = () => {
     if (container === null) {
       return <div>not loaded</div>;
     }

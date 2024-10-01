@@ -19,13 +19,13 @@ export default class ImagesService {
   }
 
   async get_images(): Promise<ImageListModel[]> {
-    let response = await fetch('http://localhost:1313/api/images');
+    const response = await fetch('http://localhost:1313/api/images');
 
-    let data = (await response.json()) as ApiImagesListModel;
-    console.log(data);
+    const data = (await response.json()) as ApiImagesListModel;
 
-    let dataset = data.images.map((model) => {
-      let dmodel: ImageListModel = {
+    const images = data.images || [];
+    const dataset = images.map((model) => {
+      const dmodel: ImageListModel = {
         id: model.id,
         created: model.created,
         tags: model.tags,

@@ -6,6 +6,9 @@ import ImagesPage from './views/images_page/images_page';
 import ErrorPage from './views/error-page';
 import Application from './views/application';
 import VolumesPage from './views/volumes_page/volumes_page';
+import NetworksPage from './views/networks_page/networks_page';
+import ConfigsPage from './views/configs_page/configs_page';
+import SecretsPage from './views/secrets_page/secrets_page';
 
 export const routes = [
   // {
@@ -36,6 +39,18 @@ export const routes = [
       {
         path: '/volumes',
         element: <VolumesPage />,
+      },
+      {
+        path: '/networks',
+        element: <NetworksPage />,
+      },
+      {
+        path: '/configs',
+        element: <ConfigsPage />,
+      },
+      {
+        path: '/secrets',
+        element: <SecretsPage />,
       },
     ],
   },

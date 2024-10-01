@@ -18,12 +18,14 @@ export default class ContainersService {
   }
 
   async get_containers(): Promise<ContainerListModel[]> {
-    let response = await fetch('http://localhost:1313/api/containers');
+    const response = await fetch('http://localhost:1313/api/containers');
 
-    let data = (await response.json()) as ApiContainersListModel;
+    const data = (await response.json()) as ApiContainersListModel;
 
-    let dataset = data.containers.map((model) => {
-      let dmodel: ContainerListModel = {
+    const containers = data.containers || [];
+
+    const dataset = containers.map((model) => {
+      const dmodel: ContainerListModel = {
         id: model.id,
         created: model.created,
         name: model.name,
@@ -45,8 +47,8 @@ export default class ContainersService {
   // }
 
   async get_container(id: string): Promise<ApiContainerResponseModel> {
-    let response = await fetch('http://localhost:1313/api/containers/' + id);
-    let data = (await response.json()) as ApiContainerResponseModel;
+    const response = await fetch('http://localhost:1313/api/containers/' + id);
+    const data = (await response.json()) as ApiContainerResponseModel;
     return data;
   }
 }

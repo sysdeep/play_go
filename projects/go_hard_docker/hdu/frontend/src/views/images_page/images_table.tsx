@@ -31,7 +31,7 @@ export default function ImagesTable({
       if (filter.dates.length === 0) {
         return true;
       }
-      let [date, ..._] = v.created.split(' ');
+      const [date, ..._] = v.created.split(' ');
       return filter.dates.includes(date);
     })
     .map((v: ImageListModel, idx: number) => {
@@ -80,7 +80,7 @@ function TableRow({ uid, tags, size, created, on_remove, on_date }: Props) {
 
   const on_date_click = (e: any) => {
     e.preventDefault();
-    let [date, ..._] = created.split(' ');
+    const [date, ..._] = created.split(' ');
     on_date(date);
   };
 
@@ -107,7 +107,7 @@ function TableRow({ uid, tags, size, created, on_remove, on_date }: Props) {
       <td>
         <ul className='table-ui'>{tags_ui()}</ul>
       </td>
-      <td>{format_size(size)}</td>
+      <td className='text-right'>{format_size(size)}</td>
       <td>
         <a href='#' onClick={on_date_click}>
           {created}

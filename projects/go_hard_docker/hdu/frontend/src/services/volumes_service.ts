@@ -18,11 +18,11 @@ export default class VolumesService {
   }
 
   async get_volumes(): Promise<ApiVolumeListModel[]> {
-    let response = await fetch('http://localhost:1313/api/volumes');
+    const response = await fetch('http://localhost:1313/api/volumes');
 
-    let data = (await response.json()) as ApiVolumesListModel;
+    const data = (await response.json()) as ApiVolumesListModel;
 
-    return data.volumes;
+    return data.volumes || [];
   }
 
   // async remove_image(id: string): Promise<void> {
