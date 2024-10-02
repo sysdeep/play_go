@@ -9,6 +9,7 @@ import VolumesPage from './views/volumes_page/volumes_page';
 import NetworksPage from './views/networks_page/networks_page';
 import ConfigsPage from './views/configs_page/configs_page';
 import SecretsPage from './views/secrets_page/secrets_page';
+import HomePage from './views/home_page/home_page';
 
 export const routes = [
   // {
@@ -24,6 +25,10 @@ export const routes = [
     errorElement: <ErrorPage />,
 
     children: [
+      {
+        path: '/',
+        element: <HomePage />,
+      },
       {
         path: '/containers',
         element: <ContainersPage />,

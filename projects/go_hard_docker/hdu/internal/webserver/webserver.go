@@ -109,6 +109,9 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 	// secrets
 	e.GET("/api/secrets", api_handlers.GetSecrets)
 
+	// info
+	e.GET("/api/info", api_handlers.GetInfo)
+
 	return &Webserver{
 		e: e,
 	}
