@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ApiSecretListModel } from '../../services/secrets_service';
 import React from 'react';
 
@@ -10,11 +11,11 @@ export default function SecretsTable({ secrets }: SecretsTableProps) {
     return (
       <tr key={idx}>
         <td>
-          <a href={'/secrets/' + secret.id}>{secret.name} TODO</a>
+          <Link to={'/secret/' + secret.id}>{secret.name}</Link>
         </td>
         <td> {secret.created} </td>
         <td> {secret.updated} </td>
-        <td>
+        {/* <td>
           <a
             href={'/secrets/actions/remove/' + secret.name}
             className='button1 error'
@@ -22,7 +23,7 @@ export default function SecretsTable({ secrets }: SecretsTableProps) {
             <i className='fa fa-trash-o' aria-hidden='true'></i>
             Remove TODO
           </a>
-        </td>
+        </td> */}
       </tr>
     );
   });

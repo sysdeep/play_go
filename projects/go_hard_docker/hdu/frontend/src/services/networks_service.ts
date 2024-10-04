@@ -20,7 +20,20 @@ export class NetworksServices {
 
     const data = (await response.json()) as ApiNetworksListModel;
 
+    if (data.networks.length > 0) {
+      let net = await this.get_network(data.networks[0].id);
+      console.log(net);
+    }
+
     return data.networks || [];
+  }
+
+  async get_network(id: string): Promise<ApiFullNetworkModel> {
+    const response = await fetch('http://localhost:1313/api/networks/' + id);
+
+    const data = (await response.json()) as ApiFullNetworkModel;
+
+    return data;
   }
 
   // async remove_image(id: string): Promise<void> {
@@ -30,4 +43,9 @@ export class NetworksServices {
 
   //   return;
   // }
+}
+
+export interface ApiFullNetworkModel {
+  network: any;
+  containers: any;
 }

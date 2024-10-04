@@ -100,15 +100,19 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 
 	// volumes
 	e.GET("/api/volumes", api_handlers.GetVolumes)
+	e.GET("/api/volumes/:name", api_handlers.GetVolume)
 
 	// networks
 	e.GET("/api/networks", api_handlers.GetNetworks)
+	e.GET("/api/networks/:id", api_handlers.GetNetwork)
 
 	// configs
 	e.GET("/api/configs", api_handlers.GetConfigs)
+	e.GET("/api/configs/:id", api_handlers.GetConfig)
 
 	// secrets
 	e.GET("/api/secrets", api_handlers.GetSecrets)
+	e.GET("/api/secrets/:id", api_handlers.GetSecret)
 
 	// info
 	e.GET("/api/info", api_handlers.GetInfo)

@@ -11,6 +11,9 @@ import ImagesPage from './views/images_page/images_page';
 import NetworksPage from './views/networks_page/networks_page';
 import SecretsPage from './views/secrets_page/secrets_page';
 import VolumesPage from './views/volumes_page/volumes_page';
+import VolumePage from './views/volume_page/volume_page';
+import SecretPage from './views/secret_page/secret_page';
+import ConfigPage from './views/config_page/config_page';
 
 export const route = {
   images: '/images',
@@ -60,6 +63,10 @@ export const routes = [
         element: <VolumesPage />,
       },
       {
+        path: '/volume/:id',
+        element: <VolumePage />,
+      },
+      {
         path: route.networks,
         element: <NetworksPage />,
       },
@@ -68,8 +75,16 @@ export const routes = [
         element: <ConfigsPage />,
       },
       {
+        path: '/config/:id',
+        element: <ConfigPage />,
+      },
+      {
         path: route.secrets,
         element: <SecretsPage />,
+      },
+      {
+        path: '/secret/:id',
+        element: <SecretPage />,
       },
     ],
   },

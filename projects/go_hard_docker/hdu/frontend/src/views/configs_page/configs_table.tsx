@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ApiConfigListModel } from '../../services/configs_service';
 import React from 'react';
 
@@ -10,18 +11,18 @@ export default function ConfigsTable({ configs }: ConfigsTableProps) {
     return (
       <tr key={idx}>
         <td>
-          <a href={'/configs/' + config.id}>{config.name} TODO</a>
+          <Link to={'/config/' + config.id}>{config.name}</Link>
         </td>
         <td> {config.created} </td>
         <td> {config.updated} </td>
         <td>
-          <a
+          {/* <a
             href={'/configs/actions/remove/' + config.name}
             className='button1 error'
           >
             <i className='fa fa-trash-o' aria-hidden='true'></i>
             Remove TODO
-          </a>
+          </a> */}
         </td>
       </tr>
     );
