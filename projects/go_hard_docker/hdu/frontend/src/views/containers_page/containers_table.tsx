@@ -1,4 +1,4 @@
-import ContainerListModel from '@src/models/container_list_model';
+import ContainerListModel from '../../models/container_list_model';
 import React from 'react';
 import { Link } from 'react-router-dom';
 

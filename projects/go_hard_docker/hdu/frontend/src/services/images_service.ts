@@ -1,18 +1,5 @@
 import ImageListModel from '../models/image_list_model';
 
-interface ApiImageListModel {
-  containers: number;
-  created: string;
-  id: string;
-  tags: string[];
-  size: number;
-}
-
-interface ApiImagesListModel {
-  images: ApiImageListModel[];
-  total: number;
-}
-
 export default class ImagesService {
   constructor() {
     console.log('images_service created');
@@ -37,6 +24,14 @@ export default class ImagesService {
     return dataset;
   }
 
+  async get_image(id: string): Promise<ApiFullImageModel> {
+    const response = (await fetch(
+      'http://localhost:1313/api/images/' + id,
+    ).then((data) => data.json())) as ApiFullImageModel;
+
+    return response;
+  }
+
   async remove_image(id: string): Promise<void> {
     await fetch('http://localhost:1313/api/images/' + id, {
       method: 'DELETE',
@@ -44,4 +39,45 @@ export default class ImagesService {
 
     return;
   }
+}
+
+// images list ----------------------------------------------------------------
+interface ApiImageListModel {
+  containers: number;
+  created: string;
+  id: string;
+  tags: string[];
+  size: number;
+}
+
+interface ApiImagesListModel {
+  images: ApiImageListModel[];
+  total: number;
+}
+
+// image models ---------------------------------------------------------------
+interface ApiImageModel {
+  id: string;
+  repo_tags: string[];
+  parent: string;
+  comment: string;
+  created: string;
+  size: number;
+}
+
+interface ApiImageHistoryModel {
+  created: string;
+  id: string;
+  size: number;
+  tags: string[];
+}
+interface ApiImageContainerModel {
+  id: string;
+  name: string;
+}
+
+export interface ApiFullImageModel {
+  image: ApiImageModel;
+  history: ApiImageHistoryModel[];
+  containers: ApiImageContainerModel[];
 }

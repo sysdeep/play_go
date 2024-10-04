@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import IconContainers from '../components/icon_containers';
 import IconImages from '../components/icon_images';
 import IconVolumes from '../components/icon_volumes';
@@ -7,6 +7,7 @@ import IconNetworks from '../components/icon_networks';
 import IconConfigs from '../components/icon_configs';
 import IconSecrets from '../components/icon_secrets';
 import IconHome from '../components/icon_home';
+import { route } from '../routes';
 
 export default function TopNavBar() {
   return (
@@ -16,28 +17,28 @@ export default function TopNavBar() {
           <IconHome />
           &nbsp; Main
         </Link>
-        <Link to='/containers'>
+        <Link to={route.containers}>
           {/* <i className='fa fa-cubes mr-1' aria-hidden='true'></i> */}
           <IconContainers />
           &nbsp; Containers
         </Link>
-        <Link to='/images'>
+        <Link to={route.images}>
           <IconImages />
           &nbsp; Images
         </Link>
-        <Link to='/volumes'>
+        <Link to={route.volumes}>
           <IconVolumes />
           &nbsp; Volumes
         </Link>
-        <Link to='/networks'>
+        <Link to={route.networks}>
           <IconNetworks />
           &nbsp; Networks
         </Link>
-        <Link to='/configs'>
+        <Link to={route.configs}>
           <IconConfigs />
           &nbsp; Configs
         </Link>
-        <Link to='/secrets'>
+        <Link to={route.secrets}>
           <IconSecrets />
           &nbsp; Secrets
         </Link>

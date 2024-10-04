@@ -1,4 +1,4 @@
-import { ApiVolumeListModel } from '@src/services/volumes_service';
+import { ApiVolumeListModel } from '../../services/volumes_service';
 import React from 'react';
 
 interface VolumesTableProps {

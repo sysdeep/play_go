@@ -1,4 +1,4 @@
-import { ApiNetworkListModel } from '@src/services/networks_service';
+import { ApiNetworkListModel } from '../../services/networks_service';
 import React from 'react';
 
 interface NetworksTableProps {

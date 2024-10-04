@@ -1,19 +1,24 @@
 import React from 'react';
 
-import ContainersPage from './views/containers_page/containers_page';
-import ContainerPage from './views/container_page/container_page';
-import ImagesPage from './views/images_page/images_page';
-import ErrorPage from './views/error-page';
 import Application from './views/application';
-import VolumesPage from './views/volumes_page/volumes_page';
-import NetworksPage from './views/networks_page/networks_page';
 import ConfigsPage from './views/configs_page/configs_page';
-import SecretsPage from './views/secrets_page/secrets_page';
+import ContainerPage from './views/container_page/container_page';
+import ContainersPage from './views/containers_page/containers_page';
+import ErrorPage from './views/error-page';
 import HomePage from './views/home_page/home_page';
+import ImagePage from './views/image_page/image_page';
+import ImagesPage from './views/images_page/images_page';
+import NetworksPage from './views/networks_page/networks_page';
+import SecretsPage from './views/secrets_page/secrets_page';
+import VolumesPage from './views/volumes_page/volumes_page';
 
 export const route = {
   images: '/images',
   containers: '/containers',
+  volumes: '/volumes',
+  networks: '/networks',
+  configs: '/configs',
+  secrets: '/secrets',
 };
 
 export const routes = [
@@ -35,7 +40,7 @@ export const routes = [
         element: <HomePage />,
       },
       {
-        path: '/containers',
+        path: route.containers,
         element: <ContainersPage />,
       },
       {
@@ -43,23 +48,27 @@ export const routes = [
         element: <ContainerPage />,
       },
       {
-        path: '/images',
+        path: route.images,
         element: <ImagesPage />,
       },
       {
-        path: '/volumes',
+        path: '/image/:id',
+        element: <ImagePage />,
+      },
+      {
+        path: route.volumes,
         element: <VolumesPage />,
       },
       {
-        path: '/networks',
+        path: route.networks,
         element: <NetworksPage />,
       },
       {
-        path: '/configs',
+        path: route.configs,
         element: <ConfigsPage />,
       },
       {
-        path: '/secrets',
+        path: route.secrets,
         element: <SecretsPage />,
       },
     ],

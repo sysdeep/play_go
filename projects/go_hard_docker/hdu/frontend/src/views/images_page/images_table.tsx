@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import ImageListModel from '../../models/image_list_model';
 import FilterModel from './filter_model';
-import { format_size } from '@src/utils/humanize';
+import { format_size } from '../../utils/humanize';
+import { Link } from 'react-router-dom';
 
 interface ImagesTableProps {
   on_remove(id: string): void;
@@ -86,17 +87,13 @@ function TableRow({ uid, tags, size, created, on_remove, on_date }: Props) {
 
   const tags_ui = () => {
     if (tags.length === 0) {
-      return (
-        <li key={1}>
-          <a href='/images/{uid}'>no tag</a>
-        </li>
-      );
+      return <li key={1}>no tag</li>;
     }
 
     return tags.map((tag, idx) => {
       return (
         <li key={idx}>
-          <a href='/images/{uid}'>{tag}</a>
+          <Link to={'/image/' + uid}>{tag}</Link>
         </li>
       );
     });
