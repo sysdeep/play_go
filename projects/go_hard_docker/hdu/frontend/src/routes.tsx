@@ -11,6 +11,11 @@ import ConfigsPage from './views/configs_page/configs_page';
 import SecretsPage from './views/secrets_page/secrets_page';
 import HomePage from './views/home_page/home_page';
 
+export const route = {
+  images: '/images',
+  containers: '/containers',
+};
+
 export const routes = [
   // {
   //   path: '/demo',

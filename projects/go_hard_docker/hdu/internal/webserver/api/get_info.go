@@ -41,13 +41,13 @@ func (h *Api) GetInfo(c echo.Context) error {
 
 // systemInfo
 type systemInfo struct {
-	ID                string
-	Containers        int
-	ContainersRunning int
-	ContainersPaused  int
-	ContainersStopped int
-	Images            int
-	Driver            string
+	ID                string `json:"id"`
+	Containers        int    `json:"containers"`
+	ContainersRunning int    `json:"containers_running"`
+	ContainersPaused  int    `json:"containers_paused"`
+	ContainersStopped int    `json:"containers_stopped"`
+	Images            int    `json:"images"`
+	Driver            string `json:"driver"`
 	// DriverStatus       [][2]string
 	// SystemStatus       [][2]string `json:",omitempty"` // SystemStatus is only propagated by the Swarm standalone API
 	// Plugins            PluginsInfo
@@ -72,10 +72,10 @@ type systemInfo struct {
 	// CgroupDriver       string
 	// CgroupVersion      string `json:",omitempty"`
 	// NEventsListener    int
-	KernelVersion   string
-	OperatingSystem string
-	OSVersion       string
-	OSType          string
+	KernelVersion   string `json:"kernel_version"`
+	OperatingSystem string `json:"operating_system"`
+	OSVersion       string `json:"os_version"`
+	OSType          string `json:"os_type"`
 	// Architecture       string
 	// IndexServerAddress string
 	// RegistryConfig     *registry.ServiceConfig
@@ -91,8 +91,8 @@ type systemInfo struct {
 	// ExperimentalBuild  bool
 	ServerVersion string `json:"server_version"` // docker engine server version
 	// Runtimes           map[string]RuntimeWithStatus
-	DefaultRuntime string `json:"default_runtime"` // runc
-	Swarm          swarmInfo
+	DefaultRuntime string    `json:"default_runtime"` // runc
+	Swarm          swarmInfo `json:"swarm"`
 	// // LiveRestoreEnabled determines whether containers should be kept
 	// // running when the daemon is shutdown or upon daemon start if
 	// // running containers are detected
@@ -104,7 +104,7 @@ type systemInfo struct {
 	// InitCommit          Commit
 	// SecurityOptions     []string
 	// ProductLicense      string               `json:",omitempty"`
-	DefaultAddressPools []networkAddressPool
+	DefaultAddressPools []networkAddressPool `json:"default_addresses_pools"`
 	// CDISpecDirs         []string
 	//
 	// // Legacy API fields for older API versions.
@@ -119,14 +119,14 @@ type systemInfo struct {
 
 // NetworkAddressPool is a temp struct used by [Info] struct.
 type networkAddressPool struct {
-	Base string
-	Size int
+	Base string `json:"base"`
+	Size int    `json:"size"`
 }
 
 // Info represents generic information about swarm.
 type swarmInfo struct {
-	NodeID   string
-	NodeAddr string
+	NodeID   string `json:"node_id"`
+	NodeAddr string `json:"node_addr"`
 
 	// LocalNodeState   LocalNodeState
 	// ControlAvailable bool

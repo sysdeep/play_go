@@ -1,6 +1,21 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { ApiInfoModel } from '../../services/info_service';
+import { format_size } from '../../utils/humanize';
+import IconContainers from '../../components/icon_containers';
+import { route } from '../../routes';
 
-export default function ServerFrame() {
+interface ServerFrameProps {
+  info: ApiInfoModel;
+}
+export default function ServerFrame({ info }: ServerFrameProps) {
+  const networks_view = info.system.default_addresses_pools.map((pool, idx) => {
+    return (
+      <span key={idx}>
+        [{pool.base} size: {pool.size}]
+      </span>
+    );
+  });
   return (
     <div>
       <h2>Server</h2>
@@ -9,69 +24,71 @@ export default function ServerFrame() {
         <tbody>
           <tr>
             <td>Hostname</td>
-            <td className='text-right'> .SystemInfo.Name </td>
+            <td className='text-right'>{info.system.name}</td>
           </tr>
           <tr>
             <td>Server version</td>
-            <td className='text-right'> .SystemInfo.ServerVersion </td>
+            <td className='text-right'>{info.system.server_version}</td>
           </tr>
           <tr>
             <td>
-              {/* <!-- <i className="fa fa-cubes" aria-hidden="true"></i> --> */}
-              <a href='/containers'>Containers</a>
+              <Link to={route.containers}>Containers</Link>
             </td>
             <td className='text-right'>
               <span className='ml-2' title='total'>
-                <i className='fa fa-cubes' aria-hidden='true'></i>
-                .SystemInfo.Containers
+                <IconContainers />
+                &nbsp;
+                {info.system.containers}
               </span>
               <span className='ml-2' title='running'>
-                <i className='fa fa-play text-success' aria-hidden='true'></i>
-                .SystemInfo.ContainersRunning
+                <i className='bi bi-play-fill text-success'></i>
+                &nbsp;
+                {info.system.containers_running}
               </span>
               <span className='ml-2' title='stopped'>
-                <i className='fa fa-stop text-error' aria-hidden='true'></i>
-                .SystemInfo.ContainersStopped
+                <i className='bi bi-stop-fill text-error'></i>
+                &nbsp;
+                {info.system.containers_stopped}
               </span>
               <span className='ml-2' title='paused'>
-                <i className='fa fa-pause text-grey' aria-hidden='true'></i>
-                .SystemInfo.ContainersPaused
+                <i className='bi bi-pause-fill text-grey'></i>
+                &nbsp;
+                {info.system.containers_paused}
               </span>
             </td>
           </tr>
           <tr>
             <td>
-              <a href='/images'>Images</a>
+              <Link to={route.images}>Images</Link>
             </td>
-            <td className='text-right'> .SystemInfo.Images </td>
+            <td className='text-right'>{info.system.images}</td>
           </tr>
           <tr>
             <td>OperatingSystem</td>
             <td className='text-right'>
-              .SystemInfo.OperatingSystem ( .SystemInfo.KernelVersion )
+              {info.system.operating_system}({info.system.kernel_version})
             </td>
           </tr>
           <tr>
             <td>Address pool</td>
-            <td className='text-right'>
-              range .SystemInfo.DefaultAddressPools [
-              <span> .Base size: .Size </span>] end
-            </td>
+            <td className='text-right'>{networks_view}</td>
           </tr>
           <tr>
             <td>Default runtime</td>
-            <td className='text-right'> .SystemInfo.DefaultRuntime</td>
+            <td className='text-right'>{info.system.default_runtime}</td>
           </tr>
           <tr>
             <td>HW</td>
             <td className='text-right'>
               <span className='ml-2'>
-                <i className='fa fa-laptop' aria-hidden='true'></i>
-                .SystemInfo.NCPU
+                <i className='bi bi-cpu'></i>
+                &nbsp;
+                {info.system.ncpu}
               </span>
               <span className='ml-2'>
-                <i className='fa fa-pie-chart' aria-hidden='true'></i>
-                .SystemInfo.MemTotal
+                <i className='bi bi-sd-card'></i>
+                &nbsp;
+                {format_size(info.system.mem_total)}
               </span>
             </td>
           </tr>

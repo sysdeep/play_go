@@ -1,30 +1,32 @@
+interface ApiSwarmInfo {
+  node_id: string;
+  node_addr: string;
+}
+
+interface ApiNetworkPool {
+  base: string;
+  size: number;
+}
+
 interface ApiSystemModel {
-  // ID: 'RIC3:VAEK:G7YV:R6I5:4NTJ:VP3L:SC3L:KII6:Q24U:O3ER:LUEL:N2XC';
-  // Containers: 2;
-  // ContainersRunning: 2;
-  // ContainersPaused: 0;
-  // ContainersStopped: 0;
-  // Images: 30;
-  // Driver: 'overlay2';
-  // KernelVersion: '6.8.0-45-generic';
-  // OperatingSystem: 'Ubuntu 22.04.5 LTS';
-  // OSVersion: '22.04';
-  // OSType: 'linux';
-  ncpu: number;
-  mem_total: number;
+  id: string;
   name: string;
+  containers: number;
+  containers_running: number;
+  containers_paused: number;
+  containers_stopped: number;
+  images: number;
+  driver: string;
+  kernel_version: string;
+  operating_system: string;
+  os_version: string;
+  os_type: string;
+  swarm: ApiSwarmInfo;
+  default_addresses_pools: ApiNetworkPool[];
   server_version: string;
   default_runtime: string;
-  // Swarm: {
-  //   NodeID: 'tgyx3z0ro5qukwx6l5ukq1a76';
-  //   NodeAddr: '192.168.200.52';
-  // };
-  // DefaultAddressPools: [
-  //   {
-  //     Base: '172.27.0.0/16';
-  //     Size: 24;
-  //   },
-  // ];
+  ncpu: number;
+  mem_total: number;
 }
 
 export interface ApiInfoModel {

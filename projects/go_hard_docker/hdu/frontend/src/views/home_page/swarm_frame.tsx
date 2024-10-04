@@ -1,6 +1,10 @@
+import { ApiInfoModel } from '../../services/info_service';
 import React from 'react';
 
-export default function SwarmFrame() {
+interface SwarmFrameProps {
+  info: ApiInfoModel;
+}
+export default function SwarmFrame({ info }: SwarmFrameProps) {
   return (
     <div>
       <h2>Sawrm</h2>
@@ -9,19 +13,11 @@ export default function SwarmFrame() {
         <tbody>
           <tr>
             <td>Node id</td>
-            <td className='text-right'> .SystemInfo.Swarm.NodeID TODO</td>
+            <td className='text-right'>{info.system.swarm.node_id}</td>
           </tr>
           <tr>
             <td>Node address</td>
-            <td className='text-right'> .SystemInfo.Swarm.NodeAddr TODO</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td className='text-right'></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td className='text-right'></td>
+            <td className='text-right'>{info.system.swarm.node_addr}</td>
           </tr>
         </tbody>
       </table>

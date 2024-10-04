@@ -35,8 +35,8 @@ export default function HomePage() {
             <ClientFrame info={info} />
           </div>
           <div className='col'>
-            <ServerFrame />
-            <SwarmFrame />
+            <ServerFrame info={info} />
+            <SwarmFrame info={info} />
           </div>
         </div>
       );
