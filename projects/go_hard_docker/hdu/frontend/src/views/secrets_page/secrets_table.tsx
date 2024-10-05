@@ -29,7 +29,7 @@ export default function SecretsTable({ secrets }: SecretsTableProps) {
     );
   });
   return (
-    <table className='table-small'>
+    <table className='table-small striped'>
       <thead>
         <tr>
           <th>Name</th>

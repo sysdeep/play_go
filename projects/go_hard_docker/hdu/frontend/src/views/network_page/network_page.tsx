@@ -47,11 +47,13 @@ export default function NetworkPage() {
     return <p>no network</p>;
   };
 
+  const page_title = network ? network.network.name : id;
+
   return (
     <div>
       <PageTitle>
         <IconNetworks />
-        &nbsp; Network {id}
+        &nbsp; Network: {page_title}
       </PageTitle>
 
       {body()}

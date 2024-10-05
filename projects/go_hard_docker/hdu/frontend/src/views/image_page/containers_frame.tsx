@@ -19,7 +19,7 @@ export default function ContainersFrame({ image }: ContainersFrameProps) {
   return (
     <div>
       <h2>Containers</h2>
-      <table className='table-small'>
+      <table className='table table-small striped'>
         <thead>
           <tr>
             <th></th>

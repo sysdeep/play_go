@@ -49,11 +49,14 @@ export default function ImagePage() {
     return <p>no image</p>;
   };
 
+  const [, image_hash] = id.split(':');
+  const page_title = image_hash.slice(0, 12);
+
   return (
     <div>
       <PageTitle>
         <IconImages />
-        &nbsp; Image {id}
+        &nbsp; Image: {page_title}
       </PageTitle>
 
       {body()}

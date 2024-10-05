@@ -20,7 +20,7 @@ export default function ContainersFrame({ containers }: ContainersFrameProps) {
   return (
     <div>
       <h2>Containers</h2>
-      <table>
+      <table className='table table-small striped'>
         <thead>
           <tr>
             <th>Name</th>

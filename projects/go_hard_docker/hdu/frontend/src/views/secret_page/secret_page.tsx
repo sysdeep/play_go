@@ -29,7 +29,6 @@ export default function SecretPage() {
   };
 
   useEffect(() => {
-    console.log('page secret mounted');
     refresh();
   }, []);
 
@@ -45,11 +44,13 @@ export default function SecretPage() {
     return <p>no secret</p>;
   };
 
+  const page_name = secret ? secret.secret.name : id;
+
   return (
     <div>
       <PageTitle>
         <IconSecrets />
-        &nbsp; Secret {id}
+        &nbsp; Secret: {page_name}
       </PageTitle>
 
       {body()}

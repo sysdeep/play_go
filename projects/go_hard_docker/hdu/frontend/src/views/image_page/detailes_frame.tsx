@@ -12,7 +12,7 @@ export default function DetailsFrame({ image }: DetailsFrameProps) {
   });
   return (
     <div>
-      <h2>Image details</h2>
+      <h2>Details</h2>
       <div>
         <table className='table-small'>
           <tbody>

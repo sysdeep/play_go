@@ -1,5 +1,7 @@
 import React from 'react';
 import { ApiContainerResponseModel } from '../../services/containers_service';
+import { route, join_url } from '../../routes';
+import { Link } from 'react-router-dom';
 
 interface NetworksFrameProps {
   container: ApiContainerResponseModel;
@@ -12,7 +14,7 @@ export default function NetworksFrame({ container }: NetworksFrameProps) {
       return (
         <tr key={idx}>
           <td>
-            <a href={'/networks/' + net.network_id}>{endpoint}</a>
+            <Link to={join_url(route.network, net.network_id)}>{endpoint}</Link>
           </td>
           <td>{net.ip_address}</td>
           <td>{net.gateway}</td>
@@ -31,7 +33,7 @@ export default function NetworksFrame({ container }: NetworksFrameProps) {
       {/* <!-- TODO --> */}
       {/* <!-- <div>Connect to: TODO</div> --> */}
       <div>
-        <table>
+        <table className='table table-small striped'>
           <thead>
             <tr>
               <th>Network</th>

@@ -48,7 +48,7 @@ export default function VolumePage() {
     <div>
       <PageTitle>
         <IconVolumes />
-        &nbsp; Volume {id}
+        &nbsp; Volume: {id}
       </PageTitle>
 
       {body()}

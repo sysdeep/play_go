@@ -19,13 +19,13 @@ export class ConfigsServices {
     return data;
   }
 
-  // async remove_image(id: string): Promise<void> {
-  //   await fetch('http://localhost:1313/api/images/' + id, {
-  //     method: 'DELETE',
-  //   });
+  async remove_config(id: string): Promise<void> {
+    await fetch('http://localhost:1313/api/configs/' + id, {
+      method: 'DELETE',
+    });
 
-  //   return;
-  // }
+    return;
+  }
 }
 
 // list models ----------------------------------------------------------------

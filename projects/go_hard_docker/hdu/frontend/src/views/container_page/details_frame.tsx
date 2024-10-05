@@ -1,5 +1,7 @@
 import React from 'react';
 import { ApiContainerResponseModel } from '../../services/containers_service';
+import { route, join_url } from '../../routes';
+import { Link } from 'react-router-dom';
 
 interface DetailsFrameProps {
   container: ApiContainerResponseModel;
@@ -26,16 +28,16 @@ export default function DetailsFrame({ container }: DetailsFrameProps) {
 
   return (
     <div>
-      <h2>Container details</h2>
+      <h2>Details</h2>
       <div>
-        <table>
+        <table className='table table-small'>
           <tbody>
             <tr>
               <td>Image</td>
               <td>
-                <a href={'/images/' + container.container.image}>
+                <Link to={join_url(route.image, container.container.image)}>
                   {container.config.image}
-                </a>
+                </Link>
                 {/* {container.config.image} */}
               </td>
             </tr>

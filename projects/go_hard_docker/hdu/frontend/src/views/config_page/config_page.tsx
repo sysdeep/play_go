@@ -1,19 +1,17 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import PageTitle from '../../components/page_title';
 import React, { useEffect, useMemo, useState } from 'react';
 import DetailsFrame from './detailes_frame';
 import {
-  ApiFullSecretModel,
-  SecretsService,
-} from '../../services/secrets_service';
-import IconSecrets from '../../components/icon_secrets';
-import {
   ApiFullConfigModel,
   ConfigsServices,
 } from '../../services/configs_service';
+import IconConfigs from '../../components/icon_configs';
+import { route } from '../../routes';
 
 export default function ConfigPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const config_service = useMemo(() => {
     return new ConfigsServices();
@@ -37,11 +35,25 @@ export default function ConfigPage() {
     refresh();
   }, []);
 
+  const on_remove = () => {
+    if (config) {
+      config_service
+        .remove_config(id)
+        .then(() => {
+          console.log('remove ok');
+          navigate(route.configs);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   const body = () => {
     if (config) {
       return (
         <div>
-          <DetailsFrame config={config} />
+          <DetailsFrame config={config} on_remove={on_remove} />
         </div>
       );
     }
@@ -49,11 +61,13 @@ export default function ConfigPage() {
     return <p>no config</p>;
   };
 
+  const page_title = config ? config.config.name : id;
+
   return (
     <div>
       <PageTitle>
-        <IconSecrets />
-        &nbsp; Secret {id}
+        <IconConfigs />
+        &nbsp; Config: {page_title}
       </PageTitle>
 
       {body()}

@@ -109,6 +109,7 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 	// configs
 	e.GET("/api/configs", api_handlers.GetConfigs)
 	e.GET("/api/configs/:id", api_handlers.GetConfig)
+	e.DELETE("/api/configs/:id", api_handlers.RemoveConfig)
 
 	// secrets
 	e.GET("/api/secrets", api_handlers.GetSecrets)

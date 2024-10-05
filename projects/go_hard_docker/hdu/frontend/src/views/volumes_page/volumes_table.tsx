@@ -31,7 +31,7 @@ export default function VolumesTable({ volumes }: VolumesTableProps) {
     );
   });
   return (
-    <table className='table-small'>
+    <table className='table-small striped'>
       <thead>
         <tr>
           <th>Name</th>

@@ -9,9 +9,9 @@ interface DetailsFrameProps {
 export default function DetailsFrame({ network }: DetailsFrameProps) {
   return (
     <div>
-      <h2>Network details</h2>
+      <h2>Details</h2>
       <div>
-        <table>
+        <table className='table table-small'>
           <tbody>
             <tr>
               <td>ID</td>
@@ -35,15 +35,15 @@ export default function DetailsFrame({ network }: DetailsFrameProps) {
             </tr>
             <tr>
               <td>Internal</td>
-              <td>{network.network.internal}</td>
+              <td>{network.network.internal ? 'yes' : 'no'}</td>
             </tr>
             <tr>
               <td>Attachable</td>
-              <td>{network.network.attachable}</td>
+              <td>{network.network.attachable ? 'yes' : 'no'}</td>
             </tr>
             <tr>
               <td>Ingress</td>
-              <td>{network.network.ingress}</td>
+              <td>{network.network.ingress ? 'yes' : 'no'}</td>
             </tr>
           </tbody>
         </table>

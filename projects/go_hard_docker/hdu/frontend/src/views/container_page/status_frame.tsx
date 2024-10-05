@@ -8,9 +8,9 @@ interface StatusFrameProps {
 export default function StatusFrame({ container }: StatusFrameProps) {
   return (
     <div>
-      <h2>Container status</h2>
+      <h2>Status</h2>
       <div>
-        <table>
+        <table className='table table-small'>
           <tbody>
             <tr>
               <td>ID</td>

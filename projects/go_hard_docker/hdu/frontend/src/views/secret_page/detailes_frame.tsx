@@ -8,9 +8,9 @@ interface DetailsFrameProps {
 export default function DetailsFrame({ secret }: DetailsFrameProps) {
   return (
     <div>
-      <h2>Secret details</h2>
+      {/* <h2>Secret details</h2> */}
       <div>
-        <table>
+        <table className='table table-small'>
           <tbody>
             <tr>
               <td>ID</td>

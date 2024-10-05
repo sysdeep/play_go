@@ -9,7 +9,7 @@ interface HistoryFrameProps {
 export default function HistoryFrame({ image }: HistoryFrameProps) {
   const tags_list = (tags: string[]) => {
     return tags.map((tag, idx) => {
-      return <span key={idx}>tag</span>;
+      return <span key={idx}>{tag}</span>;
     });
   };
 
@@ -27,7 +27,7 @@ export default function HistoryFrame({ image }: HistoryFrameProps) {
   return (
     <div>
       <h2>History</h2>
-      <table className='table-small'>
+      <table className='table table-small striped'>
         <thead>
           <tr>
             <th>ID</th>

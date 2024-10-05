@@ -54,8 +54,8 @@ export default function ContainerPage() {
         <ActionsFrame id={id} />
         <StatusFrame container={container} />
         <DetailsFrame container={container} />
-        <VolumesFrame container={container} />
         <NetworksFrame container={container} />
+        <VolumesFrame container={container} />
       </>
     );
   };

@@ -10,9 +10,9 @@ interface DetailsFrameProps {
 export default function DetailsFrame({ volume }: DetailsFrameProps) {
   return (
     <div>
-      <h2>Volume details</h2>
+      {/* <h2>Volume details</h2> */}
       <div>
-        <table>
+        <table className='table table-small'>
           <tbody>
             <tr>
               <td>ID</td>

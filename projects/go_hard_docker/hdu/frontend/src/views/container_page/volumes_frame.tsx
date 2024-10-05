@@ -1,5 +1,7 @@
-import { ApiContainerResponseModel } from '../../services/containers_service';
+import { Link } from 'react-router-dom';
 import React from 'react';
+import { ApiContainerResponseModel } from '../../services/containers_service';
+import { route, join_url } from '../../routes';
 
 interface VolumesFrameProps {
   container: ApiContainerResponseModel;
@@ -10,7 +12,7 @@ export default function VolumesFrame({ container }: VolumesFrameProps) {
     return (
       <tr key={idx}>
         <td>
-          <a href={'/volumes/' + volume.name}>{volume.name}</a>
+          <Link to={join_url(route.volume, volume.name)}>{volume.name}</Link>
         </td>
         <td>{volume.destination}</td>
       </tr>
@@ -20,7 +22,7 @@ export default function VolumesFrame({ container }: VolumesFrameProps) {
     <div>
       <h2>Volumes</h2>
       <div>
-        <table>
+        <table className='table table-small striped'>
           <thead>
             <tr>
               <th>Host/volume</th>

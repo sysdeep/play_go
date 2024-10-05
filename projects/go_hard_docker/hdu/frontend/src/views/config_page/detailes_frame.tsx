@@ -1,16 +1,18 @@
 import React from 'react';
 import { ApiFullConfigModel } from '../../services/configs_service';
+import ButtonRemove from '../../components/button_remove';
 
 interface DetailsFrameProps {
   config: ApiFullConfigModel;
+  on_remove(): void;
 }
 
-export default function DetailsFrame({ config }: DetailsFrameProps) {
+export default function DetailsFrame({ config, on_remove }: DetailsFrameProps) {
   return (
     <div>
-      <h2>Secret details</h2>
+      {/* <h2>Secret details</h2> */}
       <div>
-        <table>
+        <table className='table-small'>
           <tbody>
             <tr>
               <td>ID</td>
@@ -30,6 +32,10 @@ export default function DetailsFrame({ config }: DetailsFrameProps) {
             </tr>
           </tbody>
         </table>
+
+        <div>
+          <ButtonRemove on_remove={on_remove} />
+        </div>
 
         <pre>{config.config.data_text}</pre>
 
