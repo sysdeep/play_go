@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ApiVolumeListModel } from '../../services/volumes_service';
 import React from 'react';
+import { route, join_url } from '../../routes';
 
 interface VolumesTableProps {
   volumes: ApiVolumeListModel[];
@@ -11,7 +12,7 @@ export default function VolumesTable({ volumes }: VolumesTableProps) {
     return (
       <tr key={idx}>
         <td>
-          <Link to={'/volume/' + volume.name}>{volume.name}</Link>
+          <Link to={join_url(route.volume, volume.name)}>{volume.name}</Link>
         </td>
         <td> {volume.stack_name} </td>
         <td> {volume.driver} </td>

@@ -4,13 +4,13 @@ import NetworksTable from './networks_table';
 import TotalReport from './total_report';
 import {
   ApiNetworkListModel,
-  NetworksServices,
+  NetworksService,
 } from '../../services/networks_service';
 import IconNetworks from '../../components/icon_networks';
 
 export default function NetworksPage() {
   const networks_service = useMemo(() => {
-    return new NetworksServices();
+    return new NetworksService();
   }, []);
 
   const [networks, setNetworks] = useState<ApiNetworkListModel[]>([]);

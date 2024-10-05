@@ -32,8 +32,8 @@ export default class VolumesService {
 export interface ApiVolumeListModel {
   id: string;
   created: string;
-  name: number;
-  stack_name: number;
+  name: string;
+  stack_name: string;
   mount_point: string;
   driver: string;
 }

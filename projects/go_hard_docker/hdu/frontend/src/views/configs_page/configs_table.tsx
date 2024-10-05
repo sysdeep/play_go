@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ApiConfigListModel } from '../../services/configs_service';
 import React from 'react';
+import { route, join_url } from '../../routes';
 
 interface ConfigsTableProps {
   configs: ApiConfigListModel[];
@@ -11,7 +12,7 @@ export default function ConfigsTable({ configs }: ConfigsTableProps) {
     return (
       <tr key={idx}>
         <td>
-          <Link to={'/config/' + config.id}>{config.name}</Link>
+          <Link to={join_url(route.config, config.id)}>{config.name}</Link>
         </td>
         <td> {config.created} </td>
         <td> {config.updated} </td>

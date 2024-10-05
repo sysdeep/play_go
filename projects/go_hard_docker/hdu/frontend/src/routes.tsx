@@ -14,15 +14,25 @@ import VolumesPage from './views/volumes_page/volumes_page';
 import VolumePage from './views/volume_page/volume_page';
 import SecretPage from './views/secret_page/secret_page';
 import ConfigPage from './views/config_page/config_page';
+import NetworkPage from './views/network_page/network_page';
+import { join_url } from './utils/url';
 
 export const route = {
+  image: '/image',
   images: '/images',
+  container: '/container',
   containers: '/containers',
+  volume: '/volume',
   volumes: '/volumes',
+  network: '/network',
   networks: '/networks',
+  config: '/config',
   configs: '/configs',
+  secret: '/secret',
   secrets: '/secrets',
 };
+
+export { join_url };
 
 export const routes = [
   // {
@@ -47,7 +57,7 @@ export const routes = [
         element: <ContainersPage />,
       },
       {
-        path: '/container/:id',
+        path: join_url(route.container, ':id'),
         element: <ContainerPage />,
       },
       {
@@ -55,7 +65,7 @@ export const routes = [
         element: <ImagesPage />,
       },
       {
-        path: '/image/:id',
+        path: join_url(route.image, ':id'),
         element: <ImagePage />,
       },
       {
@@ -63,7 +73,7 @@ export const routes = [
         element: <VolumesPage />,
       },
       {
-        path: '/volume/:id',
+        path: join_url(route.volume, ':id'),
         element: <VolumePage />,
       },
       {
@@ -71,11 +81,15 @@ export const routes = [
         element: <NetworksPage />,
       },
       {
+        path: join_url(route.network, ':id'),
+        element: <NetworkPage />,
+      },
+      {
         path: route.configs,
         element: <ConfigsPage />,
       },
       {
-        path: '/config/:id',
+        path: join_url(route.config, ':id'),
         element: <ConfigPage />,
       },
       {
@@ -83,7 +97,7 @@ export const routes = [
         element: <SecretsPage />,
       },
       {
-        path: '/secret/:id',
+        path: join_url(route.secret, ':id'),
         element: <SecretPage />,
       },
     ],

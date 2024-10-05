@@ -3,6 +3,7 @@ import ImageListModel from '../../models/image_list_model';
 import FilterModel from './filter_model';
 import { format_size } from '../../utils/humanize';
 import { Link } from 'react-router-dom';
+import { route, join_url } from '../../routes';
 
 interface ImagesTableProps {
   on_remove(id: string): void;
@@ -93,7 +94,7 @@ function TableRow({ uid, tags, size, created, on_remove, on_date }: Props) {
     return tags.map((tag, idx) => {
       return (
         <li key={idx}>
-          <Link to={'/image/' + uid}>{tag}</Link>
+          <Link to={join_url(route.image, uid)}>{tag}</Link>
         </li>
       );
     });

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ApiSecretListModel } from '../../services/secrets_service';
 import React from 'react';
+import { route, join_url } from '../../routes';
 
 interface SecretsTableProps {
   secrets: ApiSecretListModel[];
@@ -11,7 +12,7 @@ export default function SecretsTable({ secrets }: SecretsTableProps) {
     return (
       <tr key={idx}>
         <td>
-          <Link to={'/secret/' + secret.id}>{secret.name}</Link>
+          <Link to={join_url(route.secret, secret.id)}>{secret.name}</Link>
         </td>
         <td> {secret.created} </td>
         <td> {secret.updated} </td>

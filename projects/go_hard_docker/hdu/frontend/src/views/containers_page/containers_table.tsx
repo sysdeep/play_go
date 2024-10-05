@@ -1,6 +1,7 @@
 import ContainerListModel from '../../models/container_list_model';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { route, join_url } from '../../routes';
 
 interface ContainersTableProps {
   containers: ContainerListModel[];
@@ -37,7 +38,9 @@ function ContainerRow({ container }: ContainerRowProps) {
   return (
     <tr>
       <td>
-        <Link to={`/container/` + container.id}>{container.name}</Link>
+        <Link to={join_url(route.container, container.id)}>
+          {container.name}
+        </Link>
       </td>
       <td>{container.state}</td>
       <td>{container.image}</td>

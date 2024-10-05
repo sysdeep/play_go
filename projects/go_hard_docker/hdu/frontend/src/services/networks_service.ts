@@ -1,16 +1,4 @@
-export interface ApiNetworkListModel {
-  id: string;
-  name: number;
-  created: string;
-  driver: string;
-}
-
-interface ApiNetworksListModel {
-  networks: ApiNetworkListModel[];
-  total: number;
-}
-
-export class NetworksServices {
+export class NetworksService {
   constructor() {
     console.log('networks_service created');
   }
@@ -45,7 +33,40 @@ export class NetworksServices {
   // }
 }
 
+// list models ----------------------------------------------------------------
+export interface ApiNetworkListModel {
+  id: string;
+  name: number;
+  created: string;
+  driver: string;
+}
+
+interface ApiNetworksListModel {
+  networks: ApiNetworkListModel[];
+  total: number;
+}
+// network model --------------------------------------------------------------
+interface ApiNetworkModel {
+  name: string;
+  id: string;
+  created: string;
+  scope: string;
+  driver: string;
+  internal: boolean;
+  attachable: boolean;
+  ingress: boolean;
+}
+
+export interface ApiNetworkContainerModel {
+  id: string;
+  name: string;
+  endpoint_id: string;
+  mac_address: string;
+  ip_v4_address: string;
+  ip_v6_address: string;
+}
+
 export interface ApiFullNetworkModel {
-  network: any;
-  containers: any;
+  network: ApiNetworkModel;
+  containers: ApiNetworkContainerModel[];
 }

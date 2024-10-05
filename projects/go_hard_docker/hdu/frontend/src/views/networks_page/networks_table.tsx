@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom';
 import { ApiNetworkListModel } from '../../services/networks_service';
 import React from 'react';
+import { route, join_url } from '../../routes';
 
 interface NetworksTableProps {
   networks: ApiNetworkListModel[];
@@ -10,7 +12,7 @@ export default function NetworksTable({ networks }: NetworksTableProps) {
     return (
       <tr key={idx}>
         <td>
-          <a href={'/hetworks/' + network.id}>{network.name} TODO</a>
+          <Link to={join_url(route.network, network.id)}>{network.name}</Link>
         </td>
         <td> {network.driver} </td>
         <td> {network.created} </td>
