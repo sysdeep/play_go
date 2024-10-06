@@ -2,13 +2,23 @@ import { Link } from 'react-router-dom';
 import { ApiConfigListModel } from '../../services/configs_service';
 import React from 'react';
 import { route, join_url } from '../../routes';
+import IconRemove from '@src/components/icon_remove';
 
 interface ConfigsTableProps {
   configs: ApiConfigListModel[];
+  on_remove(id: string): void;
 }
 
-export default function ConfigsTable({ configs }: ConfigsTableProps) {
+export default function ConfigsTable({
+  configs,
+  on_remove,
+}: ConfigsTableProps) {
   const configs_view = configs.map((config, idx) => {
+    const on_remove_click = (e: any, id: string) => {
+      e.preventDefault();
+      on_remove(id);
+    };
+
     return (
       <tr key={idx}>
         <td>
@@ -17,13 +27,14 @@ export default function ConfigsTable({ configs }: ConfigsTableProps) {
         <td> {config.created} </td>
         <td> {config.updated} </td>
         <td>
-          {/* <a
-            href={'/configs/actions/remove/' + config.name}
-            className='button1 error'
+          <a
+            href='#'
+            className='error'
+            onClick={(e) => on_remove_click(e, config.id)}
           >
-            <i className='fa fa-trash-o' aria-hidden='true'></i>
-            Remove TODO
-          </a> */}
+            <IconRemove />
+            Remove
+          </a>
         </td>
       </tr>
     );

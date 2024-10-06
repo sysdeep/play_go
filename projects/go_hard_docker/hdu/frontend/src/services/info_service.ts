@@ -1,3 +1,5 @@
+import { join_url } from '@src/routes';
+
 interface ApiSwarmInfo {
   node_id: string;
   node_addr: string;
@@ -36,12 +38,14 @@ export interface ApiInfoModel {
 }
 
 export default class InfoService {
-  constructor() {
+  private base_url: string;
+  constructor(base_url: string) {
+    this.base_url = base_url;
     console.log('volumes_service created');
   }
 
   async get_info(): Promise<ApiInfoModel> {
-    const response = await fetch('http://localhost:1313/api/info');
+    const response = await fetch(join_url(this.base_url, '/api/info'));
 
     const data = (await response.json()) as ApiInfoModel;
 

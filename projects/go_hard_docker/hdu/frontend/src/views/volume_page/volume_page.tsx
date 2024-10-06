@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PageTitle from '../../components/page_title';
 import React, { useEffect, useMemo, useState } from 'react';
 import DetailsFrame from './detailes_frame';
@@ -6,12 +6,16 @@ import VolumesService, {
   ApiFullVolumeModel,
 } from '../../services/volumes_service';
 import IconVolumes from '../../components/icon_volumes';
+import { route } from '@src/routes';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function VolumePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { configuration } = useConfiguration();
 
   const volume_service = useMemo(() => {
-    return new VolumesService();
+    return new VolumesService(configuration.base_url);
   }, []);
 
   const [volume, setVolume] = useState<ApiFullVolumeModel | null>(null);
@@ -32,11 +36,22 @@ export default function VolumePage() {
     refresh();
   }, []);
 
+  const on_remove = () => {
+    volume_service
+      .remove_volume(id)
+      .then(() => {
+        navigate(route.volumes);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const body = () => {
     if (volume) {
       return (
         <div>
-          <DetailsFrame volume={volume} />
+          <DetailsFrame volume={volume} on_remove={on_remove} />
         </div>
       );
     }

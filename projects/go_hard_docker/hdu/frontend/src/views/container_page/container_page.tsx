@@ -11,12 +11,14 @@ import DetailsFrame from './details_frame';
 import VolumesFrame from './volumes_frame';
 import NetworksFrame from './networks_frame';
 import IconContainers from '../../components/icon_containers';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function ContainerPage() {
   const { id } = useParams();
+  const { configuration } = useConfiguration();
 
   const containers_service = useMemo(() => {
-    return new ContainersService();
+    return new ContainersService(configuration.base_url);
   }, []);
 
   const [container, setContainer] = useState<ApiContainerResponseModel | null>(

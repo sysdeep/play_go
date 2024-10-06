@@ -7,10 +7,12 @@ import FilterPanel from './filter_panel';
 import FilterModel from './filter_model';
 import TotalReport from './total_report';
 import IconImages from '../../components/icon_images';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function ImagesPage() {
+  const { configuration } = useConfiguration();
   const images_service = useMemo(() => {
-    return new ImagesService();
+    return new ImagesService(configuration.base_url);
   }, []);
 
   const [images, setImages] = useState<ImageListModel[]>([]);
@@ -38,8 +40,6 @@ export default function ImagesPage() {
   }, []);
 
   const remove_image = (id: string) => {
-    console.log('remove', id);
-
     images_service
       .remove_image(id)
       .then(() => {

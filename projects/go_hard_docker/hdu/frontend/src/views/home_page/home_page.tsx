@@ -3,10 +3,12 @@ import ClientFrame from './client_frame';
 import ServerFrame from './server_frame';
 import SwarmFrame from './swarm_frame';
 import InfoService, { ApiInfoModel } from '../../services/info_service';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function HomePage() {
+  const { configuration } = useConfiguration();
   const info_service = useMemo(() => {
-    return new InfoService();
+    return new InfoService(configuration.base_url);
   }, []);
 
   const [info, setInfo] = useState<ApiInfoModel | null>(null);

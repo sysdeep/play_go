@@ -1,10 +1,15 @@
+import { join_url } from '@src/routes';
+
 export class SecretsService {
-  constructor() {
+  private base_url: string;
+
+  constructor(base_url: string) {
+    this.base_url = base_url;
     console.log('secrets service created');
   }
 
   async get_secrets(): Promise<ApiSecretListModel[]> {
-    const response = await fetch('http://localhost:1313/api/secrets');
+    const response = await fetch(join_url(this.base_url, '/api/secrets'));
 
     const data = (await response.json()) as ApiSecretsListModel;
 
@@ -12,20 +17,19 @@ export class SecretsService {
   }
 
   async get_secret(id: string): Promise<ApiFullSecretModel> {
-    const response = await fetch('http://localhost:1313/api/secrets/' + id);
+    const response = await fetch(join_url(this.base_url, '/api/secrets/' + id));
 
     const data = (await response.json()) as ApiFullSecretModel;
 
     return data;
   }
 
-  // async remove_image(id: string): Promise<void> {
-  //   await fetch('http://localhost:1313/api/images/' + id, {
-  //     method: 'DELETE',
-  //   });
-
-  //   return;
-  // }
+  async remove_secret(id: string): Promise<void> {
+    await fetch(join_url(this.base_url, '/api/secrets/' + id), {
+      method: 'DELETE',
+    });
+    return;
+  }
 }
 
 // list models ----------------------------------------------------------------

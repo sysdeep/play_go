@@ -1,3 +1,4 @@
+import { join_url } from '@src/routes';
 import ContainerListModel from '../models/container_list_model';
 
 interface ApiContainerListModel {
@@ -13,12 +14,15 @@ interface ApiContainersListModel {
 }
 
 export default class ContainersService {
-  constructor() {
+  private base_url: string;
+
+  constructor(base_url: string) {
+    this.base_url = base_url;
     console.log('containers_service created');
   }
 
   async get_containers(): Promise<ContainerListModel[]> {
-    const response = await fetch('http://localhost:1313/api/containers');
+    const response = await fetch(join_url(this.base_url, '/api/containers'));
 
     const data = (await response.json()) as ApiContainersListModel;
 
@@ -47,7 +51,9 @@ export default class ContainersService {
   // }
 
   async get_container(id: string): Promise<ApiContainerResponseModel> {
-    const response = await fetch('http://localhost:1313/api/containers/' + id);
+    const response = await fetch(
+      join_url(this.base_url, '/api/containers/' + id),
+    );
     const data = (await response.json()) as ApiContainerResponseModel;
     return data;
   }

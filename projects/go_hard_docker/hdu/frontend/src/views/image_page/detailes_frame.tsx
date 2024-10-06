@@ -1,12 +1,14 @@
 import { ApiFullImageModel } from '../../services/images_service';
 import React from 'react';
 import { format_size } from '../../utils/humanize';
+import ButtonRemove from '@src/components/button_remove';
 
 interface DetailsFrameProps {
   image: ApiFullImageModel;
+  on_remove(): void;
 }
 
-export default function DetailsFrame({ image }: DetailsFrameProps) {
+export default function DetailsFrame({ image, on_remove }: DetailsFrameProps) {
   const tags_view = image.image.repo_tags.map((tag, idx) => {
     return <li key={idx}>{tag}</li>;
   });
@@ -44,11 +46,10 @@ export default function DetailsFrame({ image }: DetailsFrameProps) {
             </tr>
           </tbody>
         </table>
-        {/* TODO */}
-        {/* <a href='/images/actions/remove/ .Image.ID ' className='button error'>
-          <i className='fa fa-trash-o' aria-hidden='true'></i>
-          Remove
-        </a> */}
+
+        <div>
+          <ButtonRemove on_remove={on_remove} />
+        </div>
       </div>
     </div>
   );

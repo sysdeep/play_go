@@ -7,10 +7,12 @@ import {
 } from '../../services/secrets_service';
 import IconSecrets from '../../components/icon_secrets';
 import SecretsTable from './secrets_table';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function SecretsPage() {
+  const { configuration } = useConfiguration();
   const secrets_service = useMemo(() => {
-    return new SecretsService();
+    return new SecretsService(configuration.base_url);
   }, []);
 
   const [secrets, setSecrets] = useState<ApiSecretListModel[]>([]);
@@ -31,6 +33,17 @@ export default function SecretsPage() {
     refresh();
   }, []);
 
+  const on_remove = (id: string) => {
+    secrets_service
+      .remove_secret(id)
+      .then(() => {
+        refresh();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div>
       <PageTitle>
@@ -48,7 +61,7 @@ export default function SecretsPage() {
         //{' '}
       </div> */}
 
-      <SecretsTable secrets={secrets} />
+      <SecretsTable secrets={secrets} on_remove={on_remove} />
       <TotalReport total={secrets.length} />
     </div>
   );

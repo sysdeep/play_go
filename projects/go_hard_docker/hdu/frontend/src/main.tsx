@@ -8,13 +8,16 @@ import './style.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import { routes } from './routes';
+import { useConfiguration } from './store/configuration';
 
-// Say something
-console.log('[ERWT] : Renderer execution started');
+// setup configuration
+const { setConfiguration } = useConfiguration();
+setConfiguration({
+  // TODO: use global variable
+  base_url: 'http://localhost:1313',
+});
 
-// // Application to Render
-// const app = <Application />;
-
+// setup router
 // const router = createBrowserRouter([
 const router = createHashRouter(routes);
 

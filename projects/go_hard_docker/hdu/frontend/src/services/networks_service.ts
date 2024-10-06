@@ -1,10 +1,15 @@
+import { join_url } from '@src/routes';
+
 export class NetworksService {
-  constructor() {
+  private base_url: string;
+
+  constructor(base_url: string) {
+    this.base_url = base_url;
     console.log('networks_service created');
   }
 
   async get_networks(): Promise<ApiNetworkListModel[]> {
-    const response = await fetch('http://localhost:1313/api/networks');
+    const response = await fetch(join_url(this.base_url, '/api/networks'));
 
     const data = (await response.json()) as ApiNetworksListModel;
 
@@ -17,20 +22,22 @@ export class NetworksService {
   }
 
   async get_network(id: string): Promise<ApiFullNetworkModel> {
-    const response = await fetch('http://localhost:1313/api/networks/' + id);
+    const response = await fetch(
+      join_url(this.base_url, '/api/networks/' + id),
+    );
 
     const data = (await response.json()) as ApiFullNetworkModel;
 
     return data;
   }
 
-  // async remove_image(id: string): Promise<void> {
-  //   await fetch('http://localhost:1313/api/images/' + id, {
-  //     method: 'DELETE',
-  //   });
+  async remove_network(id: string): Promise<void> {
+    await fetch(join_url(this.base_url, '/api/networks/' + id), {
+      method: 'DELETE',
+    });
 
-  //   return;
-  // }
+    return;
+  }
 }
 
 // list models ----------------------------------------------------------------

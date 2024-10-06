@@ -5,10 +5,12 @@ import ContainerListModel from '../../models/container_list_model';
 import ContainersService from '../../services/containers_service';
 import TotalReport from './total_report';
 import IconContainers from '../../components/icon_containers';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function ContainersPage() {
+  const { configuration } = useConfiguration();
   const containers_service = useMemo(() => {
-    return new ContainersService();
+    return new ContainersService(configuration.base_url);
   }, []);
 
   const [containers, setContainers] = useState<ContainerListModel[]>([]);

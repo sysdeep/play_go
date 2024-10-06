@@ -8,13 +8,15 @@ import {
 } from '../../services/configs_service';
 import IconConfigs from '../../components/icon_configs';
 import { route } from '../../routes';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function ConfigPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { configuration } = useConfiguration();
 
   const config_service = useMemo(() => {
-    return new ConfigsServices();
+    return new ConfigsServices(configuration.base_url);
   }, []);
 
   const [config, setConfig] = useState<ApiFullConfigModel | null>(null);

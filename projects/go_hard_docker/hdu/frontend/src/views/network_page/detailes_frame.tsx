@@ -1,12 +1,17 @@
 import React from 'react';
 import { format_size } from '../../utils/humanize';
 import { ApiFullNetworkModel } from '../../services/networks_service';
+import ButtonRemove from '@src/components/button_remove';
 
 interface DetailsFrameProps {
   network: ApiFullNetworkModel;
+  on_remove(): void;
 }
 
-export default function DetailsFrame({ network }: DetailsFrameProps) {
+export default function DetailsFrame({
+  network,
+  on_remove,
+}: DetailsFrameProps) {
   return (
     <div>
       <h2>Details</h2>
@@ -47,6 +52,10 @@ export default function DetailsFrame({ network }: DetailsFrameProps) {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div>
+        <ButtonRemove on_remove={on_remove} />
       </div>
     </div>
   );

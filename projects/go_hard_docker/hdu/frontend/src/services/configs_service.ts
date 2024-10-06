@@ -1,10 +1,15 @@
+import { join_url } from '@src/routes';
+
 export class ConfigsServices {
-  constructor() {
+  private base_url: string;
+
+  constructor(base_url: string) {
+    this.base_url = base_url;
     console.log('configs service created');
   }
 
   async get_configs(): Promise<ApiConfigListModel[]> {
-    const response = await fetch('http://localhost:1313/api/configs');
+    const response = await fetch(join_url(this.base_url, '/api/configs'));
 
     const data = (await response.json()) as ApiConfigsListModel;
 
@@ -12,7 +17,7 @@ export class ConfigsServices {
   }
 
   async get_config(id: string): Promise<ApiFullConfigModel> {
-    const response = await fetch('http://localhost:1313/api/configs/' + id);
+    const response = await fetch(join_url(this.base_url, '/api/configs/' + id));
 
     const data = (await response.json()) as ApiFullConfigModel;
 
@@ -20,7 +25,7 @@ export class ConfigsServices {
   }
 
   async remove_config(id: string): Promise<void> {
-    await fetch('http://localhost:1313/api/configs/' + id, {
+    await fetch(join_url(this.base_url, '/api/configs/' + id), {
       method: 'DELETE',
     });
 

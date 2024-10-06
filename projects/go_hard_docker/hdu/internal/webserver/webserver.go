@@ -101,10 +101,12 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 	// volumes
 	e.GET("/api/volumes", api_handlers.GetVolumes)
 	e.GET("/api/volumes/:name", api_handlers.GetVolume)
+	e.DELETE("/api/volumes/:name", api_handlers.RemoveVolume)
 
 	// networks
 	e.GET("/api/networks", api_handlers.GetNetworks)
 	e.GET("/api/networks/:id", api_handlers.GetNetwork)
+	e.DELETE("/api/networks/:id", api_handlers.RemoveNetwork)
 
 	// configs
 	e.GET("/api/configs", api_handlers.GetConfigs)
@@ -114,6 +116,7 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 	// secrets
 	e.GET("/api/secrets", api_handlers.GetSecrets)
 	e.GET("/api/secrets/:id", api_handlers.GetSecret)
+	e.DELETE("/api/secrets/:id", api_handlers.RemoveSecret)
 
 	// info
 	e.GET("/api/info", api_handlers.GetInfo)

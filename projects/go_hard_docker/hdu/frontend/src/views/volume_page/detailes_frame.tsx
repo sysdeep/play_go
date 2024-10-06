@@ -2,12 +2,14 @@ import { ApiFullImageModel } from '../../services/images_service';
 import React from 'react';
 import { format_size } from '../../utils/humanize';
 import { ApiFullVolumeModel } from '../../services/volumes_service';
+import ButtonRemove from '@src/components/button_remove';
 
 interface DetailsFrameProps {
   volume: ApiFullVolumeModel;
+  on_remove(): void;
 }
 
-export default function DetailsFrame({ volume }: DetailsFrameProps) {
+export default function DetailsFrame({ volume, on_remove }: DetailsFrameProps) {
   return (
     <div>
       {/* <h2>Volume details</h2> */}
@@ -15,7 +17,7 @@ export default function DetailsFrame({ volume }: DetailsFrameProps) {
         <table className='table table-small'>
           <tbody>
             <tr>
-              <td>ID</td>
+              <td>Name</td>
               <td>{volume.volume.name}</td>
             </tr>
             <tr>
@@ -33,15 +35,9 @@ export default function DetailsFrame({ volume }: DetailsFrameProps) {
           </tbody>
         </table>
 
-        {/* <div>
-          <a
-            href='/volumes/actions/remove/{ volume.volume.Name }'
-            className='button error'
-          >
-            <i className='fa fa-trash-o' aria-hidden='true'></i>
-            Remove
-          </a>
-        </div> */}
+        <div>
+          <ButtonRemove on_remove={on_remove} />
+        </div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import FilterModel from './filter_model';
 import { format_size } from '../../utils/humanize';
 import { Link } from 'react-router-dom';
 import { route, join_url } from '../../routes';
+import IconRemove from '@src/components/icon_remove';
 
 interface ImagesTableProps {
   on_remove(id: string): void;
@@ -113,7 +114,7 @@ function TableRow({ uid, tags, size, created, on_remove, on_date }: Props) {
       </td>
       <td>
         <a href='#' onClick={on_remove_click}>
-          <i className='bi bi-trash'></i>
+          <IconRemove />
           &nbsp; remove
         </a>
       </td>

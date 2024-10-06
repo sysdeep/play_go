@@ -7,10 +7,13 @@ import {
   NetworksService,
 } from '../../services/networks_service';
 import IconNetworks from '../../components/icon_networks';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function NetworksPage() {
+  const { configuration } = useConfiguration();
+
   const networks_service = useMemo(() => {
-    return new NetworksService();
+    return new NetworksService(configuration.base_url);
   }, []);
 
   const [networks, setNetworks] = useState<ApiNetworkListModel[]>([]);
@@ -31,6 +34,17 @@ export default function NetworksPage() {
     refresh();
   }, []);
 
+  const on_remove = (id: string) => {
+    networks_service
+      .remove_network(id)
+      .then(() => {
+        refresh();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div>
       <PageTitle>
@@ -48,7 +62,7 @@ export default function NetworksPage() {
         //{' '}
       </div> */}
 
-      <NetworksTable networks={networks} />
+      <NetworksTable networks={networks} on_remove={on_remove} />
       <TotalReport total={networks.length} />
     </div>
   );

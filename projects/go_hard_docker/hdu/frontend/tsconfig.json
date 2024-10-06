@@ -15,8 +15,9 @@
     "paths": {
       "*": ["node_modules/*"],
       "@assets/*": ["./assets/*"],
-      // "@src/*": ["./src/*"]
-    }
+      "@src/*": ["./src/*"]
+    },
+    // "rootDir": "./src/"
   },
   "include": ["src/**/*", "tools/**/*"]
 }

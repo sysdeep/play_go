@@ -1,10 +1,15 @@
+import { join_url } from '@src/routes';
+
 export default class VolumesService {
-  constructor() {
+  private base_url: string;
+
+  constructor(base_url: string) {
+    this.base_url = base_url;
     console.log('volumes_service created');
   }
 
   async get_volumes(): Promise<ApiVolumeListModel[]> {
-    const response = await fetch('http://localhost:1313/api/volumes');
+    const response = await fetch(join_url(this.base_url, '/api/volumes'));
 
     const data = (await response.json()) as ApiVolumesListModel;
 
@@ -12,25 +17,23 @@ export default class VolumesService {
   }
 
   async get_volume(id: string): Promise<ApiFullVolumeModel> {
-    const response = await fetch('http://localhost:1313/api/volumes/' + id);
+    const response = await fetch(join_url(this.base_url, '/api/volumes/' + id));
 
     const data = (await response.json()) as ApiFullVolumeModel;
 
     return data;
   }
 
-  // async remove_image(id: string): Promise<void> {
-  //   await fetch('http://localhost:1313/api/images/' + id, {
-  //     method: 'DELETE',
-  //   });
-
-  //   return;
-  // }
+  async remove_volume(name: string): Promise<void> {
+    await fetch(join_url(this.base_url, '/api/volumes/' + name), {
+      method: 'DELETE',
+    });
+    return;
+  }
 }
 
 // list models ----------------------------------------------------------------
 export interface ApiVolumeListModel {
-  id: string;
   created: string;
   name: string;
   stack_name: string;

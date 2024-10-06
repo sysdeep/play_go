@@ -1,11 +1,13 @@
 import React from 'react';
 import { ApiFullSecretModel } from '../../services/secrets_service';
+import ButtonRemove from '@src/components/button_remove';
 
 interface DetailsFrameProps {
   secret: ApiFullSecretModel;
+  on_remove(): void;
 }
 
-export default function DetailsFrame({ secret }: DetailsFrameProps) {
+export default function DetailsFrame({ secret, on_remove }: DetailsFrameProps) {
   return (
     <div>
       {/* <h2>Secret details</h2> */}
@@ -30,6 +32,10 @@ export default function DetailsFrame({ secret }: DetailsFrameProps) {
             </tr>
           </tbody>
         </table>
+
+        <div>
+          <ButtonRemove on_remove={on_remove} />
+        </div>
 
         {/* <div>
       <!-- <a href="/volumes/actions/remove/{ . }" class="button error"> -->

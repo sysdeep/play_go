@@ -7,10 +7,13 @@ import {
 } from '../../services/configs_service';
 import IconConfigs from '../../components/icon_configs';
 import ConfigsTable from './configs_table';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function ConfigsPage() {
+  const { configuration } = useConfiguration();
+
   const configs_service = useMemo(() => {
-    return new ConfigsServices();
+    return new ConfigsServices(configuration.base_url);
   }, []);
 
   const [configs, setConfigs] = useState<ApiConfigListModel[]>([]);
@@ -31,6 +34,17 @@ export default function ConfigsPage() {
     refresh();
   }, []);
 
+  const on_remove = (id: string) => {
+    configs_service
+      .remove_config(id)
+      .then(() => {
+        refresh();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div>
       <PageTitle>
@@ -48,7 +62,7 @@ export default function ConfigsPage() {
         //{' '}
       </div> */}
 
-      <ConfigsTable configs={configs} />
+      <ConfigsTable configs={configs} on_remove={on_remove} />
       <TotalReport total={configs.length} />
     </div>
   );

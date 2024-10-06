@@ -1,13 +1,17 @@
-import VolumesService, { ApiVolumeListModel } from '../../services/volumes_service';
+import VolumesService, {
+  ApiVolumeListModel,
+} from '../../services/volumes_service';
 import IconVolumes from '../../components/icon_volumes';
 import PageTitle from '../../components/page_title';
 import React, { useEffect, useMemo, useState } from 'react';
 import VolumesTable from './volumes_table';
 import TotalReport from './total_report';
+import { useConfiguration } from '@src/store/configuration';
 
 export default function VolumesPage() {
+  const { configuration } = useConfiguration();
   const volumes_service = useMemo(() => {
-    return new VolumesService();
+    return new VolumesService(configuration.base_url);
   }, []);
 
   const [volumes, setVolumes] = useState<ApiVolumeListModel[]>([]);
@@ -28,6 +32,17 @@ export default function VolumesPage() {
     refresh();
   }, []);
 
+  const on_remove = (name: string) => {
+    volumes_service
+      .remove_volume(name)
+      .then(() => {
+        refresh();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div>
       <PageTitle>
@@ -45,7 +60,7 @@ export default function VolumesPage() {
         //{' '}
       </div> */}
 
-      <VolumesTable volumes={volumes} />
+      <VolumesTable volumes={volumes} on_remove={on_remove} />
       <TotalReport total={volumes.length} />
     </div>
   );
