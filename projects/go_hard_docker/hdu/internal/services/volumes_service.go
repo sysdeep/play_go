@@ -2,7 +2,9 @@ package services
 
 import (
 	"context"
+	"sort"
 
+	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/volume"
 	"github.com/docker/docker/client"
 )
@@ -17,14 +19,32 @@ func NewVolumesService(docker_client *client.Client) *VolumesService {
 
 func (cs *VolumesService) GetAll() ([]VolumeListModel, error) {
 	var result []VolumeListModel
-	volumes_list, err := cs.docker_client.VolumeList(context.Background(), volume.ListOptions{})
+
+	// used volumes
+	used_filter := filters.KeyValuePair{Key: "dangling", Value: "false"}
+	used_volumes_list, err := cs.docker_client.VolumeList(context.Background(), volume.ListOptions{Filters: filters.NewArgs(used_filter)})
 	if err != nil {
 		return result, err
 	}
 
-	for _, c := range volumes_list.Volumes {
-		result = append(result, make_volume_list_model(c))
+	for _, c := range used_volumes_list.Volumes {
+		result = append(result, make_volume_list_model(c, true))
 	}
+
+	// non used volumes
+	non_used_filter := filters.KeyValuePair{Key: "dangling", Value: "true"}
+	non_used_volumes_list, err := cs.docker_client.VolumeList(context.Background(), volume.ListOptions{Filters: filters.NewArgs(non_used_filter)})
+	if err != nil {
+		return result, err
+	}
+
+	for _, c := range non_used_volumes_list.Volumes {
+		result = append(result, make_volume_list_model(c, false))
+	}
+
+	sort.SliceStable(result, func(i, j int) bool {
+		return result[i].Name < result[j].Name
+	})
 
 	return result, nil
 }
@@ -74,11 +94,12 @@ type VolumeListModel struct {
 	// UsageData *UsageData `json:"UsageData,omitempty"`
 
 	StackName string
+	Used      bool
 }
 
 const volume_stack_label = "com.docker.stack.namespace"
 
-func make_volume_list_model(data *volume.Volume) VolumeListModel {
+func make_volume_list_model(data *volume.Volume, used bool) VolumeListModel {
 
 	stack_name := ""
 	if stack_name_labeled, ok := data.Labels[volume_stack_label]; ok {
@@ -91,6 +112,7 @@ func make_volume_list_model(data *volume.Volume) VolumeListModel {
 		Driver:     data.Driver,
 		Mountpoint: data.Mountpoint,
 		StackName:  stack_name,
+		Used:       used,
 	}
 
 }

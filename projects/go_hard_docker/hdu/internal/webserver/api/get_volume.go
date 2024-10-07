@@ -31,7 +31,9 @@ func (h *Api) GetVolume(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	fmt.Printf("%+v\n", volume_data)
+	// TODO: получить список контейнеров в которых используется данный волум
+	// https://localhost:9443/api/endpoints/2/docker/containers/json?all=1&filters=%7B%22volume%22:%5B%22portainer_data%22%5D%7D
+	// fmt.Printf("%+v\n", volume_data)
 
 	response := volumePageModel{
 		Volume: make_volume_model(&volume_data),

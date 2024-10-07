@@ -39,6 +39,7 @@ export interface ApiVolumeListModel {
   stack_name: string;
   mount_point: string;
   driver: string;
+  used: boolean;
 }
 
 interface ApiVolumesListModel {

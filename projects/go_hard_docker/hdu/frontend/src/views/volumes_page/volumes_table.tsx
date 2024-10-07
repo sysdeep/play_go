@@ -24,6 +24,7 @@ export default function VolumesTable({
         <td>
           <Link to={join_url(route.volume, volume.name)}>{volume.name}</Link>
         </td>
+        <td> {volume.used ? 'yes' : 'no'} </td>
         <td> {volume.stack_name} </td>
         <td> {volume.driver} </td>
         {/* <!-- <td> .Mountpoint </td> --> */}
@@ -46,6 +47,7 @@ export default function VolumesTable({
       <thead>
         <tr>
           <th>Name</th>
+          <th>Used</th>
           <th>Stack</th>
           <th>Driver</th>
           {/* <!-- <th>Mount point</th> --> */}

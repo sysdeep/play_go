@@ -46,6 +46,7 @@ type ApiVolumeListModel struct {
 	Driver     string `json:"driver"`
 	Mountpoint string `json:"mount_point"`
 	StackName  string `json:"stack_name"`
+	Used       bool   `json:"used"`
 }
 
 func toApiVolumeListModel(model *services.VolumeListModel) ApiVolumeListModel {
@@ -55,5 +56,6 @@ func toApiVolumeListModel(model *services.VolumeListModel) ApiVolumeListModel {
 		Driver:     model.Driver,
 		Mountpoint: model.Mountpoint,
 		StackName:  model.StackName,
+		Used:       model.Used,
 	}
 }
