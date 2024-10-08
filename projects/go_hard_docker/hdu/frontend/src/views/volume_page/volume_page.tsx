@@ -8,6 +8,7 @@ import VolumesService, {
 import IconVolumes from '../../components/icon_volumes';
 import { route } from '@src/routes';
 import { useConfiguration } from '@src/store/configuration';
+import ContainersFrame from './containers_frame';
 
 export default function VolumePage() {
   const { id } = useParams();
@@ -51,7 +52,12 @@ export default function VolumePage() {
     if (volume) {
       return (
         <div>
-          <DetailsFrame volume={volume} on_remove={on_remove} />
+          <DetailsFrame
+            volume={volume}
+            containers={volume.containers}
+            on_remove={on_remove}
+          />
+          <ContainersFrame containers={volume.containers} />
         </div>
       );
     }

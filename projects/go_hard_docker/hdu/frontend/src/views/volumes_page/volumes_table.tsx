@@ -19,16 +19,12 @@ export default function VolumesTable({
   };
 
   const volumes_view = volumes.map((volume, idx) => {
-    return (
-      <tr key={idx}>
-        <td>
-          <Link to={join_url(route.volume, volume.name)}>{volume.name}</Link>
-        </td>
-        <td> {volume.used ? 'yes' : 'no'} </td>
-        <td> {volume.stack_name} </td>
-        <td> {volume.driver} </td>
-        {/* <!-- <td> .Mountpoint </td> --> */}
-        <td> {volume.created} </td>
+    const options_view = () => {
+      if (volume.used) {
+        return <td></td>;
+      }
+
+      return (
         <td>
           <a
             href='#'
@@ -39,6 +35,20 @@ export default function VolumesTable({
             &nbsp; Remove
           </a>
         </td>
+      );
+    };
+
+    return (
+      <tr key={idx}>
+        <td>
+          <Link to={join_url(route.volume, volume.name)}>{volume.name}</Link>
+        </td>
+        <td> {volume.used ? 'yes' : 'no'} </td>
+        <td> {volume.stack_name} </td>
+        <td> {volume.driver} </td>
+        {/* <!-- <td> .Mountpoint </td> --> */}
+        <td> {volume.created} </td>
+        {options_view()}
       </tr>
     );
   });

@@ -3,13 +3,19 @@ import React from 'react';
 import { format_size } from '../../utils/humanize';
 import { ApiFullVolumeModel } from '../../services/volumes_service';
 import ButtonRemove from '@src/components/button_remove';
+import { ApiContainerListModel } from '@src/models/api_container_list_model';
 
 interface DetailsFrameProps {
   volume: ApiFullVolumeModel;
   on_remove(): void;
+  containers: ApiContainerListModel[];
 }
 
-export default function DetailsFrame({ volume, on_remove }: DetailsFrameProps) {
+export default function DetailsFrame({
+  volume,
+  containers,
+  on_remove,
+}: DetailsFrameProps) {
   return (
     <div>
       {/* <h2>Volume details</h2> */}
@@ -36,7 +42,7 @@ export default function DetailsFrame({ volume, on_remove }: DetailsFrameProps) {
         </table>
 
         <div>
-          <ButtonRemove on_remove={on_remove} />
+          {containers.length === 0 && <ButtonRemove on_remove={on_remove} />}
         </div>
       </div>
     </div>

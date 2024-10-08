@@ -1,11 +1,11 @@
 import PageTitle from '../../components/page_title';
 import React, { useEffect, useMemo, useState } from 'react';
-import ContainersTable from './containers_table';
-import ContainerListModel from '../../models/container_list_model';
+import ContainersFrame from './containers_frame';
 import ContainersService from '../../services/containers_service';
 import TotalReport from './total_report';
 import IconContainers from '../../components/icon_containers';
 import { useConfiguration } from '@src/store/configuration';
+import { ApiContainerListModel } from '@src/models/api_container_list_model';
 
 export default function ContainersPage() {
   const { configuration } = useConfiguration();
@@ -13,7 +13,7 @@ export default function ContainersPage() {
     return new ContainersService(configuration.base_url);
   }, []);
 
-  const [containers, setContainers] = useState<ContainerListModel[]>([]);
+  const [containers, setContainers] = useState<ApiContainerListModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   // const [filter, setFilter] = useState<FilterModel>({ dates: [] });
 
@@ -21,7 +21,7 @@ export default function ContainersPage() {
     setLoading(true);
     containers_service
       .get_containers()
-      .then((containers: ContainerListModel[]) => {
+      .then((containers) => {
         setContainers(containers);
       })
       .catch((err) => {
@@ -66,7 +66,7 @@ export default function ContainersPage() {
         <IconContainers />
         &nbsp; Containers
       </PageTitle>
-      <ContainersTable containers={containers} />
+      <ContainersFrame containers={containers} />
       <TotalReport total={containers.length} />
       {/* <FilterPanel filter={filter} on_date={on_date} />
       <div>

@@ -1,13 +1,5 @@
 import { join_url } from '@src/routes';
-import ContainerListModel from '../models/container_list_model';
-
-interface ApiContainerListModel {
-  id: string;
-  name: string;
-  created: string;
-  image: string;
-  state: string;
-}
+import { ApiContainerListModel } from '@src/models/api_container_list_model';
 
 interface ApiContainersListModel {
   containers: ApiContainerListModel[];
@@ -21,25 +13,14 @@ export default class ContainersService {
     console.log('containers_service created');
   }
 
-  async get_containers(): Promise<ContainerListModel[]> {
+  async get_containers(): Promise<ApiContainerListModel[]> {
     const response = await fetch(join_url(this.base_url, '/api/containers'));
 
     const data = (await response.json()) as ApiContainersListModel;
 
     const containers = data.containers || [];
 
-    const dataset = containers.map((model) => {
-      const dmodel: ContainerListModel = {
-        id: model.id,
-        created: model.created,
-        name: model.name,
-        image: model.image,
-        state: model.state,
-      };
-      return dmodel;
-    });
-
-    return dataset;
+    return containers;
   }
 
   // async remove_container(id: string): Promise<void> {

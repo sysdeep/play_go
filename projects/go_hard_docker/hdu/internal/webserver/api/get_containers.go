@@ -33,7 +33,7 @@ func (h *Api) GetContainers(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	var containers []containerListModel
+	containers := []containerListModel{}
 	for _, c := range raw_containers {
 		containers = append(containers, convert_container(c))
 	}

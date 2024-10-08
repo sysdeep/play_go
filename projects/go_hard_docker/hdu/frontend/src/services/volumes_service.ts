@@ -1,3 +1,4 @@
+import { ApiContainerListModel } from '@src/models/api_container_list_model';
 import { join_url } from '@src/routes';
 
 export default class VolumesService {
@@ -50,7 +51,9 @@ interface ApiVolumesListModel {
 // volume model ---------------------------------------------------------------
 export interface ApiFullVolumeModel {
   volume: ApiVolumeModel;
+  containers: ApiContainerListModel[];
 }
+
 interface ApiVolumeModel {
   name: string;
   created: string;
