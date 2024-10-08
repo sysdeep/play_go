@@ -18,8 +18,13 @@ export default function ContainersTable({ containers }: ContainersFrameProps) {
           </Link>
         </td>
         <td>{container.state}</td>
-        <td>{container.image}</td>
+        <td>
+          <Link to={join_url(route.image, container.image_id)}>
+            {container.image}
+          </Link>
+        </td>
         <td>{container.created}</td>
+        <td>{container.ip_addresses.join(', ')}</td>
       </tr>
     );
   });
@@ -33,6 +38,7 @@ export default function ContainersTable({ containers }: ContainersFrameProps) {
           <th>State</th>
           <th>Image</th>
           <th>Created</th>
+          <th>IP</th>
         </tr>
       </thead>
       <tbody>{rows_view}</tbody>

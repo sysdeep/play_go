@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"hdu/internal/utils"
 	"net/http"
 	"time"
 
@@ -15,11 +16,17 @@ type containerListModel struct {
 	ID          string   `json:"id"`
 	Name        string   `json:"name"`
 	Image       string   `json:"image"`
+	ImageID     string   `json:"image_id"`
 	State       string   `json:"state"`
 	CreatedStr  string   `json:"created"`
-	IPAddresses []string // TODO
+	IPAddresses []string `json:"ip_addresses"`
 	Ports       []string //TODO
 }
+
+// type containerListNetworkModel struct {
+// 	Type      string `json:"type"` // bridge
+// 	IPAddress string `json:"ip_address"`
+// }
 
 type containersPageModel struct {
 	Containers []containerListModel `json:"containers"`
@@ -33,6 +40,7 @@ func (h *Api) GetContainers(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
+	utils.PrintAsJson(raw_containers)
 	containers := []containerListModel{}
 	for _, c := range raw_containers {
 		containers = append(containers, convert_container(c))
@@ -94,13 +102,20 @@ func convert_container(c types.Container) containerListModel {
 	// fmt.Println("unix time stamp in UTC :--->",unixTimeUTC)
 	// fmt.Println("unix time stamp in unitTimeInRFC3339 format :->",unitTimeInRFC3339)
 
+	// extract ip_address
+	ip_addresses := []string{}
+	for _, net_config := range c.NetworkSettings.Networks {
+		ip_addresses = append(ip_addresses, net_config.IPAddress)
+	}
+
 	return containerListModel{
 		ID:          c.ID,
 		Name:        c.Names[0],
 		Image:       c.Image,
+		ImageID:     c.ImageID,
 		State:       c.State,
 		CreatedStr:  unitTimeInRFC3339,
-		IPAddresses: make([]string, 0), // TODO
+		IPAddresses: ip_addresses,      // TODO
 		Ports:       make([]string, 0), // TODO
 	}
 }

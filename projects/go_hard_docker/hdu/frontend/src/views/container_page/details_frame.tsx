@@ -38,7 +38,6 @@ export default function DetailsFrame({ container }: DetailsFrameProps) {
                 <Link to={join_url(route.image, container.container.image)}>
                   {container.config.image}
                 </Link>
-                {/* {container.config.image} */}
               </td>
             </tr>
             <tr>
@@ -49,11 +48,15 @@ export default function DetailsFrame({ container }: DetailsFrameProps) {
             </tr>
             <tr>
               <td>CMD</td>
-              <td>{container.config.cmd}</td>
+              <td>
+                <code>{container.config.cmd}</code>
+              </td>
             </tr>
             <tr>
               <td>Entrypoint</td>
-              <td>{container.config.entrypoint}</td>
+              <td>
+                <code>{container.config.entrypoint}</code>
+              </td>
             </tr>
             <tr>
               <td>ENV</td>
@@ -61,10 +64,11 @@ export default function DetailsFrame({ container }: DetailsFrameProps) {
                 <EnvTable env={container.config.env} />
               </td>
             </tr>
-            <tr>
+            {/* TODO */}
+            {/* <tr>
               <td>Restart policies</td>
               <td>TODO</td>
-            </tr>
+            </tr> */}
             <tr>
               <td></td>
               <td></td>
@@ -81,7 +85,11 @@ interface EnvTableProps {
 }
 function EnvTable({ env }: EnvTableProps) {
   const rows = env.map((row, idx) => {
-    return <li key={idx}>{row}</li>;
+    return (
+      <li key={idx}>
+        <code>{row}</code>
+      </li>
+    );
   });
 
   return <ul>{rows}</ul>;

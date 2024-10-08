@@ -7,15 +7,9 @@ import { ApiContainerListModel } from '@src/models/api_container_list_model';
 
 interface DetailsFrameProps {
   volume: ApiFullVolumeModel;
-  on_remove(): void;
-  containers: ApiContainerListModel[];
 }
 
-export default function DetailsFrame({
-  volume,
-  containers,
-  on_remove,
-}: DetailsFrameProps) {
+export default function DetailsFrame({ volume }: DetailsFrameProps) {
   return (
     <div>
       {/* <h2>Volume details</h2> */}
@@ -40,10 +34,6 @@ export default function DetailsFrame({
             </tr>
           </tbody>
         </table>
-
-        <div>
-          {containers.length === 0 && <ButtonRemove on_remove={on_remove} />}
-        </div>
       </div>
     </div>
   );

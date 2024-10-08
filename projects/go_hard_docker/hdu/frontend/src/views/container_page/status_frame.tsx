@@ -6,6 +6,12 @@ interface StatusFrameProps {
 }
 
 export default function StatusFrame({ container }: StatusFrameProps) {
+  const ip_adresses: string[] = Object.keys(container.network.networks).map(
+    (network_name) => {
+      const net = container.network.networks[network_name];
+      return net.ip_address;
+    },
+  );
   return (
     <div>
       <h2>Status</h2>
@@ -22,7 +28,7 @@ export default function StatusFrame({ container }: StatusFrameProps) {
             </tr>
             <tr>
               <td>Ip address</td>
-              <td>TODO</td>
+              <td>{ip_adresses.join(', ')}</td>
             </tr>
             <tr>
               <td>Status</td>

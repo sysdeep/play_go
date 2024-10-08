@@ -9,6 +9,8 @@ import IconVolumes from '../../components/icon_volumes';
 import { route } from '@src/routes';
 import { useConfiguration } from '@src/store/configuration';
 import ContainersFrame from './containers_frame';
+import ButtonRemove from '@src/components/button_remove';
+import ButtonRefresh from '@src/components/button_refresh';
 
 export default function VolumePage() {
   const { id } = useParams();
@@ -52,11 +54,15 @@ export default function VolumePage() {
     if (volume) {
       return (
         <div>
-          <DetailsFrame
-            volume={volume}
-            containers={volume.containers}
-            on_remove={on_remove}
-          />
+          {/* actions */}
+          <div className='pull-right'>
+            {volume.containers.length === 0 && (
+              <ButtonRemove on_remove={on_remove} />
+            )}
+            <ButtonRefresh on_refresh={refresh} />
+          </div>
+
+          <DetailsFrame volume={volume} />
           <ContainersFrame containers={volume.containers} />
         </div>
       );

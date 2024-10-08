@@ -7,6 +7,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import VolumesTable from './volumes_table';
 import TotalReport from './total_report';
 import { useConfiguration } from '@src/store/configuration';
+import IconRefresh from '@src/components/icon_refresh';
+import ButtonRefresh from '@src/components/button_refresh';
 
 export default function VolumesPage() {
   const { configuration } = useConfiguration();
@@ -59,6 +61,12 @@ export default function VolumesPage() {
         </a>
         //{' '}
       </div> */}
+
+      <div>
+        <div className='pull-right'>
+          <ButtonRefresh on_refresh={refresh} />
+        </div>
+      </div>
 
       <VolumesTable volumes={volumes} on_remove={on_remove} />
       <TotalReport total={volumes.length} />
