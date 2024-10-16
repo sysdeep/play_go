@@ -52,7 +52,7 @@ export default function ImagesTable({
     });
 
   return (
-    <table className='table-small striped'>
+    <table className='table table-sm table-striped'>
       <thead>
         <tr>
           <th>Tags</th>

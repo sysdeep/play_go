@@ -13,10 +13,10 @@ export default function DetailsFrame({ image, on_remove }: DetailsFrameProps) {
     return <li key={idx}>{tag}</li>;
   });
   return (
-    <div>
+    <div className='box'>
       <h2>Details</h2>
       <div>
-        <table className='table-small'>
+        <table className='table'>
           <tbody>
             <tr>
               <td>ID</td>

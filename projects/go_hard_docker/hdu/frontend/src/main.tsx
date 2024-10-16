@@ -3,9 +3,13 @@ import { createRoot } from 'react-dom/client';
 
 import { RouterProvider, createHashRouter } from 'react-router-dom';
 
-import 'chota';
+// import 'chota';
+// import 'bulma/css/bulma.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import './style.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+// import '@fontsource/roboto'; // Defaults to weight 400
+import '@fontsource/ubuntu'; // Defaults to weight 400
 
 import { routes } from './routes';
 import { useConfiguration } from './store/configuration';

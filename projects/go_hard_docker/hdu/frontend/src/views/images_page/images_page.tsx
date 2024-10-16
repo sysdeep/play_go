@@ -8,6 +8,7 @@ import FilterModel from './filter_model';
 import TotalReport from './total_report';
 import IconImages from '../../components/icon_images';
 import { useConfiguration } from '@src/store/configuration';
+import ButtonRefresh from '@src/components/button_refresh';
 
 export default function ImagesPage() {
   const { configuration } = useConfiguration();
@@ -63,15 +64,11 @@ export default function ImagesPage() {
   return (
     <div>
       <PageTitle>
-        <IconImages />
-        &nbsp; Images
+        <IconImages /> Images
       </PageTitle>
       <FilterPanel filter={filter} on_date={on_date} />
       <div>
-        <span>loading: {loading}</span>
-        <button className='button' onClick={() => refresh()}>
-          Refresh
-        </button>
+        <ButtonRefresh on_refresh={refresh} loading={loading} />
       </div>
       <ImagesTable
         images={images}

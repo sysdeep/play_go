@@ -19,10 +19,10 @@ export default function VolumesFrame({ container }: VolumesFrameProps) {
     );
   });
   return (
-    <div>
+    <div className='box'>
       <h2>Volumes</h2>
       <div>
-        <table className='table table-small striped'>
+        <table className='table is-striped is-fullwidth'>
           <thead>
             <tr>
               <th>Host/volume</th>

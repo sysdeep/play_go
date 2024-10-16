@@ -27,7 +27,7 @@ export default function DetailsFrame({ container }: DetailsFrameProps) {
   );
 
   return (
-    <div>
+    <div className='box'>
       <h2>Details</h2>
       <div>
         <table className='table table-small'>

@@ -1,13 +1,15 @@
 import React from 'react';
 import IconRefresh from './icon_refresh';
 
-interface ButtonRemoveProps {
+type ButtonRemoveProps = {
   //   disabled: boolean;
   on_refresh(): void;
-}
+  loading?: boolean;
+};
 export default function ButtonRefresh({
   //   disabled = false,
   on_refresh,
+  loading = false,
 }: ButtonRemoveProps) {
   const on_click = (e: any) => {
     e.preventDefault();
@@ -15,9 +17,14 @@ export default function ButtonRefresh({
   };
 
   return (
-    <button className='button secondary' onClick={on_click}>
-      <IconRefresh />
-      &nbsp; Refresh
+    <button className='btn btn-secondary' onClick={on_click}>
+      {loading && (
+        <span
+          className='spinner-grow spinner-grow-sm'
+          aria-hidden='true'
+        ></span>
+      )}
+      {!loading && <IconRefresh />} Refresh
     </button>
   );
 }

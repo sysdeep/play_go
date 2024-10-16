@@ -25,9 +25,9 @@ export default function HistoryFrame({ image }: HistoryFrameProps) {
   });
 
   return (
-    <div>
+    <div className='box'>
       <h2>History</h2>
-      <table className='table table-small striped'>
+      <table className='table is-striped is-fullwidth'>
         <thead>
           <tr>
             <th>ID</th>

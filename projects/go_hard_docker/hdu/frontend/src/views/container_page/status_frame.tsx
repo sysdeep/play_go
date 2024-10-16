@@ -13,7 +13,7 @@ export default function StatusFrame({ container }: StatusFrameProps) {
     },
   );
   return (
-    <div>
+    <div className='box'>
       <h2>Status</h2>
       <div>
         <table className='table table-small'>

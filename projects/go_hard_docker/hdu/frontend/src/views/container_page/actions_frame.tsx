@@ -5,32 +5,48 @@ interface ActionsFrameProps {
 }
 export default function ActionsFrame({ id }: ActionsFrameProps) {
   return (
-    <div className='_card'>
+    <div className='box'>
       <h2>Actions</h2>
       <div>
-        <ul>
-          <li>
-            <a href='/container/{id}/action/start'>Start TODO</a>
-          </li>
-          <li>
-            <a href='/container/{id}/action/stop'>Stop TODO</a>
-          </li>
-          <li>
-            <a href='/container/{id}/action/kill'>Kill TODO</a>
-          </li>
-          <li>
-            <a href='/container/{id}/action/restart'>Restart TODO</a>
-          </li>
-          <li>
-            <a href='/container/{id}/action/pause'>Pause TODO</a>
-          </li>
-          <li>
-            <a href='/container/{id}/action/resume'>Resume TODO</a>
-          </li>
-          <li>
-            <a href='/container/{id}/action/remove'>Remove TODO</a>
-          </li>
-        </ul>
+        <a
+          className='btn btn-secondary mx-2'
+          href='/container/{id}/action/start'
+        >
+          Start TODO
+        </a>
+        <a className='btn btn-secondary' href='/container/{id}/action/stop'>
+          Stop TODO
+        </a>
+        <a
+          className='btn btn-secondary mx-2'
+          href='/container/{id}/action/kill'
+        >
+          Kill TODO
+        </a>
+        <a
+          className='btn btn-secondary mx-2'
+          href='/container/{id}/action/restart'
+        >
+          Restart TODO
+        </a>
+        <a
+          className='btn btn-secondary mx-2'
+          href='/container/{id}/action/pause'
+        >
+          Pause TODO
+        </a>
+        <a
+          className='btn btn-secondary mx-2'
+          href='/container/{id}/action/resume'
+        >
+          Resume TODO
+        </a>
+        <a
+          className='btn btn-secondary mx-2'
+          href='/container/{id}/action/remove'
+        >
+          Remove TODO
+        </a>
       </div>
     </div>
   );

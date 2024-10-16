@@ -17,7 +17,7 @@ export default function ContainersFrame({ image }: ContainersFrameProps) {
     );
   });
   return (
-    <div>
+    <div className='box'>
       <h2>Containers</h2>
       <table className='table table-small striped'>
         <thead>

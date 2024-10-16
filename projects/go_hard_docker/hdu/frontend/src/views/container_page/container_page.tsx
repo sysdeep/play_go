@@ -65,8 +65,8 @@ export default function ContainerPage() {
   return (
     <div>
       <PageTitle>
-        <IconContainers />
-        &nbsp; Container: {id}
+        <IconContainers /> Container:{' '}
+        {container ? container.container.name : 'loading'}
       </PageTitle>
       {main_body()}
     </div>

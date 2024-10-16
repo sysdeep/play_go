@@ -29,9 +29,8 @@ export default function ContainersTable({ containers }: ContainersFrameProps) {
     );
   });
 
-  // TODO: возможно стоит завести отдельный компонент...
   return (
-    <table className='table table-small striped'>
+    <table className='table table-sm table-striped'>
       <thead>
         <tr>
           <th>Name</th>

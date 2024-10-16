@@ -9,7 +9,7 @@ interface ContainersFrameProps {
 
 export default function ContainersFrame({ containers }: ContainersFrameProps) {
   return (
-    <div>
+    <div className='box'>
       <h3>
         <IconContainers />
         &nbsp; Containers

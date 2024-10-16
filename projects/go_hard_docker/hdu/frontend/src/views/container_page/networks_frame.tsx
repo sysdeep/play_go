@@ -28,12 +28,12 @@ export default function NetworksFrame({ container }: NetworksFrameProps) {
     },
   );
   return (
-    <div>
+    <div className='box'>
       <h2>Networks</h2>
       {/* <!-- TODO --> */}
       {/* <!-- <div>Connect to: TODO</div> --> */}
       <div>
-        <table className='table table-small striped'>
+        <table className='table is-striped is-fullwidth'>
           <thead>
             <tr>
               <th>Network</th>

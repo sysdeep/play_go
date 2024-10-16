@@ -11,10 +11,10 @@ interface DetailsFrameProps {
 
 export default function DetailsFrame({ volume }: DetailsFrameProps) {
   return (
-    <div>
+    <div className='box'>
       {/* <h2>Volume details</h2> */}
       <div>
-        <table className='table table-small'>
+        <table className='table is-fullwidth'>
           <tbody>
             <tr>
               <td>Name</td>

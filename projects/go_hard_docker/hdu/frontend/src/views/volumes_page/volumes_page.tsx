@@ -17,8 +17,10 @@ export default function VolumesPage() {
   }, []);
 
   const [volumes, setVolumes] = useState<ApiVolumeListModel[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const refresh = () => {
+    setLoading(true);
     volumes_service
       .get_volumes()
       .then((volumes: ApiVolumeListModel[]) => {
@@ -26,7 +28,8 @@ export default function VolumesPage() {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -48,8 +51,7 @@ export default function VolumesPage() {
   return (
     <div>
       <PageTitle>
-        <IconVolumes />
-        &nbsp; Volumes
+        <IconVolumes /> Volumes
       </PageTitle>
 
       {/* // TODO //{' '} */}
@@ -64,7 +66,7 @@ export default function VolumesPage() {
 
       <div>
         <div className='pull-right'>
-          <ButtonRefresh on_refresh={refresh} />
+          <ButtonRefresh on_refresh={refresh} loading={loading} />
         </div>
       </div>
 

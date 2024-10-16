@@ -48,8 +48,7 @@ export default function ConfigsPage() {
   return (
     <div>
       <PageTitle>
-        <IconConfigs />
-        &nbsp; Configs
+        <IconConfigs /> Configs
       </PageTitle>
 
       {/* // TODO //{' '} */}

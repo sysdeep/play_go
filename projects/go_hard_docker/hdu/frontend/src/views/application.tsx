@@ -4,12 +4,14 @@ import TopNavBar from './top_nav_bar';
 
 export default function Application() {
   return (
-    <div className='container'>
+    <>
       <TopNavBar />
-      <div>
-        <Outlet />
+      <div className='container'>
+        <div className='mt-2'>
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
