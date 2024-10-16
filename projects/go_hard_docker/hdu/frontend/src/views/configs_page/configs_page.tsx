@@ -8,6 +8,7 @@ import {
 import IconConfigs from '../../components/icon_configs';
 import ConfigsTable from './configs_table';
 import { useConfiguration } from '@src/store/configuration';
+import ButtonRefresh from '@src/components/button_refresh';
 
 export default function ConfigsPage() {
   const { configuration } = useConfiguration();
@@ -17,8 +18,10 @@ export default function ConfigsPage() {
   }, []);
 
   const [configs, setConfigs] = useState<ApiConfigListModel[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const refresh = () => {
+    setLoading(true);
     configs_service
       .get_configs()
       .then((configs: ApiConfigListModel[]) => {
@@ -26,7 +29,8 @@ export default function ConfigsPage() {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -50,6 +54,10 @@ export default function ConfigsPage() {
       <PageTitle>
         <IconConfigs /> Configs
       </PageTitle>
+
+      <div>
+        <ButtonRefresh on_refresh={refresh} loading={loading} />
+      </div>
 
       {/* // TODO //{' '} */}
       {/* <div>

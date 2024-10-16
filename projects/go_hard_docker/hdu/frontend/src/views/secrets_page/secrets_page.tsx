@@ -8,6 +8,7 @@ import {
 import IconSecrets from '../../components/icon_secrets';
 import SecretsTable from './secrets_table';
 import { useConfiguration } from '@src/store/configuration';
+import ButtonRefresh from '@src/components/button_refresh';
 
 export default function SecretsPage() {
   const { configuration } = useConfiguration();
@@ -16,8 +17,10 @@ export default function SecretsPage() {
   }, []);
 
   const [secrets, setSecrets] = useState<ApiSecretListModel[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const refresh = () => {
+    setLoading(true);
     secrets_service
       .get_secrets()
       .then((secrets: ApiSecretListModel[]) => {
@@ -25,7 +28,8 @@ export default function SecretsPage() {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -47,9 +51,12 @@ export default function SecretsPage() {
   return (
     <div>
       <PageTitle>
-        <IconSecrets />
-        &nbsp; Secrets
+        <IconSecrets /> Secrets
       </PageTitle>
+
+      <div>
+        <ButtonRefresh on_refresh={refresh} loading={loading} />
+      </div>
 
       {/* // TODO //{' '} */}
       {/* <div>

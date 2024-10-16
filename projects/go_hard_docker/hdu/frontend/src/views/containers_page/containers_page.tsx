@@ -6,6 +6,7 @@ import TotalReport from './total_report';
 import IconContainers from '../../components/icon_containers';
 import { useConfiguration } from '@src/store/configuration';
 import { ApiContainerListModel } from '@src/models/api_container_list_model';
+import ButtonRefresh from '@src/components/button_refresh';
 
 export default function ContainersPage() {
   const { configuration } = useConfiguration();
@@ -63,9 +64,11 @@ export default function ContainersPage() {
   return (
     <div>
       <PageTitle>
-        <IconContainers />
-        &nbsp; Containers
+        <IconContainers /> Containers
       </PageTitle>
+      <div>
+        <ButtonRefresh on_refresh={refresh} loading={loading} />
+      </div>
       <ContainersFrame containers={containers} />
       <TotalReport total={containers.length} />
       {/* <FilterPanel filter={filter} on_date={on_date} />

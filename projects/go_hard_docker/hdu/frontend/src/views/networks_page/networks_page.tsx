@@ -8,6 +8,7 @@ import {
 } from '../../services/networks_service';
 import IconNetworks from '../../components/icon_networks';
 import { useConfiguration } from '@src/store/configuration';
+import ButtonRefresh from '@src/components/button_refresh';
 
 export default function NetworksPage() {
   const { configuration } = useConfiguration();
@@ -17,8 +18,10 @@ export default function NetworksPage() {
   }, []);
 
   const [networks, setNetworks] = useState<ApiNetworkListModel[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const refresh = () => {
+    setLoading(true);
     networks_service
       .get_networks()
       .then((networks: ApiNetworkListModel[]) => {
@@ -26,7 +29,8 @@ export default function NetworksPage() {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -48,9 +52,12 @@ export default function NetworksPage() {
   return (
     <div>
       <PageTitle>
-        <IconNetworks />
-        &nbsp; Networks
+        <IconNetworks /> Networks
       </PageTitle>
+
+      <div>
+        <ButtonRefresh on_refresh={refresh} loading={loading} />
+      </div>
 
       {/* // TODO //{' '} */}
       {/* <div>
