@@ -16,15 +16,33 @@ func (h *Api) GetRegistryRepositories(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	return c.JSON(http.StatusOK, newRegistryRepositoryResponse(&catalog))
+	return c.JSON(http.StatusOK, newRegistryRepositoriesResponse(&catalog))
 }
 
 type registryRepositoriesResponse struct {
-	Repositories []string `json:"repositories"`
+	Repositories []repositoryListModel `json:"repositories"`
 }
 
-func newRegistryRepositoryResponse(model *registry_client.Catalog) registryRepositoriesResponse {
+func newRegistryRepositoriesResponse(model *registry_client.Catalog) registryRepositoriesResponse {
+
+	repos := []repositoryListModel{}
+	for _, row := range model.Repositories {
+		repos = append(repos, newRepositoryListModel(row))
+	}
+
 	return registryRepositoriesResponse{
-		Repositories: model.Repositories,
+		Repositories: repos,
+	}
+}
+
+type repositoryListModel struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+func newRepositoryListModel(model registry_client.RepositoryListModel) repositoryListModel {
+	return repositoryListModel{
+		ID:   model.ID,
+		Name: model.Name,
 	}
 }

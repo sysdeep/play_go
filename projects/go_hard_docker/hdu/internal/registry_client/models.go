@@ -8,12 +8,33 @@ package registry_client
 // }
 
 type Catalog struct {
-	Repositories []string
+	Repositories []RepositoryListModel
 }
 
-type Repository struct {
+type RepositoryListModel struct {
+	ID   string
+	Name string
+}
+
+func newRepositoryListModel(name string) RepositoryListModel {
+	return RepositoryListModel{
+		ID:   name2id(name),
+		Name: name,
+	}
+}
+
+type RepositoryModel struct {
+	ID   string
 	Name string
 	Tags []string
+}
+
+func newRepositoryModel(name string, tags []string) RepositoryModel {
+	return RepositoryModel{
+		ID:   name2id(name),
+		Name: name,
+		Tags: tags,
+	}
 }
 
 type ManifestV2 struct {

@@ -16,6 +16,9 @@ import SecretPage from './views/secret_page/secret_page';
 import ConfigPage from './views/config_page/config_page';
 import NetworkPage from './views/network_page/network_page';
 import { join_url } from './utils/url';
+import RepositoriesPage from './views/registry/repositories_page/repositories_page';
+import RepositoryPage from './views/registry/repository_page/repository_page';
+import RepositoryTagPage from './views/registry/repository_tag_page/repository_tag_page';
 
 export const route = {
   image: '/image',
@@ -30,6 +33,10 @@ export const route = {
   configs: '/configs',
   secret: '/secret',
   secrets: '/secrets',
+
+  registry_repositories: '/registry/repositories',
+  registry_repository: '/registry/repository',
+  registry_repository_tag: '/registry/repository_tag',
 };
 
 export { join_url };
@@ -99,6 +106,19 @@ export const routes = [
       {
         path: join_url(route.secret, ':id'),
         element: <SecretPage />,
+      },
+
+      {
+        path: route.registry_repositories,
+        element: <RepositoriesPage />,
+      },
+      {
+        path: join_url(route.registry_repository, ':id'),
+        element: <RepositoryPage />,
+      },
+      {
+        path: join_url(route.registry_repository_tag, ':id/:tag'),
+        element: <RepositoryTagPage />,
       },
     ],
   },

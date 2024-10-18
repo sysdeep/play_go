@@ -15,7 +15,7 @@ export default function ButtonRemove({
   };
 
   return (
-    <button className='button error' onClick={on_click}>
+    <button className='btn btn-danger' onClick={on_click}>
       <IconRemove />
       &nbsp; Remove
     </button>

@@ -64,6 +64,11 @@ export default function TopNavBar() {
                 <IconSecrets /> Secrets
               </Link>
             </li>
+            <li className='nav-item'>
+              <Link to={route.registry_repositories} className='nav-link'>
+                Registry
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

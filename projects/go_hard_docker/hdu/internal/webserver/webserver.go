@@ -124,6 +124,8 @@ func NewWebserver(docker *client.Client, registry_client *registry_client.Regist
 
 	// registry
 	e.GET("/api/registry/repositories", api_handlers.GetRegistryRepositories)
+	e.GET("/api/registry/repository/:id", api_handlers.GetRegistryRepository)
+	e.GET("/api/registry/repository_tag/:id/:tag", api_handlers.GetRegistryRepositoryTag)
 
 	return &Webserver{
 		e: e,

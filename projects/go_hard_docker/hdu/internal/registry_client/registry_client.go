@@ -84,36 +84,51 @@ func (c *RegistryClient) GetCatalog(n int) (Catalog, error) {
 		return Catalog{}, err
 	}
 
+	repos := []RepositoryListModel{}
+	for _, row := range result.Repositories {
+		repos = append(repos, newRepositoryListModel(row))
+	}
+
 	return Catalog{
-		Repositories: result.Repositories,
+		Repositories: repos,
 	}, nil
 
 }
 
 // GetRepository
-func (c *RegistryClient) GetRepository(image_name string) (Repository, error) {
+func (c *RegistryClient) GetRepository(id string) (RepositoryModel, error) {
+	// convert id to name
+	image_name, err := id2name(id)
+	if err != nil {
+		return RepositoryModel{}, err
+	}
+
+	// send request
 	url := c.make_url(fmt.Sprintf("/v2/%s/tags/list", image_name))
 
 	body, err := c.make_get(url)
 	if err != nil {
-		return Repository{}, err
+		return RepositoryModel{}, err
 	}
 
 	result := repositoryResponse{}
 	err = json.Unmarshal(body, &result)
 	if err != nil {
-		return Repository{}, err
+		return RepositoryModel{}, err
 	}
 
-	return Repository{
-		Name: result.Name,
-		Tags: result.Tags,
-	}, nil
+	return newRepositoryModel(result.Name, result.Tags), nil
 
 }
 
 // GetManivestV2
-func (c *RegistryClient) GetManivestV2(image_name string, tag_name string) (ManifestV2, error) {
+func (c *RegistryClient) GetManivestV2(id string, tag_name string) (ManifestV2, error) {
+	// convert id to name
+	image_name, err := id2name(id)
+	if err != nil {
+		return ManifestV2{}, err
+	}
+
 	url := c.make_url(fmt.Sprintf("/v2/%s/manifests/%s", image_name, tag_name))
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -207,6 +222,7 @@ func (c *RegistryClient) make_get(url string) ([]byte, error) {
 
 	resp, err := c.client.Get(url)
 	if err != nil {
+
 		fmt.Println(err)
 		return make([]byte, 0), err
 	}
