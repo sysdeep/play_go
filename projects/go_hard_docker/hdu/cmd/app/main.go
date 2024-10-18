@@ -2,6 +2,7 @@ package main
 
 import (
 	"hdu/internal/logger"
+	"hdu/internal/registry_client"
 	"hdu/internal/services"
 	"hdu/internal/webserver"
 
@@ -14,11 +15,11 @@ func main() {
 
 	// test docker
 
-	cli, err := client.NewClientWithOpts(client.FromEnv)
+	d_client, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		panic(err)
 	}
-	defer cli.Close()
+	defer d_client.Close()
 
 	// // Получение списка запуцщенных контейнеров(docker ps)
 	// containers, err := cli.ContainerList(context.Background(), container.ListOptions{All: true})
@@ -32,10 +33,12 @@ func main() {
 	// 	fmt.Printf("%s %s (status: %s)\n", container.ID, container.Image, container.Status)
 	// }
 
+	r_client := registry_client.NewRegistryClient("https://localhost:5000")
+
 	// core
-	servs := services.NewServices(cli)
+	servs := services.NewServices(d_client)
 
 	// web server
-	web_server := webserver.NewWebserver(cli, servs, log)
+	web_server := webserver.NewWebserver(d_client, r_client, servs, log)
 	web_server.Start()
 }

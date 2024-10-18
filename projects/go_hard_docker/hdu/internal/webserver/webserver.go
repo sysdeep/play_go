@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"hdu/internal/logger"
+	"hdu/internal/registry_client"
 	"hdu/internal/services"
 	"hdu/internal/webserver/api"
 	"hdu/internal/webserver/handlers"
@@ -16,7 +17,7 @@ type Webserver struct {
 	// docker *client.Client
 }
 
-func NewWebserver(docker *client.Client, services *services.Services, logger *logger.Logger) *Webserver {
+func NewWebserver(docker *client.Client, registry_client *registry_client.RegistryClient, services *services.Services, logger *logger.Logger) *Webserver {
 
 	e := echo.New()
 
@@ -87,7 +88,7 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 	// })
 
 	// api ----------------------------------------------------------------------
-	api_handlers := api.NewApi(docker, services, logger)
+	api_handlers := api.NewApi(docker, registry_client, services, logger)
 
 	// containers
 	e.GET("/api/containers", api_handlers.GetContainers)
@@ -120,6 +121,9 @@ func NewWebserver(docker *client.Client, services *services.Services, logger *lo
 
 	// info
 	e.GET("/api/info", api_handlers.GetInfo)
+
+	// registry
+	e.GET("/api/registry/repositories", api_handlers.GetRegistryRepositories)
 
 	return &Webserver{
 		e: e,

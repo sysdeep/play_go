@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	client := registry_client.NewRegistryClient("http://localhost:5000")
+	client := registry_client.NewRegistryClient("https://localhost:5000")
 	catalog, err := client.GetCatalog(1)
 	_check_error(err)
 	utils.PrintAsJson(catalog)
@@ -34,6 +34,8 @@ func main() {
 
 func _check_error(err error) {
 	if err != nil {
+		fmt.Println("Error ------------------------------")
 		log.Panic(err)
+		fmt.Println("Error ------------------------------")
 	}
 }

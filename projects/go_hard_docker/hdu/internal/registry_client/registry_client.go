@@ -70,7 +70,7 @@ func (c *RegistryClient) GetCatalog(n int) (Catalog, error) {
 
 	// make endpoint address
 	url := c.make_url(fmt.Sprintf("/v2/_catalog?n={%d}", n))
-
+	fmt.Println(url)
 	// fetch
 	body, err := c.make_get(url)
 	if err != nil {
