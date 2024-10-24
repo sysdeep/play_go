@@ -1,0 +1,2 @@
+- https://dev.to/andyhaskell/intro-to-bubble-tea-in-go-21lg
+- https://dev.to/andyhaskell/processing-user-input-in-bubble-tea-with-a-menu-component-222i
