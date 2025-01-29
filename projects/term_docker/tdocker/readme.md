@@ -23,3 +23,8 @@
 - https://github.com/charmbracelet/bubbletea
 - https://github.com/rivo/tview/
   - мощная штука
+
+## Bubbletea
+
+- https://dev-gang.ru/article/vstuplenie-k-bubble-tea-v-go-9jnr764l12/
+- https://dev-gang.ru/article/obrabotka-polzovatelskogo-vvoda-v-bubble-tea-s-pomosczu-komponenta-menu-peo0v6hdeb/
