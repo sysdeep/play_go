@@ -1,4 +1,4 @@
-package main
+package components
 
 import (
 	"fmt"
@@ -8,35 +8,42 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-type menu struct {
-	options       []menuItem
+type MenuFrame struct {
+	options       []MenuFrameItem
 	selectedIndex int
+	isActive      bool
 }
 
-type menuItem struct {
-	text    string
-	onPress func() tea.Msg
+type MenuFrameItem struct {
+	Text    string
+	OnPress func() tea.Msg
 }
 
 type toggleCasingMsg struct{}
 type exitMsg struct{}
 
-type gotoPageMsg struct {
-	Page int
+// type gotoPageMsg struct {
+// 	Page int
+// }
+
+func NewMainFrame(options []MenuFrameItem) MenuFrame {
+	return MenuFrame{
+		options: options,
+	}
 }
 
-func (m menu) Init() tea.Cmd {
+func (m MenuFrame) Init() tea.Cmd {
 	// ????
 	return tea.SetWindowTitle("Grocery List")
 }
 
-func (m menu) View() string {
+func (m MenuFrame) View() string {
 	var options []string
 	for i, o := range m.options {
 		if i == m.selectedIndex {
-			options = append(options, fmt.Sprintf("-> %s", o.text))
+			options = append(options, fmt.Sprintf("-> %s", o.Text))
 		} else {
-			options = append(options, fmt.Sprintf("   %s", o.text))
+			options = append(options, fmt.Sprintf("   %s", o.Text))
 		}
 	}
 
@@ -47,15 +54,20 @@ func (m menu) View() string {
 
 	body := strings.Join(options, "\n")
 
+	color := "240"
+	if m.isActive {
+		color = "205"
+	}
+
 	style := lipgloss.NewStyle().
 		// BorderStyle(lipgloss.NormalBorder()).
 		BorderStyle(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("240"))
+		BorderForeground(lipgloss.Color(color))
 
 	return style.Render(body)
 }
 
-func (m menu) Update(msg tea.Msg) (menu, tea.Cmd) {
+func (m MenuFrame) Update(msg tea.Msg) (MenuFrame, tea.Cmd) {
 	switch msg := msg.(type) {
 	case toggleCasingMsg:
 		return m.toggleSelectedItemCase(), nil
@@ -68,7 +80,7 @@ func (m menu) Update(msg tea.Msg) (menu, tea.Cmd) {
 		case "down", "right", "up", "left":
 			// return m.moveCursor(msg.String()), nil
 			m.moveCursor(msg.String())
-			return m, m.options[m.selectedIndex].onPress
+			return m, m.options[m.selectedIndex].OnPress
 			// case "enter", "return":
 			// 	return m, m.options[m.selectedIndex].onPress
 		}
@@ -76,7 +88,7 @@ func (m menu) Update(msg tea.Msg) (menu, tea.Cmd) {
 	return m, nil
 }
 
-func (m *menu) moveCursor(msg string) {
+func (m *MenuFrame) moveCursor(msg string) {
 	switch msg {
 	case "up", "left":
 		m.selectedIndex--
@@ -91,12 +103,16 @@ func (m *menu) moveCursor(msg string) {
 	// return m
 }
 
-func (m menu) toggleSelectedItemCase() menu {
-	selectedText := m.options[m.selectedIndex].text
+func (m MenuFrame) toggleSelectedItemCase() MenuFrame {
+	selectedText := m.options[m.selectedIndex].Text
 	if selectedText == strings.ToUpper(selectedText) {
-		m.options[m.selectedIndex].text = strings.ToLower(selectedText)
+		m.options[m.selectedIndex].Text = strings.ToLower(selectedText)
 	} else {
-		m.options[m.selectedIndex].text = strings.ToUpper(selectedText)
+		m.options[m.selectedIndex].Text = strings.ToUpper(selectedText)
 	}
 	return m
+}
+
+func (m *MenuFrame) SetFocus(focus bool) {
+	m.isActive = focus
 }
