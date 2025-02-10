@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type menu struct {
@@ -20,6 +21,10 @@ type menuItem struct {
 type toggleCasingMsg struct{}
 type exitMsg struct{}
 
+type gotoPageMsg struct {
+	Page int
+}
+
 func (m menu) Init() tea.Cmd {
 	// ????
 	return tea.SetWindowTitle("Grocery List")
@@ -34,10 +39,20 @@ func (m menu) View() string {
 			options = append(options, fmt.Sprintf("   %s", o.text))
 		}
 	}
-	return fmt.Sprintf(`%s
 
-Press enter/return to select a list item, arrow keys to move, or Ctrl+C to exit.`,
-		strings.Join(options, "\n"))
+	// 	body := fmt.Sprintf(`%s
+
+	// Press enter/return to select a list item, arrow keys to move, or Ctrl+C to exit.`,
+	// 		strings.Join(options, "\n"))
+
+	body := strings.Join(options, "\n")
+
+	style := lipgloss.NewStyle().
+		// BorderStyle(lipgloss.NormalBorder()).
+		BorderStyle(lipgloss.RoundedBorder()).
+		BorderForeground(lipgloss.Color("240"))
+
+	return style.Render(body)
 }
 
 func (m menu) Update(msg tea.Msg) (menu, tea.Cmd) {
@@ -51,15 +66,17 @@ func (m menu) Update(msg tea.Msg) (menu, tea.Cmd) {
 		case "ctrl+c":
 			return m, tea.Quit
 		case "down", "right", "up", "left":
-			return m.moveCursor(msg.String()), nil
-		case "enter", "return":
+			// return m.moveCursor(msg.String()), nil
+			m.moveCursor(msg.String())
 			return m, m.options[m.selectedIndex].onPress
+			// case "enter", "return":
+			// 	return m, m.options[m.selectedIndex].onPress
 		}
 	}
 	return m, nil
 }
 
-func (m menu) moveCursor(msg string) menu {
+func (m *menu) moveCursor(msg string) {
 	switch msg {
 	case "up", "left":
 		m.selectedIndex--
@@ -71,7 +88,7 @@ func (m menu) moveCursor(msg string) menu {
 
 	optCount := len(m.options)
 	m.selectedIndex = (m.selectedIndex + optCount) % optCount
-	return m
+	// return m
 }
 
 func (m menu) toggleSelectedItemCase() menu {
