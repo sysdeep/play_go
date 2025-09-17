@@ -160,6 +160,11 @@ func (m MasterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// 	m.viewport.GotoBottom()
 		}
 
+		switch msg.String() {
+		case "q":
+			return m, tea.Quit
+		}
+
 	// We handle errors just like any other message
 	case errMsg:
 		m.err = msg
@@ -204,7 +209,7 @@ func (m MasterModel) View() string {
 		lipgloss.Top,
 		main_view,
 		gap,
-		"Press Ctrl+C or Esc to exit",
+		"Press Ctrl+C or Esc or q to exit",
 	)
 
 	// return fmt.Sprintf(
