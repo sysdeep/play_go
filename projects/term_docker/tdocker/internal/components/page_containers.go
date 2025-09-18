@@ -1,23 +1,35 @@
 package components
 
 import (
-	"tdocker/internal/state"
+	"context"
+	"fmt"
+	"strings"
+	"tdocker/internal/tui"
 
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/client"
 )
 
-var baseStyle = lipgloss.NewStyle().
-	BorderStyle(lipgloss.NormalBorder()).
-	BorderForeground(lipgloss.Color("240"))
+// var baseStyle = lipgloss.NewStyle().
+// 	BorderStyle(lipgloss.NormalBorder()).
+// 	BorderForeground(lipgloss.Color("240"))
 
 type PageContainers struct {
-	state *state.State
-	t     table.Model
+	// state *state.State
+	t          table.Model
+	focused    bool
+	dockerCli  *client.Client
+	conteiners []container.Summary
+	MaxWidth   int
+	MaxHeight  int
 }
 
-func NewPageContainers(st *state.State) PageContainers {
+func NewPageContainers(dockerCli *client.Client) PageContainers {
+
+	// raw_containers, _ := dockerCli.ContainerList(context.Background(), container.ListOptions{All: true})
 
 	columns := []table.Column{
 		{Title: "Rank", Width: 4},
@@ -51,19 +63,18 @@ func NewPageContainers(st *state.State) PageContainers {
 	t.SetStyles(s)
 
 	return PageContainers{
-		state: st,
-		t:     t,
+		// state: st,
+		t:         t,
+		focused:   false,
+		dockerCli: dockerCli,
+		MaxWidth:  70,
+		MaxHeight: 30,
+		// conteiners: raw_containers,
 	}
 }
 
 func (p PageContainers) Init() tea.Cmd {
 	return nil
-}
-
-func (p PageContainers) View() string {
-	// return "This is containers page"
-
-	return baseStyle.Render(p.t.View()) + "\n"
 }
 
 func (p PageContainers) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -72,6 +83,17 @@ func (p PageContainers) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// if p.state.CurrentPage == state.PAGE_CONTAINERS {
 	// 	p.t.Focus()
 	// }
+
+	switch msg := msg.(type) {
+
+	case tui.FocusMsg:
+		p.focused = msg.Focus == tui.FOCUS_PAGE
+		return p, nil
+	}
+
+	if !p.focused {
+		return p, nil
+	}
 
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
@@ -86,7 +108,11 @@ func (p PageContainers) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		switch msg.String() {
 
+		case "r":
+			p.updateList()
+			return p, nil
 		case "esc":
+
 			if p.t.Focused() {
 				p.t.Blur()
 			} else {
@@ -100,10 +126,41 @@ func (p PageContainers) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			)
 		}
 	}
+
 	p.t, cmd = p.t.Update(msg)
 	return p, cmd
 }
 
-func (p PageContainers) Focus() {
-	p.t.Focus()
+func (p PageContainers) View() string {
+	// return "This is containers page"
+
+	wStyle := lipgloss.NewStyle().Width(p.MaxWidth)
+	// fmt.Println(p.MaxWidth)
+
+	rows := p.t.Rows()
+	for _, c := range p.conteiners {
+		rows = append(rows, []string{c.Status, c.ID, c.Names[0], "-"})
+	}
+	p.t.SetRows(rows)
+
+	borderStyle := MakeFocusedBorder(p.focused)
+
+	cs := []string{}
+	for _, c := range p.conteiners {
+		cs = append(cs, wStyle.Render(c.ID))
+	}
+
+	ccs := strings.Join(cs, "\n")
+
+	v := lipgloss.JoinVertical(lipgloss.Bottom, p.t.View(), ccs,
+		wStyle.Render(fmt.Sprintf("len: %d", len(rows))),
+	)
+
+	// return borderStyle.Render(p.t.View())
+	return borderStyle.Render(lipgloss.NewStyle().Height(p.MaxHeight).Render(v))
+}
+
+func (p *PageContainers) updateList() {
+	raw_containers, _ := p.dockerCli.ContainerList(context.Background(), container.ListOptions{All: true})
+	p.conteiners = raw_containers
 }

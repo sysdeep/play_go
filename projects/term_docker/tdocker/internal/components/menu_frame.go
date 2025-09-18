@@ -1,17 +1,19 @@
 package components
 
 import (
-	"fmt"
 	"strings"
+	"tdocker/internal/tui"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
 
+// TODO: сейчас выбор страницы и пункта меню никак не связаны друг с другом
 type MenuFrame struct {
 	options       []MenuFrameItem
 	selectedIndex int
 	isActive      bool
+	maxWidth      int
 }
 
 type MenuFrameItem struct {
@@ -22,53 +24,42 @@ type MenuFrameItem struct {
 type toggleCasingMsg struct{}
 type exitMsg struct{}
 
-// type gotoPageMsg struct {
-// 	Page int
-// }
-
-func NewMainFrame(options []MenuFrameItem) MenuFrame {
+func NewMenuFrame(options []MenuFrameItem) MenuFrame {
 	return MenuFrame{
-		options: options,
+		options:  options,
+		maxWidth: 20,
 	}
 }
 
 func (m MenuFrame) Init() tea.Cmd {
 	// ????
-	return tea.SetWindowTitle("Grocery List")
-}
-
-func (m MenuFrame) View() string {
-	var options []string
-	for i, o := range m.options {
-		if i == m.selectedIndex {
-			options = append(options, fmt.Sprintf("-> %s", o.Text))
-		} else {
-			options = append(options, fmt.Sprintf("   %s", o.Text))
-		}
-	}
-
-	// 	body := fmt.Sprintf(`%s
-
-	// Press enter/return to select a list item, arrow keys to move, or Ctrl+C to exit.`,
-	// 		strings.Join(options, "\n"))
-
-	body := strings.Join(options, "\n")
-
-	color := "240"
-	if m.isActive {
-		color = "205"
-	}
-
-	style := lipgloss.NewStyle().
-		// BorderStyle(lipgloss.NormalBorder()).
-		BorderStyle(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color(color))
-
-	return style.Render(body)
+	// return tea.SetWindowTitle("Grocery List")
+	return nil
 }
 
 func (m MenuFrame) Update(msg tea.Msg) (MenuFrame, tea.Cmd) {
+
+	// первая реакция на фокус
 	switch msg := msg.(type) {
+
+	case tui.FocusMsg:
+		// fmt.Print(msg)
+		m.isActive = msg.Focus == tui.FOCUS_MENU
+		return m, nil
+	}
+
+	// если фокус потерян - не реагируем на события
+	if !m.isActive {
+		return m, nil
+	}
+
+	switch msg := msg.(type) {
+
+	// case tui.FocusMsg:
+	// 	// fmt.Print(msg)
+	// 	m.isActive = msg.Focus == tui.FOCUS_MENU
+	// 	return m, nil
+
 	case toggleCasingMsg:
 		return m.toggleSelectedItemCase(), nil
 	case exitMsg:
@@ -86,6 +77,32 @@ func (m MenuFrame) Update(msg tea.Msg) (MenuFrame, tea.Cmd) {
 		}
 	}
 	return m, nil
+}
+
+func (m MenuFrame) View() string {
+
+	wStyle := lipgloss.NewStyle().Width(m.maxWidth)
+
+	var options []string
+	for i, o := range m.options {
+		preStr := "   "
+		if i == m.selectedIndex {
+			preStr = "-> "
+
+		}
+		options = append(options, wStyle.Render(preStr+o.Text))
+	}
+
+	// 	body := fmt.Sprintf(`%s
+
+	// Press enter/return to select a list item, arrow keys to move, or Ctrl+C to exit.`,
+	// 		strings.Join(options, "\n"))
+
+	body := strings.Join(options, "\n")
+
+	borderStyle := MakeFocusedBorder(m.isActive)
+
+	return borderStyle.Render(body)
 }
 
 func (m *MenuFrame) moveCursor(msg string) {

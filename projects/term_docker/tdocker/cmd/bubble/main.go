@@ -2,20 +2,27 @@ package main
 
 import (
 	"tdocker/internal/components"
-	"tdocker/internal/state"
+	"tdocker/internal/tui"
 	"tdocker/internal/tui/master"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/docker/docker/client"
 )
 
 func main() {
+
+	d_client, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	if err != nil {
+		panic(err)
+	}
+	defer d_client.Close()
 
 	m := makeMainMenu()
 
 	p := tea.NewProgram(
 		// newSimplePage("This app is under construction"),
 		// m,
-		master.NewMasterModel(m),
+		master.NewMasterModel(m, d_client),
 	)
 	if _, err := p.Run(); err != nil {
 		panic(err)
@@ -25,33 +32,28 @@ func main() {
 func makeMainMenu() components.MenuFrame {
 	options := []components.MenuFrameItem{
 		{
-			Text: "Containers",
-			// onPress: func() tea.Msg { return toggleCasingMsg{} },
-			OnPress: func() tea.Msg { return master.GotoPageMsg{state.PAGE_CONTAINERS} },
+			Text:    "Containers",
+			OnPress: tui.MakeGotoPageMsg(tui.PAGE_CONTAINERS),
 		},
 		{
-			Text: "Images",
-			// OnPress: func() tea.Msg { return toggleCasingMsg{} },
-			OnPress: func() tea.Msg { return master.GotoPageMsg{state.PAGE_IMAGES} },
+			Text:    "Images",
+			OnPress: tui.MakeGotoPageMsg(tui.PAGE_IMAGES),
 		},
 		{
-			Text: "Volumes",
-			// OnPress: func() tea.Msg { return toggleCasingMsg{} },
-			OnPress: func() tea.Msg { return master.GotoPageMsg{state.PAGE_VOLUMES} },
+			Text:    "Volumes",
+			OnPress: tui.MakeGotoPageMsg(tui.PAGE_VOLUMES),
 		},
 		{
-			Text: "Networks",
-			// OnPress: func() tea.Msg { return toggleCasingMsg{} },
-			OnPress: func() tea.Msg { return master.GotoPageMsg{state.PAGE_NETWORKS} },
+			Text:    "Networks",
+			OnPress: tui.MakeGotoPageMsg(tui.PAGE_NETWORKS),
 		},
-		// {
-		// 	text:    "exit",
-		// 	onPress: func() tea.Msg { return exitMsg{} },
-		// },
 	}
 
-	return components.NewMainFrame(options)
+	return components.NewMenuFrame(options)
 
 }
 
-// new
+func makeDocker() {
+	// test docker
+
+}

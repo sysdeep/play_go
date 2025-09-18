@@ -1,17 +1,15 @@
 package master
 
 import (
+	"slices"
 	"tdocker/internal/components"
-	"tdocker/internal/state"
+	"tdocker/internal/tui"
 
 	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/docker/docker/client"
 )
-
-type GotoPageMsg struct {
-	Page int
-}
 
 const gap = "\n\n"
 
@@ -19,97 +17,85 @@ type (
 	errMsg error
 )
 
-const (
-	FOCUS_MENU = iota
-	FOCUS_PAGE
-)
-
 type MasterModel struct {
 	// viewport viewport.Model
 	menu        components.MenuFrame
 	senderStyle lipgloss.Style
-	// messages    []string
-	err    error
+	err         error
+	sub         chan struct{}
+
+	// pages
 	npages map[int]tea.Model
-	focus  int
-	state  *state.State
+	page   int
+
+	// focus
+	focuses []string
 }
 
 // https://github.com/charmbracelet/bubbletea/tree/main/examples/chat
-func NewMasterModel(menu components.MenuFrame) MasterModel {
-
-	// ta := textarea.New()
-	// ta.Placeholder = "Send a message..."
-	// ta.Focus()
-
-	// ta.Prompt = "┃ "
-	// ta.CharLimit = 280
-
-	// ta.SetWidth(30)
-	// ta.SetHeight(3)
-
-	// // Remove cursor line styling
-	// ta.FocusedStyle.CursorLine = lipgloss.NewStyle()
-
-	// ta.ShowLineNumbers = false
-
-	// 	vp := viewport.New(30, 5)
-
-	// 	vp.SetContent(`Welcome to the chat room!
-	// Type a message and press Enter to send.`)
-
-	// ta.KeyMap.InsertNewline.SetEnabled(false)
-
-	app_state := &state.State{
-		CurrentPage: state.PAGE_CONTAINERS,
-	}
+func NewMasterModel(menu components.MenuFrame, dockerCli *client.Client) MasterModel {
 
 	return MasterModel{
-		// viewport:    vp,
-		menu: menu,
-		// messages:    []string{},
+		menu:        menu,
 		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
 		err:         nil,
+		sub:         make(chan struct{}),
+
 		npages: map[int]tea.Model{
-			state.PAGE_CONTAINERS: components.NewPageContainers(app_state),
-			state.PAGE_IMAGES:     components.NewPageImages(),
-			state.PAGE_VOLUMES:    components.NewPageVolumes(),
-			state.PAGE_NETWORKS:   components.NewPageNetworks(),
+			tui.PAGE_CONTAINERS: components.NewPageContainers(dockerCli),
+			tui.PAGE_IMAGES:     components.NewPageImages(dockerCli),
+			tui.PAGE_VOLUMES:    components.NewPageVolumes(),
+			tui.PAGE_NETWORKS:   components.NewPageNetworks(),
 		},
-		focus: FOCUS_MENU,
-		state: app_state,
+		page: tui.PAGE_CONTAINERS,
+
+		focuses: []string{
+			tui.FOCUS_MENU,
+			tui.FOCUS_PAGE,
+		},
 	}
 }
 
 func (m MasterModel) Init() tea.Cmd {
-	return textarea.Blink
+	return tea.Batch(
+		textarea.Blink,
+		tui.MakeFocusMsg(tui.FOCUS_MENU), // setup current focus
+		listenForActivity(m.sub), waitForActivity(m.sub),
+	)
+
 }
 
 func (m MasterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd = []tea.Cmd{}
 
-	// vp, vpCmd := m.viewport.Update(msg)
-	// cmds = append(cmds, vpCmd)
-	// m.viewport = vp
-
 	// menu
-	m.menu.SetFocus(m.focus == FOCUS_MENU)
-	if m.focus == FOCUS_MENU {
-		menu, mCmd := m.menu.Update(msg)
-		cmds = append(cmds, mCmd)
-		m.menu = menu
-	}
+	menu, mCmd := m.menu.Update(msg)
+	cmds = append(cmds, mCmd)
+	m.menu = menu
 
 	// current page
-	if m.focus == FOCUS_PAGE {
-		// tea.Println("focus pages")
-		p, pCmp := m.npages[m.state.CurrentPage].Update(msg)
-		cmds = append(cmds, pCmp)
-		m.npages[m.state.CurrentPage] = p
-	}
+	p, pCmp := m.npages[m.page].Update(msg)
+	cmds = append(cmds, pCmp)
+	m.npages[m.page] = p
 
 	switch msg := msg.(type) {
-	// case tea.WindowSizeMsg:
+
+	case PollMsg:
+		// am.responses++                     // record external activity
+		// m.npages[m.page]
+		// fmt.Println("poll///")
+		return m, waitForActivity(m.sub) // wait for next event
+
+	// размеры
+	case tea.WindowSizeMsg:
+		switch pp := m.npages[m.page].(type) {
+		case components.PageContainers:
+			pp.MaxWidth = msg.Width - 24
+			pp.MaxHeight = msg.Height - 12
+			m.npages[m.page] = pp
+			return m, nil
+		}
+
 	// m.viewport.Width = msg.Width
 	// m.textarea.SetWidth(msg.Width)
 	// m.viewport.Height = msg.Height - m.textarea.Height() - lipgloss.Height(gap)
@@ -122,36 +108,20 @@ func (m MasterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// m.viewport.GotoBottom()
 
 	// goto page event handling
-	case GotoPageMsg:
-		m.state.CurrentPage = msg.Page
+	case tui.GotoPageMsg:
+		m.page = msg.Page
 		return m, nil
 
 	// keys handling
 	case tea.KeyMsg:
 		switch msg.Type {
 		case tea.KeyCtrlC, tea.KeyEsc:
-			// fmt.Println(m.textarea.Value())
 			return m, tea.Quit
 		// case tea.KeyCtrlN:
 
-		// 	if m.pageIndex == 0 {
-		// 		m.pageIndex = 1
-
-		// 	} else {
-		// 		m.pageIndex = 0
-		// 	}
-		// 	m.activePage = m.pages[m.pageIndex]
-		// 	return m, nil
 		case tea.KeyTab:
-			if m.focus == FOCUS_MENU {
-				m.focus = FOCUS_PAGE
-			} else {
-				m.focus = FOCUS_MENU
-			}
-
-			// ну вот как то не там где должен быть...
-			// m.menu.SetFocus(m.focus == FOCUS_MENU)
-			return m, nil
+			m.changeFocus()
+			return m, tui.MakeFocusMsg(m.focuses[0])
 
 			// case tea.KeyEnter:
 			// 	m.messages = append(m.messages, m.senderStyle.Render("You: ")+m.textarea.Value())
@@ -174,28 +144,39 @@ func (m MasterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
+func (m *MasterModel) changeFocus() {
+	rotate(m.focuses, 1)
+}
+
+// function to rotate array by k elems (3 reverse method)
+func rotate(arr []string, k int) {
+	slices.Reverse(arr[:k])
+	slices.Reverse(arr[k:])
+	slices.Reverse(arr)
+}
+
 var (
-	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
+	// focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 	blurredStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
 )
 
 func (m MasterModel) View() string {
 
 	p_view := ""
-	cp, ok := m.npages[m.state.CurrentPage]
+	cp, ok := m.npages[m.page]
 	if ok {
 		p_view = cp.View()
 	}
 
 	m_style := blurredStyle
-	if m.focus == FOCUS_MENU {
-		m_style = focusedStyle
-	}
+	// if m.focus == FOCUS_MENU {
+	// 	m_style = focusedStyle
+	// }
 
 	p_style := blurredStyle
-	if m.focus == FOCUS_PAGE {
-		p_style = focusedStyle
-	}
+	// if m.focus == FOCUS_PAGE {
+	// 	p_style = focusedStyle
+	// }
 
 	// test columns
 	// main_view := lipgloss.JoinHorizontal(lipgloss.Top, m.menu.View(), m.pages[m.pageIndex].View())
