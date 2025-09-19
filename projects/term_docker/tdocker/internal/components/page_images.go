@@ -16,14 +16,16 @@ type PageImages struct {
 	focused       bool
 	dockerCli     *client.Client
 	images        []image.Summary
+	pageGeometry  *PageGeometry
 }
 
-func NewPageImages(dockerCli *client.Client) PageImages {
+func NewPageImages(dockerCli *client.Client, pageGeometry *PageGeometry) PageImages {
 	p := PageImages{
 		selectedIndex: 0,
 		options:       []string{"astra", "ubuntu"},
 		focused:       false,
 		dockerCli:     dockerCli,
+		pageGeometry:  pageGeometry,
 	}
 
 	p.updateList()
@@ -106,7 +108,9 @@ func (p PageImages) View() string {
 
 	borderStyle := MakeFocusedBorder(p.focused)
 
-	return borderStyle.Render(body)
+	return borderStyle.Render(
+		lipgloss.NewStyle().Width(p.pageGeometry.MaxWidth).Height(p.pageGeometry.MaxHeight).Render(body),
+	)
 
 }
 

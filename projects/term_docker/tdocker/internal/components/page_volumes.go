@@ -4,15 +4,18 @@ import (
 	"tdocker/internal/tui"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type PageVolumes struct {
-	focused bool
+	focused      bool
+	pageGeometry *PageGeometry
 }
 
-func NewPageVolumes() PageVolumes {
+func NewPageVolumes(pageGeometry *PageGeometry) PageVolumes {
 	return PageVolumes{
-		focused: false,
+		focused:      false,
+		pageGeometry: pageGeometry,
 	}
 }
 
@@ -33,5 +36,7 @@ func (p PageVolumes) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (p PageVolumes) View() string {
 	borderStyle := MakeFocusedBorder(p.focused)
-	return borderStyle.Render("This is volumes page")
+	return borderStyle.Render(
+		lipgloss.NewStyle().Width(p.pageGeometry.MaxWidth).Height(p.pageGeometry.MaxHeight).Render("This is volumes page"),
+	)
 }

@@ -2,9 +2,9 @@ package components
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"tdocker/internal/tui"
+	"tdocker/internal/utils"
 
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
@@ -13,42 +13,25 @@ import (
 	"github.com/docker/docker/client"
 )
 
-// var baseStyle = lipgloss.NewStyle().
-// 	BorderStyle(lipgloss.NormalBorder()).
-// 	BorderForeground(lipgloss.Color("240"))
-
 type PageContainers struct {
-	// state *state.State
-	t          table.Model
-	focused    bool
-	dockerCli  *client.Client
-	conteiners []container.Summary
-	MaxWidth   int
-	MaxHeight  int
+	t            table.Model
+	focused      bool
+	dockerCli    *client.Client
+	pageGeometry *PageGeometry
 }
 
-func NewPageContainers(dockerCli *client.Client) PageContainers {
-
-	// raw_containers, _ := dockerCli.ContainerList(context.Background(), container.ListOptions{All: true})
+func NewPageContainers(dockerCli *client.Client, pageGeometry *PageGeometry) PageContainers {
 
 	columns := []table.Column{
-		{Title: "Rank", Width: 4},
-		{Title: "City", Width: 10},
-		{Title: "Country", Width: 10},
-		{Title: "Population", Width: 10},
-	}
-
-	rows := []table.Row{
-		{"1", "Tokyo", "Japan", "37,274,000"},
-		{"2", "Delhi", "India", "32,065,760"},
-		{"3", "Shanghai", "China", "28,516,904"},
-		{"4", "Dhaka", "Bangladesh", "22,478,116"},
-		{"5", "São Paulo", "Brazil", "22,429,800"},
+		{Title: "Status", Width: 20},
+		{Title: "ID", Width: 20},
+		{Title: "Name", Width: 20},
+		{Title: "Image", Width: 30},
 	}
 
 	t := table.New(
 		table.WithColumns(columns),
-		table.WithRows(rows), table.WithFocused(true), table.WithHeight(7))
+		table.WithFocused(true), table.WithHeight(7))
 
 	s := table.DefaultStyles()
 	s.Header = s.Header.
@@ -63,34 +46,50 @@ func NewPageContainers(dockerCli *client.Client) PageContainers {
 	t.SetStyles(s)
 
 	return PageContainers{
-		// state: st,
-		t:         t,
-		focused:   false,
-		dockerCli: dockerCli,
-		MaxWidth:  70,
-		MaxHeight: 30,
-		// conteiners: raw_containers,
+		t:            t,
+		focused:      false,
+		dockerCli:    dockerCli,
+		pageGeometry: pageGeometry,
 	}
 }
 
 func (p PageContainers) Init() tea.Cmd {
+	p.updateList()
 	return nil
 }
 
 func (p PageContainers) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
-	// tea.Println("update containes")
-	// if p.state.CurrentPage == state.PAGE_CONTAINERS {
-	// 	p.t.Focus()
-	// }
-
+	// проверка на фокус
 	switch msg := msg.(type) {
 
+	// case tui.GotoPageMsg:
+	// 	return p, tea.Println(msg.Page)
+	// 	if msg.Page == tui.PAGE_CONTAINERS {
+	// 		p.updateList()
+	// 		// return p, nil
+	// 	}
+
+	// если событие обновления странички - обновляем
+	case tui.NeedRefreshMsg:
+		// return p, tea.Println("need")
+		if msg.Page == tui.PAGE_CONTAINERS {
+			p.updateList()
+			return p, nil
+		}
+
 	case tui.FocusMsg:
+		oldFocus := p.focused
 		p.focused = msg.Focus == tui.FOCUS_PAGE
+
+		// при получении фокуса - обновляем таблицу
+		if p.focused != oldFocus && p.focused {
+			p.updateList()
+		}
 		return p, nil
 	}
 
+	// если не в фокусе - события не обрабатываем
 	if !p.focused {
 		return p, nil
 	}
@@ -134,33 +133,28 @@ func (p PageContainers) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (p PageContainers) View() string {
 	// return "This is containers page"
 
-	wStyle := lipgloss.NewStyle().Width(p.MaxWidth)
-	// fmt.Println(p.MaxWidth)
-
-	rows := p.t.Rows()
-	for _, c := range p.conteiners {
-		rows = append(rows, []string{c.Status, c.ID, c.Names[0], "-"})
-	}
-	p.t.SetRows(rows)
-
 	borderStyle := MakeFocusedBorder(p.focused)
 
-	cs := []string{}
-	for _, c := range p.conteiners {
-		cs = append(cs, wStyle.Render(c.ID))
-	}
-
-	ccs := strings.Join(cs, "\n")
-
-	v := lipgloss.JoinVertical(lipgloss.Bottom, p.t.View(), ccs,
-		wStyle.Render(fmt.Sprintf("len: %d", len(rows))),
-	)
-
-	// return borderStyle.Render(p.t.View())
-	return borderStyle.Render(lipgloss.NewStyle().Height(p.MaxHeight).Render(v))
+	screen := p.t.View()
+	return borderStyle.Render(
+		lipgloss.NewStyle().Height(p.pageGeometry.MaxHeight).Width(p.pageGeometry.MaxWidth).Render(screen))
 }
 
 func (p *PageContainers) updateList() {
 	raw_containers, _ := p.dockerCli.ContainerList(context.Background(), container.ListOptions{All: true})
-	p.conteiners = raw_containers
+
+	rows := []table.Row{}
+	for _, c := range raw_containers {
+
+		shortID := utils.ShortID(c.ID)
+
+		rows = append(rows, []string{
+			c.Status,                    // Status
+			shortID,                     // ID
+			strings.Join(c.Names, ", "), // Name
+			c.Image,                     // Image
+		})
+	}
+	p.t.SetRows(rows)
+
 }

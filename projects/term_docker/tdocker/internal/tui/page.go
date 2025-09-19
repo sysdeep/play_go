@@ -20,3 +20,7 @@ func MakeGotoPageMsg(page int) tea.Cmd {
 		}
 	}
 }
+
+type NeedRefreshMsg struct {
+	Page int
+}

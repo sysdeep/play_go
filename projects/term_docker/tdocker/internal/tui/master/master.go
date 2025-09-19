@@ -25,8 +25,9 @@ type MasterModel struct {
 	sub         chan struct{}
 
 	// pages
-	npages map[int]tea.Model
-	page   int
+	pageGeometry *components.PageGeometry
+	npages       map[int]tea.Model
+	page         int
 
 	// focus
 	focuses []string
@@ -35,6 +36,11 @@ type MasterModel struct {
 // https://github.com/charmbracelet/bubbletea/tree/main/examples/chat
 func NewMasterModel(menu components.MenuFrame, dockerCli *client.Client) MasterModel {
 
+	pageGeometry := &components.PageGeometry{
+		MaxWidth:  10,
+		MaxHeight: 10,
+	}
+
 	return MasterModel{
 		menu:        menu,
 		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
@@ -42,12 +48,13 @@ func NewMasterModel(menu components.MenuFrame, dockerCli *client.Client) MasterM
 		sub:         make(chan struct{}),
 
 		npages: map[int]tea.Model{
-			tui.PAGE_CONTAINERS: components.NewPageContainers(dockerCli),
-			tui.PAGE_IMAGES:     components.NewPageImages(dockerCli),
-			tui.PAGE_VOLUMES:    components.NewPageVolumes(),
-			tui.PAGE_NETWORKS:   components.NewPageNetworks(),
+			tui.PAGE_CONTAINERS: components.NewPageContainers(dockerCli, pageGeometry),
+			tui.PAGE_IMAGES:     components.NewPageImages(dockerCli, pageGeometry),
+			tui.PAGE_VOLUMES:    components.NewPageVolumes(pageGeometry),
+			tui.PAGE_NETWORKS:   components.NewPageNetworks(pageGeometry),
 		},
-		page: tui.PAGE_CONTAINERS,
+		page:         tui.PAGE_CONTAINERS,
+		pageGeometry: pageGeometry,
 
 		focuses: []string{
 			tui.FOCUS_MENU,
@@ -61,6 +68,9 @@ func (m MasterModel) Init() tea.Cmd {
 		textarea.Blink,
 		tui.MakeFocusMsg(tui.FOCUS_MENU), // setup current focus
 		listenForActivity(m.sub), waitForActivity(m.sub),
+
+		// шлём событие что надо обновить страничку
+		func() tea.Msg { return tui.NeedRefreshMsg{Page: tui.PAGE_CONTAINERS} },
 	)
 
 }
@@ -88,13 +98,18 @@ func (m MasterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// размеры
 	case tea.WindowSizeMsg:
-		switch pp := m.npages[m.page].(type) {
-		case components.PageContainers:
-			pp.MaxWidth = msg.Width - 24
-			pp.MaxHeight = msg.Height - 12
-			m.npages[m.page] = pp
-			return m, nil
-		}
+
+		m.pageGeometry.MaxWidth = msg.Width - 24
+		m.pageGeometry.MaxHeight = msg.Height - 12
+		return m, nil
+
+		// switch pp := m.npages[m.page].(type) {
+		// case components.PageContainers:
+		// 	pp.MaxWidth = msg.Width - 24
+		// 	pp.MaxHeight = msg.Height - 12
+		// 	m.npages[m.page] = pp
+		// 	return m, nil
+		// }
 
 	// m.viewport.Width = msg.Width
 	// m.textarea.SetWidth(msg.Width)
@@ -110,7 +125,8 @@ func (m MasterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// goto page event handling
 	case tui.GotoPageMsg:
 		m.page = msg.Page
-		return m, nil
+
+		return m, func() tea.Msg { return tui.NeedRefreshMsg{Page: msg.Page} }
 
 	// keys handling
 	case tea.KeyMsg:
@@ -186,12 +202,28 @@ func (m MasterModel) View() string {
 		p_style.Render(p_view),
 	)
 
-	return lipgloss.JoinVertical(
+	screen := lipgloss.JoinVertical(
 		lipgloss.Top,
 		main_view,
 		gap,
 		"Press Ctrl+C or Esc or q to exit",
 	)
+
+	return screen
+
+	// попытки изобразить модальчик - неудачно.. все ждут 2 версию lipgloss где такой функционал обещали
+	// over := lipgloss.NewStyle().
+	// 	// Width(10).
+	// 	// Height(10).
+	// 	Padding(1, 2).
+	// 	BorderStyle(lipgloss.RoundedBorder()).
+	// 	BorderForeground(lipgloss.Color("202")).Render("Over text")
+
+	// return screen + lipgloss.Place(100, 100, lipgloss.Center, lipgloss.Center, over)
+	// return "s\no\nm\ne\n text" + lipgloss.Place(10, 10, lipgloss.Center, lipgloss.Center, over)
+	// return lipgloss.Place(100, 10, lipgloss.Center, lipgloss.Center, over)
+
+	// return lipgloss.JoinVertical(lipgloss.Center, screen, over)
 
 	// return fmt.Sprintf(
 	// 	"%s%s%s",
