@@ -96,6 +96,9 @@ func (p PageImages) View() string {
 		// body,
 	}
 	for idx, img := range p.images {
+		if len(img.RepoTags) == 0 {
+			continue
+		}
 		rowStr := img.RepoTags[0]
 		preStr := "  "
 		if idx == p.selectedIndex {
