@@ -5,6 +5,9 @@ import (
 	"image"
 	"image/color"
 	"log"
+	"ms3gio/internal/logic/models"
+	"ms3gio/internal/logic/project"
+	"ms3gio/ui/scene"
 	"os"
 
 	"gioui.org/app"
@@ -41,6 +44,13 @@ func run(window *app.Window) error {
 	var closeButton widget.Clickable
 	var boiling bool
 
+	project := &project.Project{
+		Section: &models.Section{
+			Sensor1: &models.DSensor{},
+		},
+	}
+	sceneObj := scene.New(project)
+
 	for {
 		switch e := window.Event().(type) {
 		case app.DestroyEvent:
@@ -52,6 +62,8 @@ func run(window *app.Window) error {
 
 			if closeButton.Clicked(gtx) {
 				boiling = !boiling
+
+				project.Section.Sensor1.IsState = !project.Section.Sensor1.IsState
 			}
 
 			// draw
@@ -61,6 +73,9 @@ func run(window *app.Window) error {
 				// Empty space is left at the start, i.e. at the top
 				Spacing: layout.SpaceStart,
 			}.Layout(gtx,
+
+				// scene
+				layout.Rigid(sceneObj.Layout),
 
 				// circle
 				layout.Rigid(
@@ -85,6 +100,16 @@ func run(window *app.Window) error {
 						return layout.Dimensions{Size: d}
 					},
 				),
+
+				// layout.Rigid(
+				// 	func(gtx layout.Context) layout.Dimensions {
+				// 		return modals.NewError(fmt.Errorf("TEst Error"), theme).Layout(gtx)
+				// 	}),
+
+				// layout.Rigid(
+				// 	func(gtx layout.Context) layout.Dimensions {
+				// 		return modals.NewInfo("Title 1", "BoDYD", theme).Layout(gtx)
+				// 	}),
 
 				// text
 				layout.Rigid(
