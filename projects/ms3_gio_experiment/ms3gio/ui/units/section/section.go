@@ -22,7 +22,7 @@ func New(model *models.Section) *Section {
 
 	return &Section{
 		model:   model,
-		sensor1: dsensor.New(model.Sensor1, image.Pt(40, 400)),
+		sensor1: dsensor.New(model.Sensor1, 24, image.Pt(40, 400)),
 	}
 }
 
