@@ -4,9 +4,8 @@ import (
 	"image"
 	"image/color"
 	"log"
-	"ms3gio/internal/logic/models"
 	"ms3gio/ui/palette"
-	"ms3gio/ui/units/dsensor"
+	"ms3gio/ui/views/lamp"
 	"os"
 
 	"gioui.org/app"
@@ -25,7 +24,7 @@ type D = layout.Dimensions
 func main() {
 	go func() {
 		window := new(app.Window)
-		window.Option(app.Title("DSensor"))
+		window.Option(app.Title("Lamp"))
 		window.Option(app.Size(unit.Dp(800), unit.Dp(600)))
 
 		err := run(window)
@@ -37,17 +36,34 @@ func main() {
 	app.Main()
 }
 
+func makeColorsPair(color int) (lamp.LampColor, lamp.LampColor) {
+	clBody := lamp.LampColor{
+		Active: palette.Color(color, palette.P400),
+		Normal: palette.Color(color, palette.P600),
+	}
+
+	clBorder := lamp.LampColor{
+		Active: palette.Color(color, palette.P600),
+		Normal: palette.Color(color, palette.P400),
+	}
+
+	return clBody, clBorder
+}
+
 func run(window *app.Window) error {
 	theme := material.NewTheme()
 
 	var ops op.Ops
 
 	var stateButton widget.Clickable
-	var blockButton widget.Clickable
-	var errorButton widget.Clickable
 
-	sensorModel := &models.DSensor{}
-	sensorView := dsensor.New(sensorModel, 32, image.Pt(100, 100))
+	colors := palette.Colors[:]
+
+	lamps := []*lamp.Lamp{}
+	for _, color := range colors {
+		body, border := makeColorsPair(color)
+		lamps = append(lamps, lamp.New(32, body, border))
+	}
 
 	for {
 		switch e := window.Event().(type) {
@@ -59,15 +75,9 @@ func run(window *app.Window) error {
 			gtx := app.NewContext(&ops, e)
 
 			if stateButton.Clicked(gtx) {
-				sensorModel.IsState = !sensorModel.IsState
-			}
-
-			if blockButton.Clicked(gtx) {
-				sensorModel.IsBlock = !sensorModel.IsBlock
-			}
-
-			if errorButton.Clicked(gtx) {
-				sensorModel.IsError = !sensorModel.IsError
+				for _, lamp := range lamps {
+					lamp.Toggle()
+				}
 			}
 
 			// draw
@@ -80,7 +90,7 @@ func run(window *app.Window) error {
 
 				// scene
 				// layout.Rigid(sensorView.Layout),
-				layout.Rigid(func(gtx C) D { return makeSceneLayout(gtx, sensorView.Layout) }),
+				layout.Rigid(func(gtx C) D { return makeSceneLayout(gtx, lamps) }),
 
 				// actions row
 				layout.Rigid(
@@ -102,42 +112,6 @@ func run(window *app.Window) error {
 				),
 
 				layout.Rigid(
-					func(gtx layout.Context) layout.Dimensions {
-
-						margins := layout.Inset{
-							Top:    unit.Dp(25),
-							Bottom: unit.Dp(25),
-							Right:  unit.Dp(35),
-							Left:   unit.Dp(35),
-						}
-
-						return margins.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
-							btn := material.Button(theme, &blockButton, "Block")
-							return btn.Layout(gtx)
-						})
-
-					},
-				),
-
-				layout.Rigid(
-					func(gtx layout.Context) layout.Dimensions {
-
-						margins := layout.Inset{
-							Top:    unit.Dp(25),
-							Bottom: unit.Dp(25),
-							Right:  unit.Dp(35),
-							Left:   unit.Dp(35),
-						}
-
-						return margins.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
-							btn := material.Button(theme, &errorButton, "Error")
-							return btn.Layout(gtx)
-						})
-
-					},
-				),
-
-				layout.Rigid(
 					// The height of the spacer is 25 Device independent pixels
 					layout.Spacer{Height: unit.Dp(25)}.Layout,
 				),
@@ -149,12 +123,17 @@ func run(window *app.Window) error {
 	}
 }
 
-func makeSceneLayout(gtx C, item layout.Widget) D {
+func makeSceneLayout(gtx C, items []*lamp.Lamp) D {
+	var list = layout.List{}
 	return layout.Stack{}.Layout(gtx,
 		layout.Expanded(func(gtx C) D {
-			return ColorBox(gtx, image.Pt(300, 200), palette.Color(palette.Gray, palette.P300))
+			return ColorBox(gtx, image.Pt(1200, 200), palette.Color(palette.Gray, palette.P300))
 		}),
-		layout.Stacked(item),
+		layout.Stacked(func(gtx C) D {
+			return list.Layout(gtx, len(items), func(gtx C, i int) D {
+				return items[i].Layout(gtx)
+			})
+		}),
 	)
 }
 

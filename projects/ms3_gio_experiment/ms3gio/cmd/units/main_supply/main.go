@@ -40,7 +40,11 @@ func run(window *app.Window) error {
 	var errorButton widget.Clickable
 
 	sensorModel := &models.MainSupply{}
-	sensorView := mainsupply.New(sensorModel, image.Pt(0, 0))
+	sensorView1 := mainsupply.New(sensorModel, image.Pt(0, 0))
+	sensorView2 := mainsupply.New(sensorModel, image.Pt(0, 0))
+	sensorView3 := mainsupply.New(sensorModel, image.Pt(0, 0))
+
+	// popupVisible := true
 
 	for {
 		switch e := window.Event().(type) {
@@ -51,17 +55,17 @@ func run(window *app.Window) error {
 			// This graphics context is used for managing the rendering state.
 			gtx := app.NewContext(&ops, e)
 
-			if stateButton.Clicked(gtx) {
-				sensorModel.IsState = !sensorModel.IsState
-			}
+			// if stateButton.Clicked(gtx) {
+			// 	popupVisible = true
+			// }
 
-			if blockButton.Clicked(gtx) {
-				sensorModel.IsBlock = !sensorModel.IsBlock
-			}
+			// if blockButton.Clicked(gtx) {
+			// 	sensorModel.IsBlock = !sensorModel.IsBlock
+			// }
 
-			if errorButton.Clicked(gtx) {
-				sensorModel.IsError = !sensorModel.IsError
-			}
+			// if errorButton.Clicked(gtx) {
+			// 	sensorModel.IsError = !sensorModel.IsError
+			// }
 
 			// draw
 			layout.Flex{
@@ -72,7 +76,34 @@ func run(window *app.Window) error {
 			}.Layout(gtx,
 
 				// scene
-				layout.Rigid(sensorView.Layout),
+				// layout.Rigid(func(gtx C) D {
+				// 	return Popup(&popupVisible).Layout(gtx, sensorView1.Layout)
+				// }),
+				layout.Rigid(sensorView1.Layout),
+				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+					return layout.Inset{
+						Top:    unit.Dp(25),
+						Bottom: unit.Dp(25),
+						Right:  unit.Dp(35),
+						Left:   unit.Dp(35),
+					}.Layout(gtx, sensorView2.Layout)
+				}),
+
+				layout.Flexed(1.0,
+					// The height of the spacer is 25 Device independent pixels
+					layout.Spacer{Height: unit.Dp(25)}.Layout,
+				),
+				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+					return layout.Flex{
+						Axis:      layout.Horizontal,
+						Alignment: layout.End,
+						Spacing:   layout.SpaceAround,
+					}.Layout(gtx, layout.Rigid(sensorView3.Layout))
+				}),
+				layout.Flexed(1.0,
+					// The height of the spacer is 25 Device independent pixels
+					layout.Spacer{Height: unit.Dp(25)}.Layout,
+				),
 
 				// actions row
 				layout.Rigid(

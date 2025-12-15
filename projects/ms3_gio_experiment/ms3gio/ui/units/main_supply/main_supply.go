@@ -2,58 +2,46 @@ package mainsupply
 
 import (
 	"image"
-	"image/color"
 	"ms3gio/internal/logic/models"
 
 	"gioui.org/layout"
-	"gioui.org/op"
-	"gioui.org/op/clip"
-	"gioui.org/op/paint"
 )
 
 type MainSupply struct {
 	pos   image.Point
 	model *models.MainSupply
-	max   image.Point
+	// Bounding image.Rectangle
+
+	// components
+	body    *body
+	powerSW *powerSwitcher
 }
 
 func New(model *models.MainSupply, pos image.Point) *MainSupply {
+
 	return &MainSupply{
 		pos:   pos,
 		model: model,
+		// Bounding: image.Rect(0, 0, 48, 64),
 
-		max: image.Pt(32, 64),
+		body:    newBody(),
+		powerSW: newPowerSwitcher(image.Pt(4, 16)),
 	}
 }
 
 func (s *MainSupply) Layout(gtx layout.Context) layout.Dimensions {
 
-	defer op.Offset(s.pos).Push(gtx.Ops).Pop()
+	if s.powerSW.Clicked() {
+		s.model.PowerOn()
+	}
 
-	body := clip.Rect{
-		Min: image.Pt(0, 0),
-		Max: s.max,
-	}.Op()
-
-	paint.FillShape(gtx.Ops, s.getColor(), body)
-
-	return layout.Dimensions{Size: s.max}
+	return layout.Stack{}.Layout(gtx,
+		// Force widget to the same size as the second.
+		layout.Expanded(s.body.Layout),
+		layout.Stacked(s.powerSW.Layout),
+	)
 }
 
-func (d *MainSupply) getColor() color.NRGBA {
-	return color.NRGBA{R: 100, G: 100, B: 100, A: 255}
-
-	// if d.model.IsBlock {
-	// 	return color.NRGBA{R: 100, G: 100, B: 100, A: 255}
-	// }
-
-	// if d.model.IsError {
-	// 	return color.NRGBA{R: 255, G: 0, B: 0, A: 255}
-	// }
-
-	// if d.model.IsState {
-	// 	return color.NRGBA{R: 0, G: 255, B: 40, A: 255}
-	// }
-
-	// return color.NRGBA{R: 0, G: 100, B: 40, A: 255}
+func (m *MainSupply) BoundingRect() image.Rectangle {
+	return m.body.BoundingRect()
 }
