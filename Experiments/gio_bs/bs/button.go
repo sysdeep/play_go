@@ -28,49 +28,49 @@ func Button(th *theme.Theme, model *widget.Clickable, txt string) button.Button 
 
 func ButtonPrimary(th *theme.Theme, buttonCli *widget.Clickable, txt string) button.Button {
 	b := Button(th, buttonCli, txt)
-	b.Background = th.Palette.Primary
+	b.Background = th.Palette.Primary.Fg
 	return b
 }
 
 func ButtonSecondary(th *theme.Theme, buttonCli *widget.Clickable, txt string) button.Button {
 	b := Button(th, buttonCli, txt)
-	b.Background = th.Palette.Secondary
+	b.Background = th.Palette.Secondary.Fg
 	return b
 }
 
 func ButtonSuccess(th *theme.Theme, buttonCli *widget.Clickable, txt string) button.Button {
 	b := Button(th, buttonCli, txt)
-	b.Background = th.Palette.Success
+	b.Background = th.Palette.Success.Fg
 	return b
 }
 
 func ButtonDanger(th *theme.Theme, buttonCli *widget.Clickable, txt string) button.Button {
 	b := Button(th, buttonCli, txt)
-	b.Background = th.Palette.Danger
+	b.Background = th.Palette.Danger.Fg
 	return b
 }
 
 func ButtonInfo(th *theme.Theme, buttonCli *widget.Clickable, txt string) button.Button {
 	b := Button(th, buttonCli, txt)
-	b.Background = th.Palette.Info
+	b.Background = th.Palette.Info.Fg
 	return b
 }
 
 func ButtonWarning(th *theme.Theme, buttonCli *widget.Clickable, txt string) button.Button {
 	b := Button(th, buttonCli, txt)
-	b.Background = th.Palette.Warning
+	b.Background = th.Palette.Warning.Fg
 	return b
 }
 
 func ButtonLight(th *theme.Theme, buttonCli *widget.Clickable, txt string) button.Button {
 	b := Button(th, buttonCli, txt)
-	b.Background = th.Palette.Light
+	b.Background = th.Palette.Light.Fg
 	return b
 }
 
 func ButtonDark(th *theme.Theme, buttonCli *widget.Clickable, txt string) button.Button {
 	b := Button(th, buttonCli, txt)
-	b.Background = th.Palette.Dark
+	b.Background = th.Palette.Dark.Fg
 	return b
 }
 

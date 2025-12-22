@@ -1,18 +1,17 @@
 package tabs
 
 import (
-	"giobs/bs/button"
 	"giobs/bs/theme"
-	"image"
 
 	"gioui.org/layout"
-	"gioui.org/op/clip"
-	"gioui.org/op/paint"
 	"gioui.org/unit"
 )
 
 /*
+
 see examples
+
+- https://getbootstrap.com/docs/5.3/components/navs-tabs/
 */
 
 type Tabs struct {
@@ -33,9 +32,12 @@ func NewTabs(th *theme.Theme, tabs ...*Tab) *Tabs {
 func (t *Tabs) Layout(gtx layout.Context) layout.Dimensions {
 	var flex = layout.Flex{Axis: layout.Vertical}
 	return flex.Layout(gtx,
+
+		// tabs list
 		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
 			return t.list.Layout(gtx, len(t.tabs), func(gtx layout.Context, tabIdx int) layout.Dimensions {
 				tb := t.tabs[tabIdx]
+
 				if tb.btn.Clicked(gtx) {
 					// if t.selected < tabIdx {
 					// 	slider.PushLeft()
@@ -43,34 +45,19 @@ func (t *Tabs) Layout(gtx layout.Context) layout.Dimensions {
 					// 	slider.PushRight()
 					// }
 					t.selected = tabIdx
+
 				}
 
-				var tabWidth int
-				return layout.Stack{Alignment: layout.S}.Layout(gtx,
-					layout.Stacked(func(gtx layout.Context) layout.Dimensions {
-						dims := button.Clickable(gtx, &tb.btn, func(gtx layout.Context) layout.Dimensions {
-							return t.tabs[tabIdx].LayoutTab(gtx)
-						})
-						tabWidth = dims.Size.X
-						return dims
-					}),
-					layout.Stacked(func(gtx layout.Context) layout.Dimensions {
-						if t.selected != tabIdx {
-							return layout.Dimensions{}
-						}
-						tabHeight := gtx.Dp(unit.Dp(4))
-						tabRect := image.Rect(0, 0, tabWidth, tabHeight)
-						paint.FillShape(gtx.Ops, t.th.Palette.ContrastBg, clip.Rect(tabRect).Op())
-						return layout.Dimensions{
-							Size: image.Point{X: tabWidth, Y: tabHeight},
-						}
-					}),
-				)
+				for i, ttab := range t.tabs {
+					ttab.selected = i == t.selected
+				}
+
+				return tb.Layout(gtx)
 			})
 		}),
 
+		// tab content
 		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			// return bs.H2(t.th, "aaaa").Layout(gtx)
 			return t.tabs[t.selected].LayoutContent(gtx)
 		}),
 

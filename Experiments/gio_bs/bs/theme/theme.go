@@ -28,22 +28,26 @@ type Palette struct {
 	ContrastFg color.NRGBA
 
 	// new bs
-	Primary             color.NRGBA
-	PrimaryTextEmphasis color.NRGBA
-	PrimaryBGSubtle     color.NRGBA
-	PrimaryBorderSubtle color.NRGBA
+	BodyColor color.NRGBA
+	BodyBg    color.NRGBA
 
-	Secondary             color.NRGBA
-	SecondaryTextEmphasis color.NRGBA
-	SecondaryBGSubtle     color.NRGBA
-	SecondaryBorderSubtle color.NRGBA
+	SecondaryColor color.NRGBA
+	SecondaryBg    color.NRGBA
 
-	Success color.NRGBA
-	Danger  color.NRGBA
-	Info    color.NRGBA
-	Warning color.NRGBA
-	Light   color.NRGBA
-	Dark    color.NRGBA
+	TertiaryColor color.NRGBA
+	TertiaryBg    color.NRGBA
+
+	Emphasis color.NRGBA
+	Border   color.NRGBA
+
+	Primary   ActionColor
+	Secondary ActionColor
+	Success   ActionColor
+	Danger    ActionColor
+	Info      ActionColor
+	Warning   ActionColor
+	Light     ActionColor
+	Dark      ActionColor
 }
 
 // Theme holds the general theme of an app or window. Different top-level
@@ -76,22 +80,52 @@ func NewTheme() *Theme {
 		ContrastFg: rgb(0xffffff),
 
 		// new
-		Primary:             rgb(0x0d6efd),
-		PrimaryTextEmphasis: rgb(0x052c65),
-		PrimaryBGSubtle:     rgb(0xcfe2ff),
-		PrimaryBorderSubtle: rgb(0x9ec5fe),
+		BodyColor: rgb(0x212529),
+		BodyBg:    rgb(0xfff),
 
-		Secondary:             rgb(0x6c757d),
-		SecondaryTextEmphasis: rgb(0x2b2f32),
-		SecondaryBGSubtle:     rgb(0xe2e3e5),
-		SecondaryBorderSubtle: rgb(0xc4c8cb),
+		// SecondaryColor: rgb(0x0d6efd),
+		SecondaryColor: color.NRGBA{A: 200, R: 33, B: 37, G: 41}, //rgba(33, 37, 41, 0.75);
+		SecondaryBg:    rgb(0xe9ecef),
 
-		Success: rgb(0x198754),
-		Danger:  rgb(0xdc3545),
-		Info:    rgb(0x0dcaf0),
-		Warning: rgb(0xffc107),
-		Light:   rgb(0xf8f9fa),
-		Dark:    rgb(0x212529),
+		// TertiaryColor: rgb(0x0d6efd),
+		TertiaryColor: color.NRGBA{R: 33, G: 37, B: 41, A: 100}, //rgba(33, 37, 41, 0.5);
+		TertiaryBg:    rgb(0xf8f9fa),
+
+		Emphasis: rgb(0x000),
+		Border:   rgb(0xdee2e6),
+
+		Primary: ActionColor{
+			Fg:     rgb(0x0d6efd),
+			Bg:     rgb(0xcfe2ff),
+			Border: rgb(0x9ec5fe),
+			Text:   rgb(0x052c65),
+		},
+
+		Secondary: ActionColor{
+			Fg:     rgb(0x6c757d),
+			Bg:     rgb(0xe2e3e5),
+			Border: rgb(0xc4c8cb),
+			Text:   rgb(0x2b2f32),
+		},
+
+		Success: ActionColor{
+			Fg: rgb(0x198754),
+		},
+		Danger: ActionColor{
+			Fg: rgb(0xdc3545),
+		},
+		Info: ActionColor{
+			Fg: rgb(0x0dcaf0),
+		},
+		Warning: ActionColor{
+			Fg: rgb(0xffc107),
+		},
+		Light: ActionColor{
+			Fg: rgb(0xf8f9fa),
+		},
+		Dark: ActionColor{
+			Fg: rgb(0x212529),
+		},
 	}
 	t.TextSize = 16
 
