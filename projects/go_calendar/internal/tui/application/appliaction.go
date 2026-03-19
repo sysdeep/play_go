@@ -1,6 +1,8 @@
 package application
 
 import (
+	"tcalendar/internal/configuration"
+	"tcalendar/internal/tui/about"
 	"tcalendar/internal/tui/board"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -16,15 +18,25 @@ type Application struct {
 
 	sub chan struct{}
 
+	router *Router
+
 	brd tea.Model
 }
 
-func New() *Application {
+const PAGE_CALENDAR = "calendar"
+const PAGE_ABOUT = "about"
+
+func New(conf configuration.Configuration) *Application {
+	router := newRouter()
+	router.Register(PAGE_CALENDAR, board.New())
+	router.Register(PAGE_ABOUT, about.New(conf))
+
 	return &Application{
-		sub:    make(chan struct{}),
-		brd:    board.New(),
+		sub: make(chan struct{}),
+		// brd:    board.New(),
 		width:  minWidth,
 		height: minHeight,
+		router: router,
 	}
 }
 
@@ -78,6 +90,14 @@ func (a Application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// 	a.currentPage = PAGE_KAFKA
 		// 	return a, nil
 
+		case "a":
+			a.router.GoTo(PAGE_ABOUT)
+			return a, nil
+
+		case "c":
+			a.router.GoTo(PAGE_CALENDAR)
+			return a, nil
+
 		// These keys should exit the program.
 		case "ctrl+c", "q":
 			return a, tea.Quit
@@ -87,21 +107,8 @@ func (a Application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	var cmds = []tea.Cmd{}
 
-	newBoard, bCmd := a.brd.Update(msg)
-	a.brd = newBoard
+	_, bCmd := a.router.MustPage().Update(msg)
 	cmds = append(cmds, bCmd)
-
-	// // current page
-	// p, pCmp := a.pages[a.page].Update(msg)
-	// cmds = append(cmds, pCmp)
-	// a.pages[a.page] = p
-
-	// all pages
-	// for k, p := range a.pages {
-	// 	pp, ppCmd := p.Update(msg)
-	// 	cmds = append(cmds, ppCmd)
-	// 	a.pages[k] = pp
-	// }
 
 	return a, tea.Batch(cmds...)
 
@@ -109,34 +116,9 @@ func (a Application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (a Application) View() string {
 
-	// full_result := lipgloss.PlaceVertical(
-	// 	a.maxHeight-2,
-	// 	lipgloss.Center,
-	// 	lipgloss.PlaceHorizontal(
-	// 		a.maxWidth,
-	// 		lipgloss.Center,
-	// 		a.pages[a.page].View(),
-	// 		lipgloss.WithWhitespaceBackground(lipgloss.Color("#3458eb")),
-	// 	),
-	// )
+	pageView := a.router.MustPage().View()
 
-	// var pp = []string{}
-	// for _, p := range a.pagesStack {
-	// 	pp = append(pp, strconv.Itoa(p))
-	// }
-
-	// return lipgloss.NewStyle().
-	// 	Width(a.maxWidth).
-	// 	Height(a.maxHeight).
-	// 	Background(lipgloss.Color("#3458eb")).
-	// 	Render(lipgloss.JoinVertical(
-	// 		lipgloss.Left,
-	// 		full_result,
-	// 		strings.Join(pp, ":"),
-	// 	))
-	content := lipgloss.JoinVertical(lipgloss.Top, a.brd.View())
-
-	// return lipgloss.NewStyle().Width(300).Height(200).AlignHorizontal(lipgloss.Center).AlignVertical(lipgloss.Center).Render(content)
+	content := lipgloss.JoinVertical(lipgloss.Top, pageView) + "\n\n[a]bout [c]alendar [q]uit"
 
 	return lipgloss.PlaceVertical(
 		a.height,
