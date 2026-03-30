@@ -1,6 +1,6 @@
 module egame
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/hajimehoshi/ebiten/v2 v2.9.6
@@ -16,10 +16,8 @@ require (
 	github.com/jezek/xgb v1.2.0 // indirect
 	github.com/jfreymuth/oggvorbis v1.0.5 // indirect
 	github.com/jfreymuth/vorbis v1.0.2 // indirect
-	golang.org/x/exp/shiny v0.0.0-20251209150349-8475f28825e9 // indirect
-	golang.org/x/image v0.34.0 // indirect
-	golang.org/x/mobile v0.0.0-20251209145715-2553ed8ce294 // indirect
-	golang.org/x/sync v0.19.0 // indirect
+	golang.org/x/image v0.38.0 // indirect
+	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/sys v0.39.0 // indirect
-	golang.org/x/text v0.32.0 // indirect
+	golang.org/x/text v0.35.0 // indirect
 )
