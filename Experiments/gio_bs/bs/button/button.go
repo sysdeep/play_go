@@ -1,6 +1,7 @@
 package button
 
 import (
+	"giobs/bs/theme"
 	"image/color"
 
 	"gioui.org/font"
@@ -23,6 +24,8 @@ type Button struct {
 	Inset        layout.Inset
 	Model        *widget.Clickable
 	Shaper       *text.Shaper
+
+	Th *theme.Theme
 }
 
 func (b Button) Layout(gtx layout.Context) layout.Dimensions {
@@ -39,3 +42,37 @@ func (b Button) Layout(gtx layout.Context) layout.Dimensions {
 		})
 	})
 }
+
+// OptWidget interface
+func (b *Button) SetClass(className theme.ClassName) {
+	switch className {
+
+	case theme.Primary:
+		b.Background = b.Th.Palette.Primary.Fg
+
+	case theme.Secondary:
+		b.Background = b.Th.Palette.Secondary.Fg
+
+	case theme.Warning:
+		b.Background = b.Th.Palette.Warning.Fg
+
+	case theme.Success:
+		b.Background = b.Th.Palette.Success.Fg
+
+	case theme.Danger:
+		b.Background = b.Th.Palette.Danger.Fg
+
+	case theme.Light:
+		b.Background = b.Th.Palette.Light.Fg
+
+	case theme.Dark:
+		b.Background = b.Th.Palette.Dark.Fg
+
+	default:
+		b.Background = b.Th.Palette.Primary.Fg
+	}
+}
+
+// var stylesMap = map[theme.ClassName]string{
+// 	theme.Primary: th.Palette.Primary.Fg
+// }

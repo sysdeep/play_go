@@ -3,6 +3,7 @@ package main
 import (
 	"giobs/bs"
 	"giobs/bs/button"
+	"giobs/bs/label"
 	"giobs/bs/theme"
 	"image"
 	"image/color"
@@ -75,10 +76,24 @@ func run(window *app.Window) error {
 
 	// new stateFull buttons
 	var sfButtons = []button.Button{
-		sf.NewButton("sf1"),
-		sf.NewButton("sf2"),
-		sf.NewButton("sf3"),
-		sf.NewButton("sf4"),
+		sf.NewButton("sf1", bs.WithClass(theme.Warning)),
+		sf.NewButton("sf2", bs.WithClass(theme.Success)),
+		sf.NewButton("sf3", bs.WithClass(theme.Secondary)),
+		sf.NewButton("sf4", bs.WithClass(theme.Danger)),
+	}
+
+	var sfLabels = []label.LabelStyle{
+		sf.NewLabel("sf1", bs.WithClass(theme.Warning)),
+		sf.NewLabel("sf2", bs.WithClass(theme.Success)),
+		sf.NewLabel("sf3", bs.WithClass(theme.Secondary)),
+		sf.NewLabel("sf4", bs.WithClass(theme.Danger)),
+	}
+
+	var sfHeaders = []label.LabelStyle{
+		sf.NewH6Label("sf1", bs.WithClass(theme.Warning)),
+		sf.NewH6Label("sf2", bs.WithClass(theme.Success)),
+		sf.NewH6Label("sf3", bs.WithClass(theme.Secondary)),
+		sf.NewH6Label("sf4", bs.WithClass(theme.Danger)),
 	}
 
 	for {
@@ -134,6 +149,29 @@ func run(window *app.Window) error {
 				}),
 				layout.Rigid(layout.Spacer{Height: unit.Dp(64)}.Layout),
 
+				// new stateFull labels
+				layout.Rigid(func(gtx C) D {
+					return material.H6(themeMateria, "New StateFull labels").Layout(gtx)
+				}),
+				layout.Rigid(func(gtx C) D {
+					return list.Layout(gtx, len(sfLabels), func(gtx C, i int) D {
+						return layout.UniformInset(unit.Dp(12)).Layout(gtx, sfLabels[i].Layout)
+					})
+				}),
+				layout.Rigid(layout.Spacer{Height: unit.Dp(64)}.Layout),
+
+				// new stateFull H6
+				layout.Rigid(func(gtx C) D {
+					return material.H6(themeMateria, "New StateFull H6").Layout(gtx)
+				}),
+				layout.Rigid(func(gtx C) D {
+					return list.Layout(gtx, len(sfHeaders), func(gtx C, i int) D {
+						return layout.UniformInset(unit.Dp(12)).Layout(gtx, sfHeaders[i].Layout)
+					})
+				}),
+				layout.Rigid(layout.Spacer{Height: unit.Dp(64)}.Layout),
+
+				// old ------------
 				layout.Rigid(func(gtx C) D {
 					return material.H6(themeMateria, "Old StateLess buttons").Layout(gtx)
 				}),

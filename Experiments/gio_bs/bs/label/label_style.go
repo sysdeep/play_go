@@ -1,6 +1,7 @@
 package label
 
 import (
+	"giobs/bs/theme"
 	"image/color"
 
 	"gioui.org/font"
@@ -46,4 +47,6 @@ type LabelStyle struct {
 	// State provides text selection state for the label. If not set, the label cannot
 	// be selected or copied interactively.
 	State *widget.Selectable
+
+	Th *theme.Theme
 }

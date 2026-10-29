@@ -9,6 +9,19 @@ import (
 	"gioui.org/widget"
 )
 
+type ClassName int
+
+const (
+	Primary ClassName = iota
+	Secondary
+	Success
+	Danger
+	Info
+	Warning
+	Light
+	Dark
+)
+
 // Palette contains the minimal set of colors that a widget may need to
 // draw itself.
 type Palette struct {

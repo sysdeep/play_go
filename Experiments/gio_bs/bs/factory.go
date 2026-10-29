@@ -2,8 +2,10 @@ package bs
 
 import (
 	"giobs/bs/button"
+	"giobs/bs/label"
 	"giobs/bs/theme"
 
+	"gioui.org/font"
 	"gioui.org/layout"
 	"gioui.org/widget"
 )
@@ -18,7 +20,7 @@ func NewBSFactory(th *theme.Theme) *BSFactory {
 	}
 }
 
-func (f *BSFactory) NewButton(txt string) button.Button {
+func (f *BSFactory) NewButton(txt string, opts ...Opt) button.Button {
 	model := widget.Clickable{}
 	b := button.Button{
 		Text:         txt,
@@ -32,9 +34,38 @@ func (f *BSFactory) NewButton(txt string) button.Button {
 		},
 		Model:  &model,
 		Shaper: f.th.Shaper,
+		Th:     f.th,
 	}
 	b.Font.Typeface = f.th.Face
 	// TODO: for debug
 	b.Background = f.th.Palette.Primary.Fg
+
+	// b.SetClass(theme.Warning)
+	for _, opt := range opts {
+		opt(&b)
+	}
+
 	return b
+}
+
+func (f *BSFactory) NewLabel(txt string, opts ...Opt) label.LabelStyle {
+	b := label.Label(f.th, f.th.TextSize, txt)
+
+	// b.SetClass(theme.Warning)
+	for _, opt := range opts {
+		opt(&b)
+	}
+
+	return b
+}
+
+func (f *BSFactory) NewH6Label(txt string, opts ...Opt) label.LabelStyle {
+	label := label.Label(f.th, f.th.TextSize*20.0/16.0, txt)
+	label.Font.Weight = font.Medium
+
+	for _, opt := range opts {
+		opt(&label)
+	}
+
+	return label
 }
