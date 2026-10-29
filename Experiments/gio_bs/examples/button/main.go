@@ -47,8 +47,10 @@ type BtnDef struct {
 }
 
 func run(window *app.Window) error {
+
 	themeMateria := material.NewTheme()
 	bsTheme := bs.NewTheme()
+	sf := bs.NewBSFactory(bsTheme)
 
 	var ops op.Ops
 
@@ -69,6 +71,14 @@ func run(window *app.Window) error {
 		{Btn: bs.ButtonWarning, Name: "Warning"},
 		{Btn: bs.ButtonLight, Name: "Light"},
 		{Btn: bs.ButtonDark, Name: "Dark"},
+	}
+
+	// new stateFull buttons
+	var sfButtons = []button.Button{
+		sf.NewButton("sf1"),
+		sf.NewButton("sf2"),
+		sf.NewButton("sf3"),
+		sf.NewButton("sf4"),
 	}
 
 	for {
@@ -92,14 +102,41 @@ func run(window *app.Window) error {
 				mainColor.B = uint8(rand.IntN(255))
 			}
 
+			// new stateFull buttons
+			for i := range sfButtons {
+				if sfButtons[i].Model.Clicked(gtx) {
+					sfButtons[i].Background = color.NRGBA{
+						R: uint8(rand.IntN(255)),
+						B: uint8(rand.IntN(255)),
+						G: uint8(rand.IntN(255)),
+						// A: uint8(rand.IntN(255)),
+						A: uint8(255),
+					}
+				}
+			}
+
 			// draw
 			layout.Flex{
 				// Vertical alignment, from top to bottom
 				Axis: layout.Vertical,
 				// Empty space is left at the start, i.e. at the top
-				Spacing: layout.SpaceStart,
+				// Spacing: layout.SpaceStart,
 			}.Layout(gtx,
 
+				// new stateFull buttons
+				layout.Rigid(func(gtx C) D {
+					return material.H6(themeMateria, "New StateFull buttons").Layout(gtx)
+				}),
+				layout.Rigid(func(gtx C) D {
+					return list.Layout(gtx, len(sfButtons), func(gtx C, i int) D {
+						return layout.UniformInset(unit.Dp(12)).Layout(gtx, sfButtons[i].Layout)
+					})
+				}),
+				layout.Rigid(layout.Spacer{Height: unit.Dp(64)}.Layout),
+
+				layout.Rigid(func(gtx C) D {
+					return material.H6(themeMateria, "Old StateLess buttons").Layout(gtx)
+				}),
 				layout.Rigid(func(gtx C) D {
 					return list.Layout(gtx, len(buttons), func(gtx C, i int) D {
 
